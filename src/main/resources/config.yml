@@ -1,0 +1,12 @@
+database:
+  name: practice
+  address: localhost
+  port: 27017
+  auth:
+    enabled: false
+    authDb: admin
+    username: 'nub'
+    password: 'practice'
+
+scoreboard:
+  title: '&6&lNub &f| &ePractice &7US'
