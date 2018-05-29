@@ -17,8 +17,8 @@
     </properties>
 
     <build>
+        <defaultGoal>clean package install</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <directory>/Users/zach/IdeaProjects/Test Server/plugins/</directory>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -32,7 +32,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -41,7 +41,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <version>3.1.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -110,14 +110,14 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>3.6.3</version>
+            <version>3.7.0</version>
         </dependency>
 
         <!--Lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.18</version>
+            <version>1.16.20</version>
             <scope>provided</scope>
         </dependency>
 
