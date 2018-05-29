@@ -2,12 +2,14 @@ package net.practice.practice;
 
 import lombok.Getter;
 import net.practice.practice.board.BoardManager;
-import net.practice.practice.board.provilder.ProviderResolver;
+import net.practice.practice.board.provider.ProviderResolver;
 import net.practice.practice.game.arena.ArenaManager;
 import net.practice.practice.game.ladder.LadderManager;
 import net.practice.practice.listener.ListenerHandler;
 import net.practice.practice.storage.MongoBackend;
+import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Practice extends JavaPlugin {
@@ -21,6 +23,8 @@ public class Practice extends JavaPlugin {
     @Getter private LadderManager ladderManager;
 
     @Getter private CommandFramework commandFramework;
+
+    @Getter private Location spawn, editor;
 
     @Override
     public void onEnable() {
@@ -44,6 +48,9 @@ public class Practice extends JavaPlugin {
         commandFramework = new CommandFramework(this);
 
         ListenerHandler.initListeners();
+
+        spawn = LocUtils.deserializeLocation("locations.spawn");
+        editor = LocUtils.deserializeLocation("locations.editor");
     }
 
     @Override
@@ -56,5 +63,19 @@ public class Practice extends JavaPlugin {
         ladderManager.saveLadders();
 
         backend.close();
+    }
+
+    public void setSpawn(Location location) {
+        spawn = location;
+
+        getConfig().set("locations.spawn", LocUtils.serializeLocation(location));
+        saveConfig();
+    }
+
+    public void setEditor(Location location) {
+        editor = location;
+
+        getConfig().set("locations.editor", LocUtils.serializeLocation(location));
+        saveConfig();
     }
 }

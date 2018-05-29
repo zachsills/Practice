@@ -31,7 +31,9 @@ public abstract class Duel {
         this.timeUntilStart = System.currentTimeMillis() + 5000;
     }
 
-    public abstract void start();
+    public void start() {
+        this.startTime = System.currentTimeMillis();
+    }
 
     public abstract void end(DuelEndReason reason);
 

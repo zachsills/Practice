@@ -76,3 +76,4 @@ bin/*.yml
 .classpath
 
 .project
+dependency-reduced-pom\.xml

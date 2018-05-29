@@ -1,4 +1,4 @@
-package net.practice.practice.board.provilder;
+package net.practice.practice.board.provider;
 
 import net.practice.practice.board.BoardProvider;
 import net.practice.practice.game.player.Profile;
@@ -12,15 +12,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProviderResolver implements BoardProvider {
 
+    private static final String BREAKER = C.color("&7&m--------------");
+
     private Map<ProfileState, BoardProvider> providers;
+    private BoardProvider lobbyProvider;
 
     public ProviderResolver() {
         providers = new HashMap<>();
 
         providers.put(ProfileState.PLAYING, new PlayingProvider());
+        providers.put(ProfileState.SPECTATING, new SpectatingProvider());
+
+        lobbyProvider = new LobbyProvider();
+        providers.put(ProfileState.LOBBY, lobbyProvider);
+        providers.put(ProfileState.BUILDING, lobbyProvider);
+        providers.put(ProfileState.EDITING, lobbyProvider);
+        providers.put(ProfileState.QUEUING, lobbyProvider);
     }
 
     @Override
@@ -34,7 +45,14 @@ public class ProviderResolver implements BoardProvider {
         if((boolean) profile.getSetting(ProfileSetting.SCOREBOARD))
             return Collections.emptyList();
 
-        BoardProvider provider = providers.get(profile.getProfileState());
-        return provider != null ? provider.getLines(player) : Collections.emptyList();
+        BoardProvider provider = providers.getOrDefault(profile.getProfileState(), lobbyProvider);
+        List<String> lines = provider.getLines(player);
+        if(!lines.isEmpty())
+            lines.add(0, BREAKER);
+            lines.add(BREAKER);
+
+        return lines.stream()
+                .map(C::color)
+                .collect(Collectors.toList());
     }
 }

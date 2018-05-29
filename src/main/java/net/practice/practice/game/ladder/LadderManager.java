@@ -18,11 +18,32 @@ public class LadderManager {
     }
 
     public void loadLadders() {
+        for(String id : config.getLadderSection().getKeys(false)) {
+            Ladder ladder = new Ladder(configuration.getString("ladders." + id + ".name"));
 
+            ladder.load(config.getLadderSection().getConfigurationSection(id));
+        }
     }
 
     public void saveLadder(Ladder ladder) {
+        String id = ladder.getName();
 
+        config.getLadderSection().set(id + ".name", id);
+        config.getLadderSection().set(id + ".options.buildable", ladder.isBuildable());
+        config.getLadderSection().set(id + ".options.editable", ladder.isEditable());
+        config.getLadderSection().set(id + ".options.combo", ladder.isCombo());
+        config.getLadderSection().set(id + ".options.ranked", ladder.isRanked());
+
+        config.save();
+    }
+
+    public void removeLadder(Ladder ladder) {
+        String id = ladder.getName();
+
+        config.getLadderSection().set(id, null);
+        config.save();
+
+        Ladder.getLadders().remove(id);
     }
 
     public void saveLadders() {

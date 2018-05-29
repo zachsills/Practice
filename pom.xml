@@ -17,9 +17,8 @@
     </properties>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
-        <defaultGoal>clean install</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <directory>/Users/zach/IdeaProjects/Test Server/plugins/</directory>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -50,18 +49,24 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <finalName>Practice</finalName>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+
                             <relocations>
+                                <!--
+                                <relocation>
+                                    <pattern>com.mongodb</pattern>
+                                    <shadedPattern>${project.groupId}.lib.com.mongodb</shadedPattern>
+                                </relocation>
                                 <relocation>
                                     <pattern>org.bson</pattern>
                                     <shadedPattern>${project.groupId}.lib.org.bson</shadedPattern>
                                 </relocation>
+                                -->
                                 <relocation>
                                     <pattern>com.google.gson</pattern>
                                     <shadedPattern>${project.groupId}.lib.com.google.gson</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.mongodb</pattern>
-                                    <shadedPattern>${project.groupId}.lib.com.mongodb</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -105,7 +110,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>3.5.0</version>
+            <version>3.6.3</version>
         </dependency>
 
         <!--Lombok-->

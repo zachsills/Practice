@@ -42,7 +42,6 @@ public class ArenaManager {
         String id = arena.getName();
 
         config.getArenaSection().set(id, null);
-
         config.save();
 
         Arena.getArenas().remove(id);
