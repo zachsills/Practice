@@ -43,13 +43,7 @@ public class CommandFramework implements CommandExecutor {
                 final Field field = SimplePluginManager.class.getDeclaredField("commandMap");
                 field.setAccessible(true);
                 map = (CommandMap) field.get(manager);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
+            } catch (IllegalArgumentException | SecurityException | IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
         }
