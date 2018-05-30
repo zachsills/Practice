@@ -47,9 +47,10 @@ public class ProviderResolver implements BoardProvider {
 
         BoardProvider provider = providers.getOrDefault(profile.getProfileState(), lobbyProvider);
         List<String> lines = provider.getLines(player);
-        if(!lines.isEmpty())
+        if(!lines.isEmpty()) {
             lines.add(0, BREAKER);
             lines.add(BREAKER);
+        }
 
         return lines.stream()
                 .map(C::color)
