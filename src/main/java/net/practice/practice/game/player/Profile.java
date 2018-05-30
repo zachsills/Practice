@@ -29,8 +29,8 @@ public class Profile {
     @Getter @Setter private Duel currentDuel;
     @Getter @Setter private ProfileState profileState;
 
-    @Getter @Setter private Integer rankedWins, rankedLosses;
-    @Getter @Setter private Integer unrankedWins, unrankedLosses;
+    @Getter @Setter private Integer rankedWins = 0, rankedLosses = 0;
+    @Getter @Setter private Integer unrankedWins = 0, unrankedLosses = 0;
 
     public Profile(UUID uuid, boolean cache) {
         this.uuid = uuid;
@@ -128,10 +128,10 @@ public class Profile {
 
         document.append("elo", eloStore);
         document.append("settings", settingsStore);
-        document.append("rankedWins", rankedWins.intValue());
-        document.append("rankedLosses", rankedLosses.intValue());
-        document.append("unrankedWins", unrankedWins.intValue());
-        document.append("unrankedLosses", unrankedLosses.intValue());
+        document.append("rankedWins", rankedWins);
+        document.append("rankedLosses", rankedLosses);
+        document.append("unrankedWins", unrankedWins);
+        document.append("unrankedLosses", unrankedLosses);
 
         return document;
     }

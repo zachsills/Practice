@@ -14,15 +14,16 @@ public class ArenaManager {
 
     public ArenaManager() {
         config = new ArenaConfig();
-
         configuration = config.getConfig();
     }
 
     public void loadArenas() {
-        for(String id : config.getArenaSection().getKeys(false)) {
-            Arena arena = new Arena(configuration.getString("arenas." + id + ".name"));
+        if (config.getArenaSection() != null) {
+            for (String id : config.getArenaSection().getKeys(false)) {
+                Arena arena = new Arena(configuration.getString("arenas." + id + ".name"));
 
-            arena.load(config.getArenaSection().getConfigurationSection(id));
+                arena.load(config.getArenaSection().getConfigurationSection(id));
+            }
         }
     }
 

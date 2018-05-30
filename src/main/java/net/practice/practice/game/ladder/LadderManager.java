@@ -13,15 +13,16 @@ public class LadderManager {
 
     public LadderManager() {
         config = new LadderConfig();
-
         configuration = config.getConfig();
     }
 
     public void loadLadders() {
-        for(String id : config.getLadderSection().getKeys(false)) {
-            Ladder ladder = new Ladder(configuration.getString("ladders." + id + ".name"));
+        if (config.getLadderSection() != null) {
+            for (String id : config.getLadderSection().getKeys(false)) {
+                Ladder ladder = new Ladder(configuration.getString("ladders." + id + ".name"));
 
-            ladder.load(config.getLadderSection().getConfigurationSection(id));
+                ladder.load(config.getLadderSection().getConfigurationSection(id));
+            }
         }
     }
 

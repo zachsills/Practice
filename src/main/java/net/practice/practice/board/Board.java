@@ -2,7 +2,6 @@ package net.practice.practice.board;
 
 import lombok.Getter;
 import net.practice.practice.Practice;
-import net.practice.practice.game.player.Profile;
 import net.practice.practice.util.chat.C;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -13,7 +12,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,7 @@
 package net.practice.practice.util.command;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,8 @@ public class BukkitCommand extends org.bukkit.command.Command {
     @Override
     public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
         boolean success = false;
+
+        Bukkit.broadcastMessage(commandLabel);
 
         if(!owningPlugin.isEnabled())
             return false;

@@ -1,4 +1,4 @@
-package net.practice.practice.command;
+package net.practice.practice.command.commands;
 
 import net.practice.practice.Practice;
 import net.practice.practice.util.LocUtils;
