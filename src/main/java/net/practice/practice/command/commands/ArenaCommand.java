@@ -6,6 +6,7 @@ import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.command.Command;
 import net.practice.practice.util.command.CommandArgs;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class ArenaCommand {
@@ -22,8 +23,30 @@ public class ArenaCommand {
             return;
         }
 
-        Practice.getInstance().getArenaManager().saveArena(new Arena(args.getArgs(0)));
+        String name = args.getArgs(0);
+        if (Arena.getArena(name) != null) {
+            args.getPlayer().sendMessage(ChatColor.RED + "That arena already exists.");
+            return;
+        }
+
+        new Arena(name);
         args.getPlayer().sendMessage(C.color("&eCreated a new arena called &a" + args.getArgs(0) + "."));
+    }
+
+    @Command(name = "arena.remove", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
+    public void onArenaRemove(CommandArgs args) {
+        if(args.length() != 1) {
+            sendHelp(args.getPlayer());
+            return;
+        }
+
+        Arena arena = Arena.getArena(args.getArgs(0));
+        if (arena != null) {
+            Practice.getInstance().getArenaManager().removeArena(arena);
+            args.getPlayer().sendMessage(C.color("&eRemoved arena " + arena.getDisplayName() + "&e."));
+        } else {
+            args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
+        }
     }
 
     @Command(name = "arena.pos1", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
@@ -36,8 +59,8 @@ public class ArenaCommand {
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
             arena.setPosOne(args.getPlayer().getLocation());
-            Practice.getInstance().getArenaManager().saveArena(arena);
-            args.getPlayer().sendMessage(C.color("&eSet posOne in arena " + arena.getName() + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
+            args.getPlayer().sendMessage(C.color("&eSet posOne in arena " + arena.getDisplayName()
+                    + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
         }
@@ -53,7 +76,6 @@ public class ArenaCommand {
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
             arena.setPosTwo(args.getPlayer().getLocation());
-            Practice.getInstance().getArenaManager().saveArena(arena);
             args.getPlayer().sendMessage(C.color("&eSet posTwo in arena " + arena.getName() + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
@@ -70,7 +92,6 @@ public class ArenaCommand {
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
             arena.setSpawnOne(args.getPlayer().getLocation());
-            Practice.getInstance().getArenaManager().saveArena(arena);
             args.getPlayer().sendMessage(C.color("&eSet spawnOne in arena " + arena.getName() + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
@@ -87,7 +108,6 @@ public class ArenaCommand {
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
             arena.setSpawnTwo(args.getPlayer().getLocation());
-            Practice.getInstance().getArenaManager().saveArena(arena);
             args.getPlayer().sendMessage(C.color("&eSet spawnTwo in arena " + arena.getName() + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
@@ -105,7 +125,6 @@ public class ArenaCommand {
         String builderName = args.getArgs(1);
         if (arena != null) {
             arena.setBuilder(builderName);
-            Practice.getInstance().getArenaManager().saveArena(arena);
             args.getPlayer().sendMessage(C.color("&eSet builder for arena " + arena.getName() + " to &7" + builderName + "&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));

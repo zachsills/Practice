@@ -58,7 +58,7 @@ public class LadderManager {
         }
 
         public ConfigurationSection getLadderSection() {
-            return getConfig().getConfigurationSection("ladders");
+            return getConfig().getConfigurationSection("ladders") != null ? getConfig().getConfigurationSection("ladders") : getConfig().createSection("ladders");
         }
     }
 }

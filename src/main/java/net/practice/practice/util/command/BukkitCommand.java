@@ -41,8 +41,6 @@ public class BukkitCommand extends org.bukkit.command.Command {
     public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
         boolean success = false;
 
-        Bukkit.broadcastMessage(commandLabel);
-
         if(!owningPlugin.isEnabled())
             return false;
 

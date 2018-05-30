@@ -12,12 +12,12 @@ import org.bukkit.entity.Player;
 
 public class LadderCommand {
 
-    @Command(name = "ladder"/*, aliases = { "gamemode" }*/, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder", aliases = { "game" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadder(CommandArgs args) {
         sendHelp(args.getPlayer());
     }
 
-    @Command(name = "ladder.create"/*, aliases = { "gamemode.create"}*/, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.create", aliases = { "game.create"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderCreate(CommandArgs args) {
         if(args.length() != 1) {
             sendHelp(args.getPlayer());
@@ -35,7 +35,7 @@ public class LadderCommand {
         args.getPlayer().sendMessage(C.color("&eCreated ladder " + ladder.getDisplayName() + "&e."));
     }
 
-    @Command(name = "ladder.remove"/*, aliases = { "gamemode.remove"}*/, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.remove", aliases = { "game.remove"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderRemove(CommandArgs args) {
         if(args.length() != 1) {
             sendHelp(args.getPlayer());
@@ -53,7 +53,7 @@ public class LadderCommand {
         args.getPlayer().sendMessage(C.color("&eRemoved ladder " + ladder.getDisplayName() + "&e."));
     }
 
-    @Command(name = "ladder.set"/*, aliases = { "gamemode.set"}*/, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.set", aliases = { "game.set"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderSet(CommandArgs args) {
         if(args.length() != 2) {
             sendHelp(args.getPlayer());
@@ -98,7 +98,7 @@ public class LadderCommand {
         args.getPlayer().sendMessage(C.color("&eSet attribute '&7" + args.getArgs(1).toLowerCase() + "&e' of " + ladder.getDisplayName() + "&e to " + newValue + "."));
     }
 
-    @Command(name = "ladder.seticon"/*, aliases = { "gamemode.seticon"}*/, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.seticon", aliases = { "game.seticon"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderSetIcon(CommandArgs args) {
         if(args.length() != 2) {
             sendHelp(args.getPlayer());

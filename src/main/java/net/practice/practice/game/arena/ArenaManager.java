@@ -27,7 +27,7 @@ public class ArenaManager {
         }
     }
 
-    public void saveArena(Arena arena) {
+    public void saveArena(Arena arena) throws NullPointerException {
         String id = arena.getName();
 
         config.getArenaSection().set(id + ".name", id);
@@ -49,7 +49,13 @@ public class ArenaManager {
     }
 
     public void saveArenas() {
-        Arena.getArenas().values().forEach(this::saveArena);
+        try {
+            for (Arena arena : Arena.getArenas().values()) {
+                saveArena(arena);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private final class ArenaConfig extends Configuration {
@@ -59,7 +65,7 @@ public class ArenaManager {
         }
 
         public ConfigurationSection getArenaSection() {
-            return getConfig().getConfigurationSection("arenas");
+            return getConfig().getConfigurationSection("arenas") != null ? getConfig().getConfigurationSection("arenas") : getConfig().createSection("arenas");
         }
     }
 }
