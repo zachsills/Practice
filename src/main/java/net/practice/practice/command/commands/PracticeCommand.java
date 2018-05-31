@@ -16,7 +16,7 @@ public class PracticeCommand {
 
     @Command(name = "practice.set", permission = "practice.admin", playerOnly = true, description = "Manage practice.")
     public void onPracticeSet(CommandArgs args) {
-        if(args.length() != 2) {
+        if(args.length() != 1) {
             sendHelp(args.getPlayer());
             return;
         }

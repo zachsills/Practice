@@ -1,10 +1,7 @@
 package net.practice.practice.util.command;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.help.GenericCommandHelpTopic;
 import org.bukkit.help.HelpTopic;
@@ -16,6 +13,7 @@ import org.bukkit.plugin.SimplePluginManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -171,6 +169,60 @@ public class CommandFramework implements CommandExecutor {
             map.getCommand(cmdLabel).setDescription(command.description());
         if (!command.usage().equalsIgnoreCase("") && cmdLabel == label)
             map.getCommand(cmdLabel).setUsage(command.usage());
+    }
+
+    public void unregisterCommands(final Object obj) {
+        for(Method m : obj.getClass().getMethods()) {
+            if(m.getAnnotation(Command.class) != null) {
+                final Command command = m.getAnnotation(Command.class);
+                if(m.getParameterTypes().length > 1 || m.getParameterTypes()[0] != CommandArgs.class) {
+                    System.out.println("Unable to unregister command " + m.getName() + ". Unexpected method arguments");
+                    continue;
+                }
+
+                Bukkit.broadcastMessage(command.name());
+                if (!command.name().contains(".")) {
+                    unregisterCommand(command.name());
+                    for(String alias : command.aliases())
+                        unregisterCommand(alias);
+                }
+            }
+        }
+    }
+
+    public void unregisterCommand(String label) {
+        if(plugin.getServer().getPluginManager() instanceof SimplePluginManager) {
+            SimplePluginManager manager = (SimplePluginManager) plugin.getServer().getPluginManager();
+            try {
+
+                Field commandMap = SimplePluginManager.class.getDeclaredField("commandMap");
+                commandMap.setAccessible(true);
+                SimpleCommandMap mapObj = (SimpleCommandMap) commandMap.get(manager);
+
+                Field knownCommands = mapObj.getClass().getDeclaredField("knownCommands");
+                knownCommands.setAccessible(true);
+                Map<String, org.bukkit.command.Command> cmds = (Map<String, org.bukkit.command.Command>) knownCommands.get(mapObj);
+                for (Map.Entry<String, org.bukkit.command.Command> entry : cmds.entrySet()) {
+                    if (entry.getKey().contains(label)) {
+                        entry.getValue().unregister(mapObj);
+                    }
+                }
+                cmds.remove(label);
+                setFinalStatic(knownCommands, cmds, mapObj);
+            } catch (IllegalArgumentException | SecurityException | IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void setFinalStatic(Field field, Object newValue, Object obj) throws NoSuchFieldException, IllegalAccessException {
+        field.setAccessible(true);
+
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+        field.set(obj, newValue);
     }
 
     public void registerCompleter(final String label, final Method m, final Object obj) {

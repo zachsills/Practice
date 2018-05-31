@@ -3,9 +3,7 @@ package net.practice.practice;
 import lombok.Getter;
 import net.practice.practice.board.BoardManager;
 import net.practice.practice.board.provider.ProviderResolver;
-import net.practice.practice.command.commands.ArenaCommand;
-import net.practice.practice.command.commands.LadderCommand;
-import net.practice.practice.command.commands.PracticeCommand;
+import net.practice.practice.command.CommandHandler;
 import net.practice.practice.game.arena.ArenaManager;
 import net.practice.practice.game.ladder.LadderManager;
 import net.practice.practice.listener.ListenerHandler;
@@ -40,17 +38,13 @@ public class Practice extends JavaPlugin {
 
         /* Initialize managers */
         boardManager = new BoardManager(new ProviderResolver());
+        //getServer().getPluginManager().registerEvents(boardManager, this);
         arenaManager = new ArenaManager();
-        arenaManager.loadArenas();
         ladderManager = new LadderManager();
-        ladderManager.loadLadders();
 
         /* Commands and Listeners */
         commandFramework = new CommandFramework(this);
-        //CommandHandler.registerCommands();
-        commandFramework.registerCommands(new LadderCommand());
-        commandFramework.registerCommands(new PracticeCommand());
-        commandFramework.registerCommands(new ArenaCommand());
+        CommandHandler.registerCommands();
 
         ListenerHandler.initListeners();
 
@@ -61,6 +55,10 @@ public class Practice extends JavaPlugin {
     @Override
     public void onDisable() {
         backend.saveProfiles();
+
+        CommandHandler.unregisterCommands();
+
+        boardManager.onDisable();
 
         arenaManager.saveArenas();
         ladderManager.saveLadders();

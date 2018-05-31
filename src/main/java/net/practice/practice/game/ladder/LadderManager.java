@@ -14,6 +14,7 @@ public class LadderManager {
     public LadderManager() {
         config = new LadderConfig();
         configuration = config.getConfig();
+        loadLadders();
     }
 
     public void loadLadders() {

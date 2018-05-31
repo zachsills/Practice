@@ -42,7 +42,7 @@ public class ProviderResolver implements BoardProvider {
     @Override
     public List<String> getLines(Player player) {
         Profile profile = Profile.getByPlayer(player);
-        if((boolean) profile.getSetting(ProfileSetting.SCOREBOARD))
+        if(!((boolean) profile.getSetting(ProfileSetting.SCOREBOARD)))
             return Collections.emptyList();
 
         BoardProvider provider = providers.getOrDefault(profile.getProfileState(), lobbyProvider);

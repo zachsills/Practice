@@ -63,7 +63,7 @@ public class MongoBackend implements IBackend {
 
     @Override
     public void saveProfiles() {
-        Profile.getProfiles().values().forEach(this::saveProfile);
+        Profile.getProfiles().values().forEach(this::saveProfileSync);
     }
 
     public boolean load(JavaPlugin plugin) {

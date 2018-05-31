@@ -16,4 +16,12 @@ public class CommandHandler {
                 new ArenaCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().registerCommands(command));
     }
+
+    public static void unregisterCommands() {
+        Stream.of(
+                new LadderCommand(),
+                new PracticeCommand(),
+                new ArenaCommand()
+        ).forEach(command -> Practice.getInstance().getCommandFramework().unregisterCommands(command));
+    }
 }

@@ -75,7 +75,7 @@ public class Board {
         sendNew:
         {
             int index = 0;
-            for(String entry : entries) {
+            for (String entry : entries) {
                 Entry split = split(entry);
                 Team team = scoreboard.getTeam(ENTRY_NAMES[index]);
                 if(team == null) {

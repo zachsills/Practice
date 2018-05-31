@@ -15,6 +15,7 @@ public class ArenaManager {
     public ArenaManager() {
         config = new ArenaConfig();
         configuration = config.getConfig();
+        loadArenas();
     }
 
     public void loadArenas() {
