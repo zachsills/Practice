@@ -2,9 +2,11 @@ package net.practice.practice.board;
 
 import lombok.Getter;
 import net.practice.practice.Practice;
+import net.practice.practice.util.RunnableShorthand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -52,12 +54,14 @@ public class BoardManager implements Listener {
     }
 
     public void updateAll() {
-        scoreboards.keySet().stream().filter(id -> Bukkit.getPlayer(id) != null).map(id -> scoreboards.get(id)).forEach(Board::send);
+        scoreboards.values().forEach(Board::send);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(final PlayerJoinEvent e) {
-        this.setup(e.getPlayer());
+        RunnableShorthand.runNextTick(() -> {
+            this.setup(e.getPlayer());
+        });
     }
 
     @EventHandler

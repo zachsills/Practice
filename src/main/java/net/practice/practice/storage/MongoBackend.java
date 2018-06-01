@@ -58,7 +58,6 @@ public class MongoBackend implements IBackend {
             profile.load(document);
         else
             createProfile(profile);
-
     }
 
     @Override
@@ -72,7 +71,7 @@ public class MongoBackend implements IBackend {
             final ServerAddress serverAddress = new ServerAddress(information.getAddress(), information.getPort());
 
             if(information.isAuthEnabled())
-                mongoClient = new MongoClient(serverAddress, Arrays.asList(information.getMongoCredentials()));
+                mongoClient = new MongoClient(serverAddress, Arrays.asList(information.getMongoCredentials())/*, MongoClientOptions.builder().connectionsPerHost(2).threadsAllowedToBlockForConnectionMultiplier(750).build()*/);
             else
                 mongoClient = new MongoClient(serverAddress);
 

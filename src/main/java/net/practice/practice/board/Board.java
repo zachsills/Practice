@@ -24,7 +24,6 @@ public class Board {
     @Getter private Scoreboard scoreboard;
     @Getter private Objective objective;
 
-    @Getter private long createdTime;
     @Getter private boolean ready;
 
     public Board(Player player) {
@@ -36,14 +35,16 @@ public class Board {
             objective = scoreboard.registerNewObjective("practice", "dummy");
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(plugin.getBoardManager().getProvider().getTitle());
 
         this.objective = objective;
-        this.createdTime = System.currentTimeMillis();
         this.ready = true;
+
+        send();
     }
 
     public void send() {
-        if(!ready)
+        if(player == null || !player.isOnline() || !ready)
             return;
 
         BoardProvider provider = plugin.getBoardManager().getProvider();
@@ -54,43 +55,26 @@ public class Board {
         if(lines == null || lines.isEmpty())
             return;
 
-        List<String> entries = lines.stream()
-                                    .map(C::color)
-                                    .collect(Collectors.toList());
+        if(scoreboard.getEntries().size() != lines.size())
+            scoreboard.getEntries().forEach(this::removeEntry);
 
-        title:
-        {
-            objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', provider.getTitle()));
-            break title;
-        }
+        int index = 0;
+        for(String entry : lines) {
+            Entry split = split(entry);
 
-        cleanupOld:
-        {
-            if(scoreboard.getEntries().size() != entries.size()) {
-                scoreboard.getEntries().forEach(this::removeEntry);
+            Team team = scoreboard.getTeam(ENTRY_NAMES[index]);
+            if(team == null) {
+                try {
+                    team = scoreboard.registerNewTeam(ENTRY_NAMES[index]);
+                } catch(IllegalArgumentException exception) { }
+
+                team.addEntry(team.getName());
             }
-            break cleanupOld;
-        }
 
-        sendNew:
-        {
-            int index = 0;
-            for (String entry : entries) {
-                Entry split = split(entry);
-                Team team = scoreboard.getTeam(ENTRY_NAMES[index]);
-                if(team == null) {
-                    try {
-                        team = scoreboard.registerNewTeam(ENTRY_NAMES[index]);
-                    } catch(IllegalArgumentException exception) {
-                    }
-                    team.addEntry(team.getName());
-                }
-                team.setPrefix(split.left);
-                team.setSuffix(split.right);
-                objective.getScore(team.getName()).setScore(15 - index);
-                index++;
-            }
-            break sendNew;
+            team.setPrefix(split.left);
+            team.setSuffix(split.right);
+            objective.getScore(team.getName()).setScore(15 - index);
+            index++;
         }
     }
 
@@ -116,6 +100,10 @@ public class Board {
     public void clear() {
         ready = false;
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+
+        scoreboard.getEntries().forEach(scoreboard::resetScores);
+        scoreboard.getObjectives().forEach(Objective::unregister);
+        scoreboard.getTeams().forEach(Team::unregister);
     }
 
     private void removeEntry(String id) {
@@ -137,8 +125,7 @@ public class Board {
     }
 
     static {
-        for(int i = 0; i < 15; i++) {
+        for(int i = 0; i < 15; i++)
             ENTRY_NAMES[i] = ChatColor.AQUA + ChatColor.values()[i].toString() + ChatColor.RESET;
-        }
     }
 }

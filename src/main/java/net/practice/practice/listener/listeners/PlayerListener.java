@@ -2,17 +2,18 @@ package net.practice.practice.listener.listeners;
 
 import net.practice.practice.game.player.Profile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
 public class PlayerListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onAsyncLogin(AsyncPlayerPreLoginEvent event) {
         new Profile(event.getUniqueId(), true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onJoin(PlayerJoinEvent event) {
         Profile profile = Profile.getByPlayer(event.getPlayer());
 

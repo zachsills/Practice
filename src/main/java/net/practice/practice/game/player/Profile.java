@@ -41,21 +41,24 @@ public class Profile {
         Practice.getInstance().getBackend().loadProfile(this);
 
         if(cache)
-            profiles.put(uuid.toString(), this);
+            profiles.putIfAbsent(uuid.toString(), this);
     }
 
     public Profile(UUID uuid) {
-        this(uuid, false);
+        this(uuid, true);
     }
 
     public static Profile getByUuid(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
 
-        return player != null ? getByPlayer(player) : new Profile(uuid);
+        return (player != null && player.isOnline()) ? getByPlayer(player) : new Profile(uuid);
     }
 
     public static Profile getByPlayer(Player player) {
-        return profiles.getOrDefault(player.getUniqueId().toString(), new Profile(player.getUniqueId()));
+        if(profiles.containsKey(player.getUniqueId().toString()))
+            return profiles.get(player.getUniqueId().toString());
+
+        return new Profile(player.getUniqueId());
     }
 
     public static Profile getRemovedProfile(Player player) {
