@@ -30,6 +30,7 @@ public class Profile {
     @Getter private final Map<Ladder, List<PlayerInv>> customInvs;
 
     @Getter @Setter private Duel currentDuel;
+    @Getter @Setter private Queue currentQueue;
     @Getter @Setter private ProfileState profileState;
 
     @Getter @Setter private Integer rankedWins = 0, rankedLosses = 0;
