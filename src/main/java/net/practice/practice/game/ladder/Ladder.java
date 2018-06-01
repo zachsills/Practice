@@ -2,6 +2,8 @@ package net.practice.practice.game.ladder;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.practice.practice.game.player.data.PlayerInv;
+import net.practice.practice.util.InvUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,6 +22,7 @@ public class Ladder {
     @Getter @Setter private String displayName;
     @Getter @Setter private Material displayIcon;
     @Getter @Setter private boolean buildable, editable, combo, ranked;
+    @Getter @Setter private PlayerInv defaultInv;
 
     public Ladder(String name) {
         this.name = name;
@@ -43,5 +46,8 @@ public class Ladder {
         setEditable(section.getBoolean("options.editable"));
         setCombo(section.getBoolean("options.combo"));
         setRanked(section.getBoolean("options.ranked"));
+
+        if(section.contains("defaultInventory"))
+            setDefaultInv(InvUtils.invFromString(section.getString("defaultInventory")));
     }
 }

@@ -3,6 +3,7 @@ package net.practice.practice.game.player.data;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.util.InvUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -42,6 +43,13 @@ public class PlayerInv {
 
     public ItemStack getSword() {
         return this.items[0];
+    }
+
+    public void apply(Player player) {
+        player.getInventory().setArmorContents(armor);
+        player.getInventory().setContents(items);
+
+        player.updateInventory();
     }
 
     @Override

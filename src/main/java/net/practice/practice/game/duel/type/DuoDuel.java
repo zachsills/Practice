@@ -1,12 +1,12 @@
-package net.practice.practice.game.match.type;
+package net.practice.practice.game.duel.type;
 
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.arena.Arena;
 import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.match.Duel;
-import net.practice.practice.game.match.DuelEndReason;
-import net.practice.practice.game.match.DuelType;
+import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.duel.DuelEndReason;
+import net.practice.practice.game.duel.DuelType;
 import org.bukkit.entity.Player;
 
 import java.util.List;

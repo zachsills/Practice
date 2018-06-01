@@ -1,4 +1,4 @@
-package net.practice.practice.game.match;
+package net.practice.practice.game.duel;
 
 import lombok.Getter;
 import org.bukkit.ChatColor;

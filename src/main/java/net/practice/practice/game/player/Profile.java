@@ -1,21 +1,23 @@
 package net.practice.practice.game.player;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.match.Duel;
+import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
+import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.RankingUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Profile {
 
@@ -25,6 +27,7 @@ public class Profile {
 
     @Getter private final Map<Ladder, Integer> eloMap;
     @Getter private final Map<ProfileSetting, Object> settings;
+    @Getter private final Map<Ladder, List<PlayerInv>> customInvs;
 
     @Getter @Setter private Duel currentDuel;
     @Getter @Setter private ProfileState profileState;
@@ -37,6 +40,7 @@ public class Profile {
 
         this.eloMap = new HashMap<>();
         this.settings = new HashMap<>();
+        this.customInvs = new HashMap<>();
 
         Practice.getInstance().getBackend().loadProfile(this);
 
@@ -112,8 +116,28 @@ public class Profile {
             }
         }
 
-        for(Ladder ladder : Ladder.getAllLadders())
+        if(document.containsKey("inventories")) {
+            Document invDoc = document.get("inventories", Document.class);
+
+            for(String ladderName : invDoc.keySet()) {
+                Ladder ladder = Ladder.getLadder(ladderName);
+                if(ladder == null)
+                    continue;
+
+                List<String> invList = (ArrayList<String>) invDoc.get(ladderName, ArrayList.class);
+                if(invList.size() <= 0) // Just a safe check
+                    continue;
+
+                customInvs.putIfAbsent(ladder, invList.stream()
+                                                      .map(InvUtils::invFromString)
+                                                      .collect(Collectors.toList()));
+            }
+        }
+
+        for(Ladder ladder : Ladder.getAllLadders()) {
             eloMap.putIfAbsent(ladder, RankingUtils.STARTING_ELO);
+            customInvs.putIfAbsent(ladder, null);
+        }
     }
 
     public Document toDocument() {
@@ -122,19 +146,39 @@ public class Profile {
         document.append("uuid", uuid);
 
         BasicDBObject eloStore = new BasicDBObject();
-        for(Map.Entry<Ladder, Integer> eloEntry : eloMap.entrySet())
+        for(Map.Entry<Ladder, Integer> eloEntry : eloMap.entrySet()) {
+            if(eloEntry.getValue() == RankingUtils.STARTING_ELO)
+                continue; // No need to store if we can already get the value
+
             eloStore.append(eloEntry.getKey().getName(), eloEntry.getValue());
+        }
 
         BasicDBObject settingsStore = new BasicDBObject();
         for(ProfileSetting setting : settings.keySet())
             settingsStore.append(setting.getKey(), settings.get(setting));
 
-        document.append("elo", eloStore);
-        document.append("settings", settingsStore);
+        BasicDBObject invStore = new BasicDBObject();
+        for(Map.Entry<Ladder, List<PlayerInv>> invEntry : customInvs.entrySet()) {
+            if(invEntry.getValue() == null || invEntry.getValue().size() <= 0)
+                continue;
+
+            BasicDBList invList = new BasicDBList();
+            for(PlayerInv inv : invEntry.getValue())
+                invList.add(inv.toString());
+
+            invStore.append(invEntry.getKey().getName(), invList);
+        }
+
         document.append("rankedWins", rankedWins);
         document.append("rankedLosses", rankedLosses);
         document.append("unrankedWins", unrankedWins);
         document.append("unrankedLosses", unrankedLosses);
+        if(!eloStore.isEmpty())
+            document.append("elo", eloStore);
+        if(!settingsStore.isEmpty())
+            document.append("settings", settingsStore);
+        if(!invStore.isEmpty())
+            document.append("inventories", invStore);
 
         return document;
     }

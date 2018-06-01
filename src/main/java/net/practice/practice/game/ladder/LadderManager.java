@@ -1,6 +1,7 @@
 package net.practice.practice.game.ladder;
 
 import lombok.Getter;
+import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.file.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,6 +36,8 @@ public class LadderManager {
         config.getLadderSection().set(id + ".options.editable", ladder.isEditable());
         config.getLadderSection().set(id + ".options.combo", ladder.isCombo());
         config.getLadderSection().set(id + ".options.ranked", ladder.isRanked());
+        if(ladder.getDefaultInv() != null)
+            config.getLadderSection().set(id + ".defaultInventory", ladder.getDefaultInv().toString());
 
         config.save();
     }
