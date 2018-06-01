@@ -180,7 +180,6 @@ public class CommandFramework implements CommandExecutor {
                     continue;
                 }
 
-                Bukkit.broadcastMessage(command.name());
                 if (!command.name().contains(".")) {
                     unregisterCommand(command.name());
                     for(String alias : command.aliases())

@@ -54,8 +54,6 @@ public class Practice extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        backend.saveProfiles();
-
         CommandHandler.unregisterCommands();
 
         boardManager.onDisable();
@@ -63,6 +61,7 @@ public class Practice extends JavaPlugin {
         arenaManager.saveArenas();
         ladderManager.saveLadders();
 
+        backend.saveProfiles();
         backend.close();
     }
 
