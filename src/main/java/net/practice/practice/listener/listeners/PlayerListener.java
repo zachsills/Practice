@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener {
 
@@ -38,6 +39,36 @@ public class PlayerListener implements Listener {
                 player.setFoodLevel(20);
                 player.setSaturation(0);
                 event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent event) {
+        Profile profile = Profile.getByPlayer(event.getPlayer());
+
+        switch (profile.getProfileState()) {
+            case PLAYING:
+                break;
+            case BUILDING:
+                break;
+            default:
+                event.setCancelled(true);
+                event.getPlayer().updateInventory();
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        Profile profile = Profile.getByPlayer(event.getPlayer());
+        ItemStack item = event.getItem();
+
+        if (item == null) return;
+
+        switch (profile.getProfileState()) {
+            case LOBBY:
+                if (item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().contains("Ranked")) {
+                    // TODO: xd
+                }
         }
     }
 
