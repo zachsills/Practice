@@ -44,9 +44,9 @@ public class Practice extends JavaPlugin {
 
         /* Commands and Listeners */
         commandFramework = new CommandFramework(this);
-        CommandHandler.registerCommands();
 
-        ListenerHandler.initListeners();
+        CommandHandler.registerCommands();
+        ListenerHandler.registerListeners();
 
         spawn = LocUtils.deserializeLocation("locations.spawn");
         editor = LocUtils.deserializeLocation("locations.editor");

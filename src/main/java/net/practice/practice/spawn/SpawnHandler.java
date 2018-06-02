@@ -1,5 +1,6 @@
 package net.practice.practice.spawn;
 
+import lombok.Getter;
 import net.practice.practice.Practice;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
@@ -7,8 +8,15 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class SpawnHandler {
+
+    @Getter private static Map<Integer, ItemStack> spawnItems = new HashMap<>();
+
+
 
     public static void spawn(Player player) {
         player.teleport(Practice.getInstance().getSpawn());

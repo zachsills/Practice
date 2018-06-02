@@ -148,8 +148,8 @@ public class Profile {
 
         BasicDBObject eloStore = new BasicDBObject();
         for(Map.Entry<Ladder, Integer> eloEntry : eloMap.entrySet()) {
-            if(eloEntry.getValue() == RankingUtils.STARTING_ELO)
-                continue; // No need to store if we can already get the value
+            if(eloEntry.getValue().intValue() == RankingUtils.STARTING_ELO) // No need to store if we can already get the value
+                continue;
 
             eloStore.append(eloEntry.getKey().getName(), eloEntry.getValue());
         }

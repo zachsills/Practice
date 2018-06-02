@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class ListenerHandler {
 
-    public static void initListeners() {
+    public static void registerListeners() {
         Stream.of(
                 new PlayerListener()
         ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, Practice.getInstance()));
