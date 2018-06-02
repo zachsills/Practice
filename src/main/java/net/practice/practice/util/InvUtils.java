@@ -1,10 +1,14 @@
 package net.practice.practice.util;
 
 import net.practice.practice.game.player.data.PlayerInv;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.Arrays;
 import java.util.List;
@@ -74,6 +78,7 @@ public class InvUtils {
         return inv;
     }
 
+    @SuppressWarnings("deprecation")
     public static String itemStackToString(final ItemStack item) {
         final StringBuilder builder = new StringBuilder();
 
@@ -112,6 +117,7 @@ public class InvUtils {
         return builder.toString();
     }
 
+    @SuppressWarnings("deprecation")
     public static ItemStack itemStackFromString(final String in) {
         ItemStack item = null;
         ItemMeta meta = null;
@@ -188,5 +194,22 @@ public class InvUtils {
             item.setItemMeta(meta);
 
         return item;
+    }
+
+    public static void clear(final Player player) {
+        for (final PotionEffect potion : player.getActivePotionEffects()) {
+            player.removePotionEffect(potion.getType());
+        }
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setAllowFlight(false);
+        player.setFlying(false);
+        player.setMaximumNoDamageTicks(20);
+        player.setFoodLevel(20);
+        player.setHealth(player.getMaxHealth());
+        player.setFireTicks(0);
+        player.setFallDistance(0.0f);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.updateInventory();
     }
 }

@@ -4,6 +4,7 @@ import net.practice.practice.Practice;
 import net.practice.practice.command.commands.ArenaCommand;
 import net.practice.practice.command.commands.LadderCommand;
 import net.practice.practice.command.commands.PracticeCommand;
+import net.practice.practice.command.commands.SpawnCommand;
 
 import java.util.stream.Stream;
 
@@ -13,7 +14,8 @@ public class CommandHandler {
         Stream.of(
                 new LadderCommand(),
                 new PracticeCommand(),
-                new ArenaCommand()
+                new ArenaCommand(),
+                new SpawnCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().registerCommands(command));
     }
 
@@ -21,7 +23,8 @@ public class CommandHandler {
         Stream.of(
                 new LadderCommand(),
                 new PracticeCommand(),
-                new ArenaCommand()
+                new ArenaCommand(),
+                new SpawnCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().unregisterCommands(command));
     }
 }

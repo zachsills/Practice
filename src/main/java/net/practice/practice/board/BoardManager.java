@@ -32,6 +32,9 @@ public class BoardManager implements Listener {
         this.provider = provider;
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    public void setupAll() {
         Bukkit.getOnlinePlayers().forEach(this::setup);
     }
 

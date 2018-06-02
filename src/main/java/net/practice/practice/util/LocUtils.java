@@ -22,7 +22,7 @@ public class LocUtils {
         final String[] arr = string.split(":");
         final int len = arr.length;
 
-        for(int i = 0; i < len; ++i) {
+        for (int i = 0; i < len; ++i) {
             final String attribute = arr[i];
             final String[] split = attribute.split(";");
             if(split[0].equalsIgnoreCase("@w"))

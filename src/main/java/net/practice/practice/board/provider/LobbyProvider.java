@@ -18,9 +18,8 @@ public class LobbyProvider implements BoardProvider {
     public List<String> getLines(Player player) {
         List<String> lines = new ArrayList<>();
 
-        lines.add("&fOnline: &6" + Bukkit.getOnlinePlayers().size());
-        lines.add("");
-        lines.add("&fIn Queue: &6" + 0);
+        lines.add("&eOnline: &7" + Bukkit.getOnlinePlayers().size());
+        lines.add("&eIn Queue: &7" + 0);
 
         return lines;
     }

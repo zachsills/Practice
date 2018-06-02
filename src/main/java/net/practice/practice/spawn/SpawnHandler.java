@@ -1,29 +1,30 @@
 package net.practice.practice.spawn;
 
-import lombok.Getter;
 import net.practice.practice.Practice;
+import net.practice.practice.game.player.Profile;
+import net.practice.practice.game.player.data.ProfileState;
+import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 public class SpawnHandler {
 
-    @Getter private static Map<Integer, ItemStack> spawnItems = new HashMap<>();
-
-
-
     public static void spawn(Player player) {
-        player.teleport(Practice.getInstance().getSpawn());
+        InvUtils.clear(player);
+        if (Practice.getInstance().getSpawn() != null) {
+            player.teleport(Practice.getInstance().getSpawn());
+        } else {
+            player.sendMessage(C.color("&cSpawn has not been set!"));
+        }
         player.getInventory().setContents(getSpawnInventory());
+        player.updateInventory();
+        Profile.getByPlayer(player).setProfileState(ProfileState.LOBBY);
     }
 
-    private static ItemStack[] getSpawnInventory() {
+    public static ItemStack[] getSpawnInventory() {
         ItemStack[] items = new ItemStack[36];
 
         items[0] = new I(Material.IRON_SWORD).name(C.color("&eUnranked")).lore(C.color("&7Queue for an Unranked match."));
@@ -31,7 +32,7 @@ public class SpawnHandler {
         items[2] = new I(Material.EGG).name(C.color("&7Last Queue [&equeueName&7]")).lore(C.color("&7Easily queue again and again and again and again :D."));
         items[4] = new I(Material.SKULL_ITEM).name(C.color("&cStats")).lore(C.color("&7Look at leaderboards and statistics."));
         items[6] = new I(Material.PUMPKIN_PIE).name(C.color("&bParty?")).lore(C.color("&7PARRRRRRR-TAY!"));
-        items[7] = new I(Material.WATCH).name(C.color("&dSettings")).lore(C.color("&7Look at and spectate currently running matches."));
+        items[7] = new I(Material.WATCH).name(C.color("&dSettings")).lore(C.color("&7View and change your settings."));
         items[8] = new I(Material.BOOK).name(C.color("&eKit Editor")).lore(C.color("&7Select kit and edit."));
 
         return items;

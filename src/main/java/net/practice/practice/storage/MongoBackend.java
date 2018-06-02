@@ -65,6 +65,7 @@ public class MongoBackend implements IBackend {
         Profile.getProfiles().values().forEach(this::saveProfileSync);
     }
 
+    @SuppressWarnings("deprecation")
     public boolean load(JavaPlugin plugin) {
         try {
             final MongoInformation information = new MongoInformation(plugin.getConfig().getConfigurationSection("database"));

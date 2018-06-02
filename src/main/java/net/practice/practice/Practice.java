@@ -7,10 +7,12 @@ import net.practice.practice.command.CommandHandler;
 import net.practice.practice.game.arena.ArenaManager;
 import net.practice.practice.game.ladder.LadderManager;
 import net.practice.practice.listener.ListenerHandler;
+import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.storage.MongoBackend;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Practice extends JavaPlugin {
@@ -38,6 +40,7 @@ public class Practice extends JavaPlugin {
 
         /* Initialize managers */
         boardManager = new BoardManager(new ProviderResolver());
+        boardManager.setupAll();
         //getServer().getPluginManager().registerEvents(boardManager, this);
         arenaManager = new ArenaManager();
         ladderManager = new LadderManager();
@@ -48,8 +51,7 @@ public class Practice extends JavaPlugin {
         CommandHandler.registerCommands();
         ListenerHandler.registerListeners();
 
-        spawn = LocUtils.deserializeLocation("locations.spawn");
-        editor = LocUtils.deserializeLocation("locations.editor");
+        getServer().getOnlinePlayers().forEach(SpawnHandler::spawn);
     }
 
     @Override
@@ -63,6 +65,30 @@ public class Practice extends JavaPlugin {
 
         backend.saveProfiles();
         backend.close();
+    }
+
+    public Location getSpawn() {
+        if (spawn == null) {
+            String configLoc = getConfig().getString("locations.spawn");
+            if (configLoc != null) {
+                return spawn = LocUtils.deserializeLocation(getConfig().getString("locations.spawn"));
+            }
+        } else {
+            return spawn;
+        }
+        return null;
+    }
+
+    public Location getEditor() {
+        if (editor == null) {
+            String configLoc = getConfig().getString("locations.editor");
+            if (configLoc != null) {
+                return editor = LocUtils.deserializeLocation(getConfig().getString("locations.editor"));
+            }
+        } else {
+            return editor;
+        }
+        return null;
     }
 
     public void setSpawn(Location location) {
