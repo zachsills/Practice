@@ -13,10 +13,14 @@ import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
+import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.RankingUtils;
+import net.practice.practice.util.chat.C;
+import net.practice.practice.util.itemstack.I;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -84,7 +88,7 @@ public class Profile {
         return settings.getOrDefault(setting, setting.getDefaultValue());
     }
 
-    public int getNumberQueuing(Ladder ladder) {
+    public static int getNumberQueuing(Ladder ladder) {
         int count = 0;
         for (Profile profile : getProfiles().values()) {
             if (profile.getCurrentQueue() == null) {
@@ -97,21 +101,84 @@ public class Profile {
         return count;
     }
 
+    public static int getTotalQueuing() {
+        int count = 0;
+        for (Profile profile : getProfiles().values()) {
+            if (profile.getCurrentQueue() == null) {
+                continue;
+            }
+            count++;
+        }
+        return count;
+    }
+
+    public void setQueue(Queue queue) {
+        setCurrentQueue(queue);
+        setProfileState(ProfileState.QUEUING);
+        checkForOtherQueues(queue.getLadder());
+        Player player = Bukkit.getPlayer(getUuid());
+        if (player != null) {
+            InvUtils.clear(player);
+            player.getInventory().setItem(4, new I(Material.INK_SACK).durability(1).name(C.color("&cLeave queue")).lore(C.color("&7Click to leave your current queue.")));
+        }
+    }
+
+    public void leaveQueue(boolean spawn) {
+        leaveQueue(spawn, false);
+    }
+    public void leaveQueue(boolean spawn, boolean tp) {
+        if (spawn) {
+            Player player = Bukkit.getPlayer(getUuid());
+            if (player != null) {
+                SpawnHandler.spawn(player, tp);
+                player.sendMessage(C.color("&f\u00BB &eLeft the queue for " + getCurrentQueue().getLadder().getDisplayName() + "."));
+            }
+        }
+        setCurrentQueue(null);
+        setProfileState(ProfileState.LOBBY);
+    }
+
     public void checkForOtherQueues(Ladder ladder) {
         for (Profile other : getProfiles().values()) {
+            if (other.equals(this)) continue;
             if (getCurrentQueue().canQueueWith(other.getCurrentQueue())) {
                 switch (getCurrentQueue().getLadder().getDuelType()) {
-                    case ONE_VS_ONE:
+                    case ONE_VS_ONE: {
                         Arena arena = Arena.getRandomArena();
                         if (arena != null && Bukkit.getPlayer(getUuid()) != null && Bukkit.getPlayer(other.getUuid()) != null) {
+                            leaveQueue(false);
+                            other.leaveQueue(false);
                             Duel duel = new SoloDuel(Arena.getRandomArena(), ladder, Bukkit.getPlayer(getUuid()), Bukkit.getPlayer(other.getUuid()));
                             duel.preStart();
                         }
+                    }
                 }
-                setCurrentQueue(null);
-                other.setCurrentQueue(null);
             }
         }
+    }
+
+    public static int getNumberInGame(Ladder ladder) {
+        int count = 0;
+        for (Profile profile : getProfiles().values()) {
+            if (profile.getCurrentDuel() == null) {
+                continue;
+            }
+            if (profile.getCurrentDuel().getLadder().isEqual(ladder)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static int getTotalInGame() {
+        int count = 0;
+        for (Profile profile : getProfiles().values()) {
+            if (profile.getCurrentDuel() == null) {
+                continue;
+            }
+            count++;
+        }
+        return count;
     }
 
     public void save() {

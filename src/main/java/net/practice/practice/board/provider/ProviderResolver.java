@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class ProviderResolver implements BoardProvider {
 
-    private static final String BREAKER = C.color("&7&m--------------");
+    private static final String BREAKER = C.color("&f&m------------------");
 
     private Map<ProfileState, BoardProvider> providers;
     private BoardProvider lobbyProvider;

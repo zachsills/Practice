@@ -94,10 +94,16 @@ public class PlayerListener implements Listener {
             String display = item.getItemMeta().getDisplayName();
 
             switch (profile.getProfileState()) {
-                case LOBBY:
+                case LOBBY: {
                     if (display.contains("Unranked")) {
                         UnrankedInv.openInventory(player);
                     }
+                }
+                case QUEUING: {
+                    if (display.contains("Leave queue")) {
+                        profile.leaveQueue(true, false);
+                    }
+                }
             }
         }
     }
@@ -118,9 +124,9 @@ public class PlayerListener implements Listener {
             if (item.getItemMeta().hasDisplayName()) {
                 Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
                 if (ladder != null) {
-                    profile.setCurrentQueue(new Queue(ladder, profile.getElo(ladder)));
-                    profile.checkForOtherQueues(ladder);
+                    profile.setQueue(new Queue(ladder, profile.getElo(ladder)));
                     player.sendMessage(C.color("&f\u00BB &eJoined the queue for " + (ladder.isRanked() ? "Ranked" : "Unranked") + " " + ladder.getDisplayName() + "."));
+                    player.closeInventory();
                 }
             }
         }
