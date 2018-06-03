@@ -123,7 +123,7 @@ public class InvUtils {
         ItemMeta meta = null;
         String[] split;
 
-        if(in.equals("null"))
+        if(in == null || in.equals("unset") || in.equals("null") || in.equals("'null'"))
             return new ItemStack(Material.AIR);
 
         String[] data = split = in.split(":");

@@ -1,6 +1,8 @@
 package net.practice.practice.command.commands;
 
 import net.practice.practice.Practice;
+import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.util.chat.C;
@@ -10,6 +12,7 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class LadderCommand {
 
@@ -18,7 +21,7 @@ public class LadderCommand {
         sendHelp(args.getPlayer());
     }
 
-    @Command(name = "ladder.create", aliases = { "game.create"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.create", aliases = { "game.create" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderCreate(CommandArgs args) {
         if(args.length() != 1) {
             sendHelp(args.getPlayer());
@@ -32,11 +35,11 @@ public class LadderCommand {
         }
 
         Ladder ladder = new Ladder(name);
-        ladder.setDisplayIcon(Material.DIAMOND_SWORD);
+        ladder.setDisplayIcon(new ItemStack(Material.DIAMOND_SWORD));
         args.getPlayer().sendMessage(C.color("&eCreated ladder " + ladder.getDisplayName() + "&e."));
     }
 
-    @Command(name = "ladder.remove", aliases = { "game.remove"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.remove", aliases = { "game.remove" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderRemove(CommandArgs args) {
         if(args.length() != 1) {
             sendHelp(args.getPlayer());
@@ -54,7 +57,7 @@ public class LadderCommand {
         args.getPlayer().sendMessage(C.color("&eRemoved ladder " + ladder.getDisplayName() + "&e."));
     }
 
-    @Command(name = "ladder.set", aliases = { "game.set"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.set", aliases = { "game.set" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderSet(CommandArgs args) {
         if(args.length() != 2) {
             sendHelp(args.getPlayer());
@@ -99,9 +102,9 @@ public class LadderCommand {
         args.getPlayer().sendMessage(C.color("&eSet attribute '&7" + args.getArgs(1).toLowerCase() + "&e' of " + ladder.getDisplayName() + "&e to " + newValue + "."));
     }
 
-    @Command(name = "ladder.seticon", aliases = { "game.seticon"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.seticon", aliases = { "game.seticon" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderSetIcon(CommandArgs args) {
-        if(args.length() != 2) {
+        if(args.length() != 1) {
             sendHelp(args.getPlayer());
             return;
         }
@@ -113,16 +116,17 @@ public class LadderCommand {
         }
 
         Ladder ladder = Ladder.getLadder(name);
-        Material material = Material.getMaterial(args.getArgs(1).toUpperCase());
-        if(material == null) {
-            args.getPlayer().sendMessage(ChatColor.RED + "The material '" + args.getArgs(1) + "' doesn't exist.");
+        ItemStack item = args.getPlayer().getItemInHand();
+        if (item == null) {
+            args.getPlayer().sendMessage(ChatColor.RED + "You must hold an item to set the Icon.");
             return;
         }
+        ladder.setDisplayIcon(item);
 
-        args.getPlayer().sendMessage(C.color("&eSet material icon of " + ladder.getDisplayName() + "&e to " + WordUtils.capitalizeFully(material.name()) + "."));
+        args.getPlayer().sendMessage(C.color("&eSet icon of " + ladder.getDisplayName() + "."));
     }
 
-    @Command(name = "ladder.inv", aliases = { "game.inv"}, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    @Command(name = "ladder.inv", aliases = { "game.inv" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadderInv(CommandArgs args) {
         if(args.length() != 2) {
             sendHelp(args.getPlayer());
@@ -157,12 +161,42 @@ public class LadderCommand {
         }
     }
 
+    @Command(name = "ladder.type", aliases = { "game.type" }, permission = "practice.ladder", playerOnly = true, description = "Manager ladders.")
+    public void onLadderType(CommandArgs args) {
+        if (args.length() == 1) {
+            args.getPlayer().sendMessage(C.color("&cUse /ladder type <name> <one_vs_one, two_vs_two, or team_vs_team>"));
+            return;
+        }
+        if (args.length() > 2) {
+            sendHelp(args.getPlayer());
+            return;
+        }
+
+        String name = args.getArgs(0);
+        if(Ladder.getLadder(name) == null) {
+            args.getPlayer().sendMessage(ChatColor.RED + "That ladder doesn't exist.");
+            return;
+        }
+
+        Ladder ladder = Ladder.getLadder(name);
+        DuelType type;
+        try {
+            type = DuelType.valueOf(args.getArgs(1));
+        } catch (IllegalArgumentException e) {
+            args.getPlayer().sendMessage(C.color("&cUse /ladder type <name> <one_vs_one, two_vs_two, or team_vs_team>"));
+            return;
+        }
+        ladder.setDuelType(type);
+        args.getPlayer().sendMessage(C.color("&eSet the DuelType of ladder " + ladder.getDisplayName() + " to " + type.getFriendlyName()));
+    }
+
     public void sendHelp(Player player) {
         player.sendMessage(C.color("&eLadder Help"));
         player.sendMessage(C.color("&a/ladder create <name>"));
         player.sendMessage(C.color("&a/ladder remove <name>"));
         player.sendMessage(C.color("&a/ladder set <name> <ranked;editable;build;combo>"));
         player.sendMessage(C.color("&a/ladder inv <name> <set;load>"));
-        player.sendMessage(C.color("&a/ladder seticon <name> <material>"));
+        player.sendMessage(C.color("&a/ladder seticon <name>"));
+        player.sendMessage(C.color("&a/ladder type <name> <type>"));
     }
 }

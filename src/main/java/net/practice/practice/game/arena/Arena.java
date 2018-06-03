@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Arena {
 
@@ -29,6 +30,14 @@ public class Arena {
 
     public static Arena getArena(String name) {
         return getArenas().get(name);
+    }
+
+    public static Arena getRandomArena() {
+        if (getArenas().values().isEmpty()) {
+            return null;
+        }
+        int random = ThreadLocalRandom.current().nextInt(0, getArenas().values().size());
+        return (Arena) getArenas().values().toArray()[random];
     }
 
     public void load(ConfigurationSection section) {

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.arena.Arena;
 import net.practice.practice.game.ladder.Ladder;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class Duel {
 

@@ -5,11 +5,14 @@ import com.mongodb.BasicDBObject;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
+import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
+import net.practice.practice.game.queue.Queue;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.RankingUtils;
 import org.bson.Document;
@@ -79,6 +82,36 @@ public class Profile {
 
     public Object getSetting(ProfileSetting setting) {
         return settings.getOrDefault(setting, setting.getDefaultValue());
+    }
+
+    public int getNumberQueuing(Ladder ladder) {
+        int count = 0;
+        for (Profile profile : getProfiles().values()) {
+            if (profile.getCurrentQueue() == null) {
+                continue;
+            }
+            if (profile.getCurrentQueue().getLadder().isEqual(ladder)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void checkForOtherQueues(Ladder ladder) {
+        for (Profile other : getProfiles().values()) {
+            if (getCurrentQueue().canQueueWith(other.getCurrentQueue())) {
+                switch (getCurrentQueue().getLadder().getDuelType()) {
+                    case ONE_VS_ONE:
+                        Arena arena = Arena.getRandomArena();
+                        if (arena != null && Bukkit.getPlayer(getUuid()) != null && Bukkit.getPlayer(other.getUuid()) != null) {
+                            Duel duel = new SoloDuel(Arena.getRandomArena(), ladder, Bukkit.getPlayer(getUuid()), Bukkit.getPlayer(other.getUuid()));
+                            duel.preStart();
+                        }
+                }
+                setCurrentQueue(null);
+                other.setCurrentQueue(null);
+            }
+        }
     }
 
     public void save() {

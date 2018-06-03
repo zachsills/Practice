@@ -38,6 +38,7 @@ public class LadderManager {
         config.getLadderSection().set(id + ".options.ranked", ladder.isRanked());
         if(ladder.getDefaultInv() != null)
             config.getLadderSection().set(id + ".defaultInventory", ladder.getDefaultInv().toString());
+        config.getLadderSection().set(id + ".options.displayIcon", InvUtils.itemStackToString(ladder.getDisplayIcon()));
 
         config.save();
     }
