@@ -1,5 +1,6 @@
 package net.practice.practice.util.command;
 
+import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -75,7 +76,7 @@ public class CommandFramework implements CommandExecutor {
                 final Object methodObject = commandMap.get(cmdLabel).getValue();
                 final Command command = method.getAnnotation(Command.class);
                 if(command.permission() != "" && !sender.hasPermission(command.permission())) {
-                    sender.sendMessage(command.noPerm());
+                    sender.sendMessage(C.color(command.noPerm()));
                     return true;
                 }
                 if(command.playerOnly() && !(sender instanceof Player)) {

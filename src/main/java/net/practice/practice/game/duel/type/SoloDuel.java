@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
@@ -35,13 +36,15 @@ public class SoloDuel extends Duel {
     public void preStart() {
         super.preStart();
 
-        playerOne.teleport(getArena().getPosOne());
-        playerTwo.teleport(getArena().getPosTwo());
+        playerOne.teleport(getArena().getSpawnOne());
+        playerTwo.teleport(getArena().getSpawnTwo());
 
         Profile profileOne = Profile.getByPlayer(playerOne);
         Profile profileTwo = Profile.getByPlayer(playerTwo);
         profileOne.setCurrentDuel(this);
         profileTwo.setCurrentDuel(this);
+
+
 
         countDownTask = new BukkitRunnable() {
             @Override
@@ -61,8 +64,6 @@ public class SoloDuel extends Duel {
     @Override
     public void start() {
         super.start();
-
-
     }
 
     @Override
@@ -70,5 +71,7 @@ public class SoloDuel extends Duel {
         if (countDownTask != null) {
             countDownTask.cancel();
         }
+
+
     }
 }

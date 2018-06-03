@@ -1,5 +1,6 @@
 package net.practice.practice.listener.listeners;
 
+import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
@@ -9,6 +10,7 @@ import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -18,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -56,6 +59,8 @@ public class PlayerListener implements Listener {
     public void onDropItem(PlayerDropItemEvent event) {
         Profile profile = Profile.getByPlayer(event.getPlayer());
 
+        if (event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) return;
+
         switch (profile.getProfileState()) {
             case PLAYING:
                 break;
@@ -88,7 +93,8 @@ public class PlayerListener implements Listener {
         ItemStack item = event.getItem();
 
         if (item == null || item.getItemMeta() == null
-                || !(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) return;
+                || !(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+                || player.getGameMode().equals(GameMode.CREATIVE)) return;
 
         if (item.getItemMeta().hasDisplayName()) {
             String display = item.getItemMeta().getDisplayName();
@@ -116,7 +122,7 @@ public class PlayerListener implements Listener {
 
         ItemStack item = event.getCurrentItem();
 
-        if (profile.getProfileState().equals(ProfileState.LOBBY) && event.getClickedInventory().getName() != null) {
+        if (profile.getProfileState().equals(ProfileState.LOBBY) && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);
 
             if (item == null || item.getItemMeta() == null) return;
@@ -130,6 +136,14 @@ public class PlayerListener implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        Profile profile = Profile.getByPlayer(player);
+
+        profile.getCurrentDuel().end(DuelEndReason.DIED);
     }
 
     @EventHandler

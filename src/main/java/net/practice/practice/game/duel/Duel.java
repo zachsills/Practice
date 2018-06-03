@@ -30,10 +30,12 @@ public abstract class Duel {
 
     public void preStart() {
         this.timeUntilStart = System.currentTimeMillis() + 5000;
+        setState(DuelState.STARTING);
     }
 
     public void start() {
         this.startTime = System.currentTimeMillis();
+        setState(DuelState.PLAYING);
     }
 
     public abstract void end(DuelEndReason reason);

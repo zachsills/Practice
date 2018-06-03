@@ -140,7 +140,7 @@ public class Profile {
 
     public void checkForOtherQueues(Ladder ladder) {
         for (Profile other : getProfiles().values()) {
-            if (other.equals(this)) continue;
+            if (other.equals(this) || other.getCurrentQueue() == null) continue;
             if (getCurrentQueue().canQueueWith(other.getCurrentQueue())) {
                 switch (getCurrentQueue().getLadder().getDuelType()) {
                     case ONE_VS_ONE: {
