@@ -23,7 +23,7 @@ public class LobbyProvider implements BoardProvider {
         lines.add("&ePlayer: &c" + player.getName());
         lines.add("");
         lines.add("&eQueue: &7" + Profile.getTotalQueuing());
-        lines.add("&eGame: &7" + Profile.getTotalInGame());
+        lines.add("&eFighting: &7" + Profile.getTotalInGame());
 
         Profile profile = Profile.getByPlayer(player);
         Queue queue = profile.getCurrentQueue();
@@ -31,7 +31,7 @@ public class LobbyProvider implements BoardProvider {
             lines.add("");
             lines.add("&eCurrent: " + queue.getLadder().getDisplayName());
             lines.add("  &7Queue: &c" + Profile.getNumberQueuing(queue.getLadder()));
-            lines.add("  &7Game: &c" + Profile.getNumberInGame(queue.getLadder()));
+            lines.add("  &7Fighting: &c" + Profile.getNumberInGame(queue.getLadder()));
             lines.add("  &7Time: &c" + queue.getTimeQueuingFormatted());
         }
 
