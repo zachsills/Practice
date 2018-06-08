@@ -13,7 +13,8 @@ public class CommandHandler {
                 new PracticeCommand(),
                 new ArenaCommand(),
                 new SpawnCommand(),
-                new StatsCommand()
+                new StatsCommand(),
+                new InventoryCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().registerCommands(command));
     }
 
@@ -23,7 +24,8 @@ public class CommandHandler {
                 new PracticeCommand(),
                 new ArenaCommand(),
                 new SpawnCommand(),
-                new StatsCommand()
+                new StatsCommand(),
+                new InventoryCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().unregisterCommands(command));
     }
 }

@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class WorldListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event) {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;

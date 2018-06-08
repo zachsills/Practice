@@ -12,6 +12,8 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.chat.C;
+import net.practice.practice.util.chat.JsonMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -65,6 +67,19 @@ public class SoloDuel extends Duel {
         Profile profileTwo = Profile.getByPlayer(playerTwo);
         profileOne.setRecentDuel(this);
         profileTwo.setRecentDuel(this);
+
+        if(playerOne == winner)
+            new JsonMessage().append(ChatColor.YELLOW + "Inventories: ").save()
+                    .append(ChatColor.GREEN + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
+                    .append(ChatColor.GRAY + " or ").save()
+                    .append(ChatColor.RED + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
+                    .send(playerOne, playerTwo);
+        else
+            new JsonMessage().append(ChatColor.YELLOW + "Inventories: ").save()
+                    .append(ChatColor.GREEN + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
+                    .append(ChatColor.GRAY + " or ").save()
+                    .append(ChatColor.RED + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
+                    .send(playerOne, playerTwo);
 
         new BukkitRunnable() {
             @Override

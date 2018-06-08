@@ -114,7 +114,7 @@ public class PlayerListener implements Listener {
                 || !(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
                 || player.getGameMode().equals(GameMode.CREATIVE)) return;
 
-        if (item.getItemMeta().hasDisplayName()) {
+        if(item.getItemMeta().hasDisplayName()) {
             String display = item.getItemMeta().getDisplayName();
 
             switch(profile.getProfileState()) {
@@ -124,12 +124,17 @@ public class PlayerListener implements Listener {
                     else if(display.contains("Ranked"))
                         RankedInv.openInventory(player);
                     else if(display.contains("Stats"))
-                        Bukkit.dispatchCommand(player, "stats " + player.getName());
+                        Bukkit.dispatchCommand(player, "stats");
+                    else if(display.contains("Last Queue")) {
+                        profile.addToQueue(profile.getLastQueue());
+                    }
+                    event.setCancelled(true);
                     break;
                 }
                 case QUEUING: {
                     if(display.contains("Leave Queue"))
                         profile.leaveQueue(true, false);
+                    event.setCancelled(true);
                     break;
                 }
             }
@@ -147,6 +152,11 @@ public class PlayerListener implements Listener {
         Profile profile = Profile.getByPlayer(player);
 
         ItemStack item = event.getCurrentItem();
+
+        if(event.getClickedInventory().getTitle() != null && event.getClickedInventory().getTitle().contains("'s Inventory")) {
+            event.setCancelled(true);
+            return;
+        }
 
         if(profile.getProfileState() == ProfileState.LOBBY && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);

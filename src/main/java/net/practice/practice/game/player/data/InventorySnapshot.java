@@ -1,10 +1,16 @@
 package net.practice.practice.game.player.data;
 
 import lombok.Getter;
+import net.practice.practice.util.chat.C;
+import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 public class InventorySnapshot {
 
@@ -33,6 +39,21 @@ public class InventorySnapshot {
     public void loadInventory() {
         inventory = Bukkit.createInventory(null, 54, name + "'s Inventory");
 
+        for(int i = 0; i < contents.length; i++)
+            inventory.setItem(i, contents[i]);
+
+        for(ItemStack item : armor)
+            inventory.addItem(item);
+
+        inventory.setItem(47, new I(Material.SPECKLED_MELON).name(C.color("&ePlayer Info")).clearLore().lore(C.color("&dHearts: &7" + (Math.round(health * 2) / 2.0))));
+
+        int potsRemaining = (int) Arrays.stream(contents)
+                .filter(Objects::nonNull)
+                .filter(itemStack -> itemStack.getType() == Material.POTION && itemStack.getDurability() == 16421)
+                .count();
+        inventory.setItem(49, new I(Material.POTION).durability(16461).name(C.color("&6Potion Info")).lore(C.color("&dMissed: &e" + 0)).lore(C.color("&dPots Remaining: &e" + potsRemaining)));
+
+        inventory.setItem(51, new I(Material.DIAMOND_SWORD).name(C.color("&eMatch Info")).lore(C.color("&bLongest Combo: " + 0)));
     }
 
     public void open(Player player) {

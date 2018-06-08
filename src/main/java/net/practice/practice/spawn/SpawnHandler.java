@@ -40,10 +40,16 @@ public class SpawnHandler {
     public static ItemStack[] getSpawnInventory(Player player) {
         ItemStack[] items = new ItemStack[36];
 
+        Profile profile = Profile.getByPlayer(player);
+
         items[0] = new I(Material.IRON_SWORD).name(C.color("&eUnranked")).lore(C.color("&7Queue for an Unranked match."));
         items[1] = new I(Material.DIAMOND_SWORD).name(C.color("&6Ranked")).lore(C.color("&7Queue for an Ranked match."));
-        items[2] = new I(Material.EGG).name(C.color("&7Last Queue [&equeueName&7]")).lore(C.color("&7Easily queue again and again and again and again :D."));
+
+        if(profile.getLastQueue() != null)
+            items[2] = new I(Material.EGG).name(C.color("&7Last Queue [&equeueName&7]").replace("queueName", profile.getLastQueue().getLadder().getName())).lore(C.color("&7Easily queue again and again and again and again :D."));
+
         items[4] = new I(getSkull(player.getName())).name(C.color("&cStats")).lore(C.color("&7Look at leaderboards and statistics."));
+
         items[6] = new I(Material.PUMPKIN_PIE).name(C.color("&bParty?")).lore(C.color("&7PARRRRRRR-TAY!"));
         items[7] = new I(Material.WATCH).name(C.color("&dSettings")).lore(C.color("&7View and change your settings."));
         items[8] = new I(Material.BOOK).name(C.color("&eKit Editor")).lore(C.color("&7Select kit and edit."));

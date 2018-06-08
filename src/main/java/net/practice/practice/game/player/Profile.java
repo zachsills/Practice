@@ -36,7 +36,7 @@ public class Profile {
     @Getter private final Map<Ladder, List<PlayerInv>> customInvs;
 
     @Getter @Setter private Duel currentDuel, recentDuel;
-    @Getter @Setter private Queue currentQueue;
+    @Getter @Setter private Queue currentQueue, lastQueue;
     @Getter @Setter private Team team;
     @Getter @Setter private ProfileState profileState;
 
@@ -132,6 +132,8 @@ public class Profile {
     }
 
     public void removeFromQueue() {
+        setLastQueue(getCurrentQueue());
+
         getCurrentQueue().remove(uuid);
         setCurrentQueue(null);
 
@@ -143,6 +145,8 @@ public class Profile {
     }
 
     public void leaveQueue(boolean spawn, boolean tp) {
+        removeFromQueue();
+
         if(spawn) {
             Player player = getPlayer();
             if(player != null) {
@@ -150,8 +154,6 @@ public class Profile {
                 player.sendMessage(C.color("&f\u00BB &eLeft the queue for " + getCurrentQueue().getLadder().getDisplayName() + "."));
             }
         }
-
-        removeFromQueue();
     }
 
     public void save() {

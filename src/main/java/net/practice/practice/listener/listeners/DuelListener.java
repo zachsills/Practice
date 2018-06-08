@@ -27,6 +27,7 @@ public class DuelListener implements Listener {
                 SoloDuel soloDuel = (SoloDuel) duel;
 
                 soloDuel.setWinner(soloDuel.getPlayerOne() != profile.getPlayer() ? soloDuel.getPlayerOne() : soloDuel.getPlayerTwo());
+                soloDuel.saveInventory(soloDuel.getWinner().getUniqueId());
                 soloDuel.end(DuelEndReason.DIED);
                 break;
             }
