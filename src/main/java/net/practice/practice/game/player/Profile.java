@@ -11,6 +11,7 @@ import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
+import net.practice.practice.game.team.Team;
 import net.practice.practice.inventory.item.ItemStorage;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
@@ -36,6 +37,7 @@ public class Profile {
 
     @Getter @Setter private Duel currentDuel, recentDuel;
     @Getter @Setter private Queue currentQueue;
+    @Getter @Setter private Team team;
     @Getter @Setter private ProfileState profileState;
 
     @Getter @Setter private Integer rankedWins = 0, rankedLosses = 0;
@@ -86,6 +88,13 @@ public class Profile {
         return eloMap.get(ladder);
     }
 
+    public boolean hasCustomKits(Ladder ladder) {
+        if(!customInvs.containsKey(ladder))
+            return false;
+
+        return customInvs.get(ladder).isEmpty();
+    }
+
     public Object getSetting(ProfileSetting setting) {
         return settings.getOrDefault(setting, setting.getDefaultValue());
     }
@@ -96,6 +105,16 @@ public class Profile {
 
     public boolean isInGame() {
         return currentDuel != null && profileState == ProfileState.PLAYING;
+    }
+
+    public void setCurrentDuel(Duel duel) {
+        currentDuel = duel;
+        if(currentDuel == null) {
+            setProfileState(ProfileState.LOBBY);
+            return;
+        }
+
+        setProfileState(ProfileState.PLAYING);
     }
 
     public void addToQueue(Queue queue) {

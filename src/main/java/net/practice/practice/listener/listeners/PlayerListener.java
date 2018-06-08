@@ -1,6 +1,7 @@
 package net.practice.practice.listener.listeners;
 
-import net.practice.practice.game.duel.DuelEndReason;
+import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
@@ -17,9 +18,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -80,9 +81,24 @@ public class PlayerListener implements Listener {
         Player player = (Player) event.getEntity();
         Profile profile = Profile.getByPlayer(player);
 
-        switch (profile.getProfileState()) {
-            case PLAYING:
+        switch(profile.getProfileState()) {
+            case PLAYING: {
+                if(event instanceof EntityDamageByEntityEvent) {
+                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+                    Duel duel = profile.getCurrentDuel();
+                    if(duel.getState() != DuelState.PLAYING) {
+                        event.setCancelled(true);
+                        return;
+                    }
+
+                    Player other = (Player) e.getDamager();
+                    if(!duel.hasPlayer(other))
+                        event.setCancelled(true);
+                    else
+                        event.setCancelled(false);
+                }
                 break;
+            }
             default:
                 event.setCancelled(true);
         }
@@ -161,20 +177,12 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        Profile profile = Profile.getByPlayer(player);
-
-        profile.getCurrentDuel().end(DuelEndReason.DIED);
-    }
-
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent event) {
         handleLeave(event);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onKick(PlayerKickEvent event) {
         handleLeave(event);
     }

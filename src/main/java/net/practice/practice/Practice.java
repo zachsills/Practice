@@ -55,7 +55,7 @@ public class Practice extends JavaPlugin {
         getServer().getOnlinePlayers().forEach(SpawnHandler::spawn);
 
         /* Tasks */
-        new QueueRunnable().runTaskTimer(this, 20L, 60L);
+        new QueueRunnable().runTaskTimer(this, 20L, 40L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 100L);
     }
 

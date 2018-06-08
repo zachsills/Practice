@@ -7,6 +7,7 @@ import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueType;
+import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 
 public class UnrankedQueue extends Queue {
@@ -26,6 +27,7 @@ public class UnrankedQueue extends Queue {
                     profileTwo.leaveQueue(false);
 
                     Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
+                    duel.sendMessage(C.color("&eUnranked match found: &6" + profileOne.getPlayer().getName() + " &evs. &6" + profileTwo.getPlayer().getName()));
                     duel.preStart();
                 }
             }

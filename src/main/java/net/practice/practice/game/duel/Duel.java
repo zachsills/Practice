@@ -2,10 +2,15 @@ package net.practice.practice.game.duel;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.practice.practice.Practice;
 import net.practice.practice.game.arena.Arena;
 import net.practice.practice.game.ladder.Ladder;
+import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.InventorySnapshot;
+import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,11 +22,14 @@ public abstract class Duel {
     @Getter private Ladder ladder;
     @Getter private DuelType type;
 
-    @Getter private long startTime, timeUntilStart, endTime;
+    @Getter private long startTime, endTime;
 
     @Getter @Setter private DuelState state;
 
     @Getter private Set<InventorySnapshot> snapshots;
+
+    private BukkitRunnable countDownTask;
+    @Getter private int countDown = 5;
 
     public Duel(Arena arena, Ladder ladder, DuelType type) {
         this.arena = arena;
@@ -38,20 +46,53 @@ public abstract class Duel {
     }
 
     public void preStart() {
-        this.timeUntilStart = System.currentTimeMillis() + 5000;
         setState(DuelState.STARTING);
+
+        countDownTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(countDown > 0) {
+                    sendMessage(C.color("&7Duel starting in &e" + countDown + " &e" + (countDown == 1 ? "second" : "seconds") + "&7."));
+                    countDown--;
+                } else {
+                    start();
+                    this.cancel();
+                }
+            }
+        };
+        countDownTask.runTaskTimer(Practice.getInstance(), 0, 20L);
     }
 
     public void start() {
         this.startTime = System.currentTimeMillis();
         setState(DuelState.PLAYING);
+
+        sendMessage(C.color("&aThe match has now started!"));
     }
 
-    public abstract void end(DuelEndReason reason);
+    public void giveKits(Player player) {
+        Profile profile = Profile.getByPlayer(player);
 
-    public void end() {
-        end(DuelEndReason.DIED);
+        if(!profile.hasCustomKits(ladder)) {
+            if(ladder.getDefaultInv() != null)
+                ladder.getDefaultInv().apply(player);
+
+            player.sendMessage(C.color("&eYou were given the default " + ladder.getDisplayName() + " &ekit."));
+        } else {
+            // TODO: Give custom kit selection
+        }
     }
+
+    public abstract void sendMessage(String message);
+
+    public void end(DuelEndReason reason) {
+        if(countDownTask != null)
+            countDownTask.cancel();
+
+        setState(DuelState.ENDED);
+    }
+
+    public abstract boolean hasPlayer(Player player);
 
     public void saveInventory(UUID uuid) {
         snapshots.add(new InventorySnapshot(Bukkit.getPlayer(uuid)));

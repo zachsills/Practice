@@ -21,16 +21,20 @@ public class SpawnHandler {
 
     public static void spawn(Player player, boolean tp) {
         InvUtils.clear(player);
-        if (tp) {
-            if (Practice.getInstance().getSpawn() != null) {
+        if(tp) {
+            if(Practice.getInstance().getSpawn() != null)
                 player.teleport(Practice.getInstance().getSpawn());
-            } else {
+            else
                 player.sendMessage(C.color("&cSpawn has not been set!"));
-            }
+
         }
+
         player.getInventory().setContents(getSpawnInventory(player));
         player.updateInventory();
-        Profile.getByPlayer(player).setProfileState(ProfileState.LOBBY);
+
+        Profile profile = Profile.getByPlayer(player);
+        profile.setProfileState(ProfileState.LOBBY);
+        profile.setCurrentDuel(null);
     }
 
     public static ItemStack[] getSpawnInventory(Player player) {

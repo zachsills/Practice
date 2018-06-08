@@ -7,6 +7,7 @@ import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.team.Team;
+import org.bukkit.entity.Player;
 
 public class TeamDuel extends Duel {
 
@@ -38,5 +39,16 @@ public class TeamDuel extends Duel {
     @Override
     public void end(DuelEndReason reason) {
 
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        teamOne.sendMessage(message);
+        teamTwo.sendMessage(message);
+    }
+
+    @Override
+    public boolean hasPlayer(Player player) {
+        return teamOne.contains(player) || teamTwo.contains(player);
     }
 }

@@ -1,6 +1,7 @@
 package net.practice.practice.listener;
 
 import net.practice.practice.Practice;
+import net.practice.practice.listener.listeners.DuelListener;
 import net.practice.practice.listener.listeners.PlayerListener;
 import net.practice.practice.listener.listeners.WeatherListener;
 import net.practice.practice.listener.listeners.WorldListener;
@@ -12,6 +13,7 @@ public class ListenerHandler {
 
     public static void registerListeners() {
         Stream.of(
+                new DuelListener(),
                 new PlayerListener(),
                 new WeatherListener(),
                 new WorldListener()

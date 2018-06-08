@@ -45,7 +45,10 @@ public class ProviderResolver implements BoardProvider {
         if(!((boolean) profile.getSetting(ProfileSetting.SCOREBOARD)))
             return Collections.emptyList();
 
-        BoardProvider provider = providers.getOrDefault(profile.getProfileState(), lobbyProvider);
+        BoardProvider provider = lobbyProvider;
+        if(providers.containsKey(profile.getProfileState()))
+            provider = providers.get(profile.getProfileState());
+
         List<String> lines = provider.getLines(player);
         if(!lines.isEmpty()) {
             lines.add(0, BREAKER);
