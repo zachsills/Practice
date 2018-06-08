@@ -32,8 +32,6 @@ public class ArenaManager {
         String id = arena.getName();
 
         config.getArenaSection().set(id + ".name", id);
-        config.getArenaSection().set(id + ".pos.1", LocUtils.serializeLocation(arena.getPosOne()));
-        config.getArenaSection().set(id + ".pos.2", LocUtils.serializeLocation(arena.getPosTwo()));
         config.getArenaSection().set(id + ".spawn.1", LocUtils.serializeLocation(arena.getSpawnOne()));
         config.getArenaSection().set(id + ".spawn.2", LocUtils.serializeLocation(arena.getSpawnTwo()));
 

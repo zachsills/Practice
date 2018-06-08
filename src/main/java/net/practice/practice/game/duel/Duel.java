@@ -4,7 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.arena.Arena;
 import net.practice.practice.game.ladder.Ladder;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.practice.practice.game.player.data.InventorySnapshot;
+import org.bukkit.Bukkit;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public abstract class Duel {
 
@@ -12,14 +17,18 @@ public abstract class Duel {
     @Getter private Ladder ladder;
     @Getter private DuelType type;
 
-    @Getter private long startTime, timeUntilStart;
+    @Getter private long startTime, timeUntilStart, endTime;
 
     @Getter @Setter private DuelState state;
+
+    @Getter private Set<InventorySnapshot> snapshots;
 
     public Duel(Arena arena, Ladder ladder, DuelType type) {
         this.arena = arena;
         this.ladder = ladder;
         this.type = type;
+
+        this.snapshots = new HashSet<>();
 
         this.state = DuelState.STARTING;
     }
@@ -42,5 +51,9 @@ public abstract class Duel {
 
     public void end() {
         end(DuelEndReason.DIED);
+    }
+
+    public void saveInventory(UUID uuid) {
+        snapshots.add(new InventorySnapshot(Bukkit.getPlayer(uuid)));
     }
 }

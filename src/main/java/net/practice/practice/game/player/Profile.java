@@ -5,22 +5,19 @@ import com.mongodb.BasicDBObject;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
-import net.practice.practice.game.arena.Arena;
-import net.practice.practice.game.duel.type.SoloDuel;
-import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
+import net.practice.practice.inventory.item.ItemStorage;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.RankingUtils;
 import net.practice.practice.util.chat.C;
-import net.practice.practice.util.itemstack.I;
 import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -29,6 +26,7 @@ import java.util.stream.Collectors;
 public class Profile {
 
     @Getter private static final Map<String, Profile> profiles = new HashMap<>();
+    @Getter public static long totalQueueing = 0, totalInGame = 0;
 
     @Getter private final UUID uuid;
 
@@ -36,7 +34,7 @@ public class Profile {
     @Getter private final Map<ProfileSetting, Object> settings;
     @Getter private final Map<Ladder, List<PlayerInv>> customInvs;
 
-    @Getter @Setter private Duel currentDuel;
+    @Getter @Setter private Duel currentDuel, recentDuel;
     @Getter @Setter private Queue currentQueue;
     @Getter @Setter private ProfileState profileState;
 
@@ -77,6 +75,10 @@ public class Profile {
         return profiles.remove(player.getUniqueId().toString());
     }
 
+    public Player getPlayer() {
+        return Bukkit.getPlayer(uuid);
+    }
+
     public int getElo(Ladder ladder) {
         if(!eloMap.containsKey(ladder))
             eloMap.put(ladder, RankingUtils.STARTING_ELO);
@@ -88,97 +90,45 @@ public class Profile {
         return settings.getOrDefault(setting, setting.getDefaultValue());
     }
 
-    public static int getNumberQueuing(Ladder ladder) {
-        int count = 0;
-        for (Profile profile : getProfiles().values()) {
-            if (profile.getCurrentQueue() == null) {
-                continue;
-            }
-            if (profile.getCurrentQueue().getLadder().isEqual(ladder)) {
-                count++;
-            }
-        }
-        return count;
+    public boolean isQueueing() {
+        return currentQueue != null && profileState == ProfileState.QUEUING;
     }
 
-    public static int getTotalQueuing() {
-        int count = 0;
-        for (Profile profile : getProfiles().values()) {
-            if (profile.getCurrentQueue() == null) {
-                continue;
-            }
-            count++;
-        }
-        return count;
-    }
-
-    public void setQueue(Queue queue) {
+    public void addToQueue(Queue queue) {
+        queue.add(uuid);
         setCurrentQueue(queue);
+
         setProfileState(ProfileState.QUEUING);
-        checkForOtherQueues(queue.getLadder());
-        Player player = Bukkit.getPlayer(getUuid());
-        if (player != null) {
+
+        Player player = getPlayer();
+        if(player != null) {
             InvUtils.clear(player);
-            player.getInventory().setItem(4, new I(Material.INK_SACK).durability(1).name(C.color("&cLeave queue")).lore(C.color("&7Click to leave your current queue.")));
+
+            player.getInventory().setItem(4, ItemStorage.LEAVE_QUEUE);
         }
+    }
+
+    public void removeFromQueue() {
+        getCurrentQueue().remove(uuid);
+        setCurrentQueue(null);
+
+        setProfileState(ProfileState.LOBBY);
     }
 
     public void leaveQueue(boolean spawn) {
         leaveQueue(spawn, false);
     }
+
     public void leaveQueue(boolean spawn, boolean tp) {
-        if (spawn) {
-            Player player = Bukkit.getPlayer(getUuid());
-            if (player != null) {
+        if(spawn) {
+            Player player = getPlayer();
+            if(player != null) {
                 SpawnHandler.spawn(player, tp);
                 player.sendMessage(C.color("&f\u00BB &eLeft the queue for " + getCurrentQueue().getLadder().getDisplayName() + "."));
             }
         }
-        setCurrentQueue(null);
-        setProfileState(ProfileState.LOBBY);
-    }
 
-    public void checkForOtherQueues(Ladder ladder) {
-        for (Profile other : getProfiles().values()) {
-            if (other.equals(this) || other.getCurrentQueue() == null) continue;
-            if (getCurrentQueue().canQueueWith(other.getCurrentQueue())) {
-                switch (getCurrentQueue().getLadder().getDuelType()) {
-                    case ONE_VS_ONE: {
-                        Arena arena = Arena.getRandomArena();
-                        if (arena != null && Bukkit.getPlayer(getUuid()) != null && Bukkit.getPlayer(other.getUuid()) != null) {
-                            leaveQueue(false);
-                            other.leaveQueue(false);
-                            Duel duel = new SoloDuel(Arena.getRandomArena(), ladder, Bukkit.getPlayer(getUuid()), Bukkit.getPlayer(other.getUuid()));
-                            duel.preStart();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static int getNumberInGame(Ladder ladder) {
-        int count = 0;
-        for (Profile profile : getProfiles().values()) {
-            if (profile.getCurrentDuel() == null) {
-                continue;
-            }
-            if (profile.getCurrentDuel().getLadder().isEqual(ladder)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public static int getTotalInGame() {
-        int count = 0;
-        for (Profile profile : getProfiles().values()) {
-            if (profile.getCurrentDuel() == null) {
-                continue;
-            }
-            count++;
-        }
-        return count;
+        removeFromQueue();
     }
 
     public void save() {

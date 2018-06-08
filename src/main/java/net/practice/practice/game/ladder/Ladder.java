@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.player.data.PlayerInv;
+import net.practice.practice.game.queue.Queue;
+import net.practice.practice.game.queue.type.RankedQueue;
+import net.practice.practice.game.queue.type.UnrankedQueue;
 import net.practice.practice.util.InvUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,6 +23,8 @@ public class Ladder {
 
     @Getter private final String name;
 
+    @Getter private Queue[] queues;
+
     @Getter @Setter private String displayName;
     @Getter @Setter private ItemStack displayIcon;
     @Getter @Setter private boolean buildable, editable, combo, ranked;
@@ -31,6 +35,9 @@ public class Ladder {
         this.name = name;
         this.displayName = ChatColor.GREEN + name;
         this.duelType = DuelType.ONE_VS_ONE;
+
+        this.queues = new Queue[3];
+        queues[0] = new UnrankedQueue(this);
 
         ladders.putIfAbsent(name, this);
     }
@@ -53,6 +60,23 @@ public class Ladder {
 
         if(section.contains("defaultInventory"))
             setDefaultInv(InvUtils.invFromString(section.getString("defaultInventory")));
+    }
+
+    public Queue getUnrankedQueue() {
+        return queues[0];
+    }
+
+    public Queue getRankedQueue() {
+        return queues[1];
+    }
+
+    public void setRanked(boolean value) {
+        ranked = value;
+
+        if(ranked)
+            queues[1] = new RankedQueue(this);
+        else
+            queues[1] = null;
     }
 
     public boolean isEqual(Ladder other) {

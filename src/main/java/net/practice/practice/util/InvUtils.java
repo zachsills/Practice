@@ -1,7 +1,6 @@
 package net.practice.practice.util;
 
 import net.practice.practice.game.player.data.PlayerInv;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -197,9 +196,9 @@ public class InvUtils {
     }
 
     public static void clear(final Player player) {
-        for (final PotionEffect potion : player.getActivePotionEffects()) {
+        for(final PotionEffect potion : player.getActivePotionEffects())
             player.removePotionEffect(potion.getType());
-        }
+
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
@@ -210,6 +209,7 @@ public class InvUtils {
         player.setFallDistance(0.0f);
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
+
         player.updateInventory();
     }
 }

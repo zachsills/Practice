@@ -50,7 +50,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>Practice</finalName>
+                            <finalName>SorenPractice</finalName>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
 

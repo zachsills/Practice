@@ -4,15 +4,13 @@ import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
-import net.practice.practice.game.queue.Queue;
-import net.practice.practice.inventory.UnrankedInv;
+import net.practice.practice.inventory.inventories.RankedInv;
+import net.practice.practice.inventory.inventories.UnrankedInv;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.chat.C;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -101,14 +99,16 @@ public class PlayerListener implements Listener {
 
             switch (profile.getProfileState()) {
                 case LOBBY: {
-                    if (display.contains("Unranked")) {
+                    if(display.contains("Unranked"))
                         UnrankedInv.openInventory(player);
-                    }
+                    else if(display.contains("Ranked"))
+                        RankedInv.openInventory(player);
+                    break;
                 }
                 case QUEUING: {
-                    if (display.contains("Leave queue")) {
+                    if(display.contains("Leave Queue"))
                         profile.leaveQueue(true, false);
-                    }
+                    break;
                 }
             }
         }
@@ -122,17 +122,30 @@ public class PlayerListener implements Listener {
 
         ItemStack item = event.getCurrentItem();
 
-        if (profile.getProfileState().equals(ProfileState.LOBBY) && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
+        if(profile.getProfileState().equals(ProfileState.LOBBY) && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);
 
-            if (item == null || item.getItemMeta() == null) return;
+            if(item == null || item.getItemMeta() == null) return;
 
-            if (item.getItemMeta().hasDisplayName()) {
-                Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
-                if (ladder != null) {
-                    profile.setQueue(new Queue(ladder, profile.getElo(ladder)));
-                    player.sendMessage(C.color("&f\u00BB &eJoined the queue for " + (ladder.isRanked() ? "Ranked" : "Unranked") + " " + ladder.getDisplayName() + "."));
-                    player.closeInventory();
+            if(event.getClickedInventory().getTitle().contains("Unranked")) {
+                if(item.getItemMeta().hasDisplayName()) {
+                    Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+                    if(ladder != null) {
+                        profile.addToQueue(ladder.getUnrankedQueue());
+
+                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
+                        player.closeInventory();
+                    }
+                }
+            } else if(event.getClickedInventory().getTitle().contains("Ranked")) {
+                if(item.getItemMeta().hasDisplayName()) {
+                    Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+                    if(ladder != null) {
+                        profile.addToQueue(ladder.getRankedQueue());
+
+                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
+                        player.closeInventory();
+                    }
                 }
             }
         }

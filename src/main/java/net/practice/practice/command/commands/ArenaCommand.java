@@ -49,39 +49,6 @@ public class ArenaCommand {
         }
     }
 
-    @Command(name = "arena.pos1", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
-    public void onArenaPos1(CommandArgs args) {
-        if (args.length() != 1) {
-            sendHelp(args.getPlayer());
-            return;
-        }
-
-        Arena arena = Arena.getArena(args.getArgs(0));
-        if (arena != null) {
-            arena.setPosOne(args.getPlayer().getLocation());
-            args.getPlayer().sendMessage(C.color("&eSet posOne in arena " + arena.getDisplayName()
-                    + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
-        } else {
-            args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
-        }
-    }
-
-    @Command(name = "arena.pos2", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
-    public void onArenaPos2(CommandArgs args) {
-        if (args.length() != 1) {
-            sendHelp(args.getPlayer());
-            return;
-        }
-
-        Arena arena = Arena.getArena(args.getArgs(0));
-        if (arena != null) {
-            arena.setPosTwo(args.getPlayer().getLocation());
-            args.getPlayer().sendMessage(C.color("&eSet posTwo in arena " + arena.getName() + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
-        } else {
-            args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
-        }
-    }
-
     @Command(name = "arena.spawn1", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
     public void onArenaSpawn1(CommandArgs args) {
         if (args.length() != 1) {

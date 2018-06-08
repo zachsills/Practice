@@ -1,41 +1,71 @@
 package net.practice.practice.game.queue;
 
 import lombok.Getter;
-import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.util.TimeUtils;
+import net.practice.practice.game.player.Profile;
 
-public class Queue {
+import java.util.*;
+import java.util.stream.Collectors;
 
-    @Getter public Ladder ladder;
-    @Getter public QueueRange queueRange;
-    @Getter private long startTime;
+public abstract class Queue {
 
-    public Queue(Ladder ladder, int elo) {
+    @Getter private static Set<Queue> queues = new HashSet<>();
+
+    @Getter private Ladder ladder;
+
+    @Getter private QueueType type;
+
+    @Getter private List<UUID> queued;
+
+    public Queue(Ladder ladder, QueueType type) {
         this.ladder = ladder;
-        this.queueRange = new QueueRange(elo, 5);
-        this.startTime = System.currentTimeMillis();
+        this.type = type;
+
+        this.queued = new ArrayList<>();
+
+        queues.add(this);
     }
 
-    public boolean canQueueWith(Queue other) {
-        if (!getLadder().getName().equals(other.getLadder().getName()))
-            return false;
-        if (!getLadder().getDuelType().equals(other.getLadder().getDuelType()))
-            return false;
-        if (!getQueueRange().isInRange(other.getQueueRange().getMiddle()))
-            return false;
-        if (getLadder().isBuildable() != other.getLadder().isBuildable())
-            return false;
-        if (getLadder().isEditable() != other.getLadder().isEditable())
-            return false;
-        if (getLadder().isCombo() != other.getLadder().isCombo())
-            return false;
-        if (getLadder().isRanked() != other.getLadder().isRanked())
-            return false;
-        return true;
+    public static Queue getQueue(Ladder ladder) {
+        return queues.stream()
+                .filter(queue -> queue.getLadder() == ladder)
+                .findFirst()
+                .orElse(null);
     }
 
-    public String getTimeQueuingFormatted() {
-        return TimeUtils.msToMMSS(Math.abs(System.currentTimeMillis() - startTime));
+    public static int getNumberQueuing(Ladder ladder) {
+        int total = 0;
+
+        for(int i : Arrays.stream(ladder.getQueues()).filter(Objects::nonNull).map(Queue::getSize).collect(Collectors.toList()))
+            total += i;
+
+        return total;
     }
+
+    public static int getNumberInGame(Ladder ladder) {
+        int total = 0;
+
+        for(Profile profile : Profile.getProfiles().values().stream().filter(Profile::isQueueing).collect(Collectors.toList()))
+            total += profile.getCurrentDuel().getLadder() == ladder ? 1 : 0;
+
+        return total;
+    }
+
+    public void add(UUID uuid) {
+        queued.add(uuid);
+
+        Profile.totalQueueing++;
+    }
+
+    public void remove(UUID uuid) {
+        queued.remove(uuid);
+
+        Profile.totalQueueing--;
+    }
+
+    public int getSize() {
+        return queued.size();
+    }
+
+    public abstract void setup();
 }

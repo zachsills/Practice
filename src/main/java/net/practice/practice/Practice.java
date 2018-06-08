@@ -6,13 +6,14 @@ import net.practice.practice.board.provider.ProviderResolver;
 import net.practice.practice.command.CommandHandler;
 import net.practice.practice.game.arena.ArenaManager;
 import net.practice.practice.game.ladder.LadderManager;
+import net.practice.practice.game.queue.QueueRunnable;
 import net.practice.practice.listener.ListenerHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.storage.MongoBackend;
+import net.practice.practice.task.UpdateInventoryTask;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Practice extends JavaPlugin {
@@ -52,6 +53,10 @@ public class Practice extends JavaPlugin {
         ListenerHandler.registerListeners();
 
         getServer().getOnlinePlayers().forEach(SpawnHandler::spawn);
+
+        /* Tasks */
+        new QueueRunnable().runTaskTimerAsynchronously(this, 20L, 100L);
+        new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 100L);
     }
 
     @Override
