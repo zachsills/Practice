@@ -6,6 +6,7 @@ import net.practice.practice.board.provider.ProviderResolver;
 import net.practice.practice.command.CommandHandler;
 import net.practice.practice.game.arena.ArenaManager;
 import net.practice.practice.game.ladder.LadderManager;
+import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.QueueRunnable;
 import net.practice.practice.listener.ListenerHandler;
 import net.practice.practice.spawn.SpawnHandler;
@@ -53,6 +54,7 @@ public class Practice extends JavaPlugin {
         ListenerHandler.registerListeners();
 
         getServer().getOnlinePlayers().forEach(SpawnHandler::spawn);
+        getServer().getOnlinePlayers().forEach(Profile::getByPlayer);
 
         /* Tasks */
         new QueueRunnable().runTaskTimer(this, 20L, 40L);

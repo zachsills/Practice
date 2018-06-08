@@ -1,5 +1,6 @@
 package net.practice.practice.listener.listeners;
 
+import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.ladder.Ladder;
@@ -24,6 +25,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerListener implements Listener {
 
@@ -62,8 +64,15 @@ public class PlayerListener implements Listener {
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 
-        switch (profile.getProfileState()) {
+        switch(profile.getProfileState()) {
             case PLAYING:
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(event.getItemDrop().isValid() && !event.getItemDrop().isDead())
+                            event.getItemDrop().remove();
+                    }
+                }.runTaskLater(Practice.getInstance(), 40L);
                 break;
             case BUILDING:
                 break;
@@ -85,6 +94,9 @@ public class PlayerListener implements Listener {
             case PLAYING: {
                 if(event instanceof EntityDamageByEntityEvent) {
                     EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+                    if(e.getDamager().getType() != EntityType.PLAYER)
+                        return;
+
                     Duel duel = profile.getCurrentDuel();
                     if(duel.getState() != DuelState.PLAYING) {
                         event.setCancelled(true);

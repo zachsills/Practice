@@ -1,9 +1,12 @@
 package net.practice.practice.listener.listeners;
 
+import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
+import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.player.Profile;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -11,6 +14,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class DuelListener implements Listener {
 
@@ -40,6 +44,21 @@ public class DuelListener implements Listener {
                 break;
             }
         }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(event.getEntity().isDead())
+                    ((CraftPlayer) event.getEntity()).getHandle().playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN));
+            }
+        }.runTaskLater(Practice.getInstance(), 5L);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                event.getDrops().clear();
+            }
+        }.runTaskLaterAsynchronously(Practice.getInstance(), 40L);
     }
 
     @EventHandler(priority = EventPriority.LOW)

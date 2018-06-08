@@ -34,6 +34,6 @@ public class InventoryCommand {
                 .findFirst()
                 .orElse(null);
 
-        recentSnapshot.open(player);
+        recentSnapshot.open(args.getPlayer());
     }
 }

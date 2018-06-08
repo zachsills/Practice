@@ -72,11 +72,11 @@ public class SoloDuel extends Duel {
             new JsonMessage().append(ChatColor.YELLOW + "Inventories: ").save()
                     .append(ChatColor.GREEN + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
                     .append(ChatColor.GRAY + " or ").save()
-                    .append(ChatColor.RED + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
+                    .append(ChatColor.RED + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerTwo.getName()).save()
                     .send(playerOne, playerTwo);
         else
             new JsonMessage().append(ChatColor.YELLOW + "Inventories: ").save()
-                    .append(ChatColor.GREEN + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
+                    .append(ChatColor.GREEN + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerTwo.getName()).save()
                     .append(ChatColor.GRAY + " or ").save()
                     .append(ChatColor.RED + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
                     .send(playerOne, playerTwo);
