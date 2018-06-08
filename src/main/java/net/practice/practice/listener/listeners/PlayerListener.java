@@ -8,6 +8,7 @@ import net.practice.practice.inventory.inventories.RankedInv;
 import net.practice.practice.inventory.inventories.UnrankedInv;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.chat.C;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
@@ -57,7 +58,8 @@ public class PlayerListener implements Listener {
     public void onDropItem(PlayerDropItemEvent event) {
         Profile profile = Profile.getByPlayer(event.getPlayer());
 
-        if (event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) return;
+        if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
+            return;
 
         switch (profile.getProfileState()) {
             case PLAYING:
@@ -72,7 +74,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        if (!event.getEntityType().equals(EntityType.PLAYER)) return;
+        if(event.getEntityType() != EntityType.PLAYER)
+            return;
+
         Player player = (Player) event.getEntity();
         Profile profile = Profile.getByPlayer(player);
 
@@ -97,12 +101,14 @@ public class PlayerListener implements Listener {
         if (item.getItemMeta().hasDisplayName()) {
             String display = item.getItemMeta().getDisplayName();
 
-            switch (profile.getProfileState()) {
+            switch(profile.getProfileState()) {
                 case LOBBY: {
                     if(display.contains("Unranked"))
                         UnrankedInv.openInventory(player);
                     else if(display.contains("Ranked"))
                         RankedInv.openInventory(player);
+                    else if(display.contains("Stats"))
+                        Bukkit.dispatchCommand(player, "stats " + player.getName());
                     break;
                 }
                 case QUEUING: {
@@ -116,13 +122,17 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!event.getWhoClicked().getType().equals(EntityType.PLAYER)) return;
+        if(event.getCurrentItem() == null || event.getClickedInventory() == null)
+            return;
+        if(event.getWhoClicked().getType() != EntityType.PLAYER)
+            return;
+
         Player player = (Player) event.getWhoClicked();
         Profile profile = Profile.getByPlayer(player);
 
         ItemStack item = event.getCurrentItem();
 
-        if(profile.getProfileState().equals(ProfileState.LOBBY) && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
+        if(profile.getProfileState() == ProfileState.LOBBY && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);
 
             if(item == null || item.getItemMeta() == null) return;
@@ -171,6 +181,9 @@ public class PlayerListener implements Listener {
 
     private void handleLeave(PlayerEvent event) {
         Profile profile = Profile.getRemovedProfile(event.getPlayer());
+
+        if(profile.isQueueing())
+            profile.removeFromQueue();
 
         profile.save();
     }

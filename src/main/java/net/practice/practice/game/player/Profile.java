@@ -94,6 +94,10 @@ public class Profile {
         return currentQueue != null && profileState == ProfileState.QUEUING;
     }
 
+    public boolean isInGame() {
+        return currentDuel != null && profileState == ProfileState.PLAYING;
+    }
+
     public void addToQueue(Queue queue) {
         queue.add(uuid);
         setCurrentQueue(queue);

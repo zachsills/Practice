@@ -1,14 +1,12 @@
 package net.practice.practice.command.commands;
 
 import net.practice.practice.Practice;
-import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.command.Command;
 import net.practice.practice.util.command.CommandArgs;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,6 +17,13 @@ public class LadderCommand {
     @Command(name = "ladder", aliases = { "game" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
     public void onLadder(CommandArgs args) {
         sendHelp(args.getPlayer());
+    }
+
+    @Command(name = "ladder.list", aliases = { "game.create" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
+    public void onLadderList(CommandArgs args) {
+        args.getPlayer().sendMessage(ChatColor.YELLOW + "Current Ladders: ");
+        for(Ladder ladder : Ladder.getLadders().values())
+            args.getPlayer().sendMessage(C.color("&7- " + ladder.getDisplayName()));
     }
 
     @Command(name = "ladder.create", aliases = { "game.create" }, permission = "practice.ladder", playerOnly = true, description = "Manage ladders.")
@@ -192,6 +197,7 @@ public class LadderCommand {
 
     public void sendHelp(Player player) {
         player.sendMessage(C.color("&eLadder Help"));
+        player.sendMessage(C.color("&a/ladder list"));
         player.sendMessage(C.color("&a/ladder create <name>"));
         player.sendMessage(C.color("&a/ladder remove <name>"));
         player.sendMessage(C.color("&a/ladder set <name> <ranked;editable;build;combo>"));

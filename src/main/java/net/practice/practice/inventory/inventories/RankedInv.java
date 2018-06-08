@@ -12,8 +12,7 @@ import org.bukkit.inventory.Inventory;
 
 public class RankedInv {
 
-    @Getter
-    private static Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("&aRanked"));
+    @Getter private static Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("&aRanked"));
 
     public static void updateInventory() {
         if(Ladder.getLadders().values().size() == 0) {
@@ -27,7 +26,7 @@ public class RankedInv {
                 int queuing = Queue.getNumberQueuing(ladder);
                 int inGame = Queue.getNumberInGame(ladder);
                 inventory.setItem(index, new I(ladder.getDisplayIcon()).amount(1).clearLore().lore(C.color("&f&m------------")).lore(C.color("&7Queuing: &c" + queuing))
-                        .lore(C.color("&7In Game: &c") + inGame).amount(queuing).lore(C.color("&f&m------------")));
+                        .lore(C.color("&7In Game: &c") + inGame).lore(C.color("&f&m------------")));
                 index++;
             }
         }

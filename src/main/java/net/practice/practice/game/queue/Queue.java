@@ -45,7 +45,7 @@ public abstract class Queue {
     public static int getNumberInGame(Ladder ladder) {
         int total = 0;
 
-        for(Profile profile : Profile.getProfiles().values().stream().filter(Profile::isQueueing).collect(Collectors.toList()))
+        for(Profile profile : Profile.getProfiles().values().stream().filter(Profile::isInGame).collect(Collectors.toList()))
             total += profile.getCurrentDuel().getLadder() == ladder ? 1 : 0;
 
         return total;

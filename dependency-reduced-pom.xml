@@ -2,10 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.practice.practice</groupId>
-  <artifactId>Practice</artifactId>
+  <artifactId>SorenPractice</artifactId>
   <version>1.0.0-DEV</version>
   <build>
     <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+    <defaultGoal>clean package install</defaultGoal>
     <resources>
       <resource>
         <targetPath>.</targetPath>
@@ -16,11 +17,11 @@
         </includes>
       </resource>
     </resources>
-    <directory>/Users/zach/IdeaProjects/Test Server/plugins/</directory>
+    <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.7.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -28,7 +29,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.3</version>
+        <version>3.1.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -44,10 +45,6 @@
                 <relocation>
                   <pattern>org.bson</pattern>
                   <shadedPattern>${project.groupId}.lib.org.bson</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>com.google.gson</pattern>
-                  <shadedPattern>${project.groupId}.lib.com.google.gson</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
@@ -140,35 +137,14 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.18</version>
+      <version>1.16.20</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.comphenix.protocol</groupId>
-      <artifactId>ProtocolLib</artifactId>
-      <version>4.3.0-SNAPSHOT</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>ProtocolLib-API</artifactId>
-          <groupId>com.comphenix.protocol</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>cglib-nodep</artifactId>
-          <groupId>cglib</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>BukkitExecutors</artifactId>
-          <groupId>com.comphenix.executors</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <project.main>${project.groupId}.${project.artifactId}</project.main>
+    <project.main>${project.groupId}.Practice</project.main>
   </properties>
 </project>
-

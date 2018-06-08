@@ -25,7 +25,7 @@ public class UnrankedQueue extends Queue {
                     profileOne.leaveQueue(false);
                     profileTwo.leaveQueue(false);
 
-                    Duel duel = new SoloDuel(Arena.getRandomArena(), getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
+                    Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
                     duel.preStart();
                 }
             }
