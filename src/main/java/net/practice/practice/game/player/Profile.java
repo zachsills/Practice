@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
@@ -35,9 +36,12 @@ public class Profile {
     @Getter private final Map<ProfileSetting, Object> settings;
     @Getter private final Map<Ladder, List<PlayerInv>> customInvs;
 
+    @Getter private Map<String, DuelRequest> duelRequests;
+
     @Getter @Setter private Duel currentDuel, recentDuel;
     @Getter @Setter private Queue currentQueue, lastQueue;
     @Getter @Setter private Team team;
+
     @Getter @Setter private ProfileState profileState;
 
     @Getter @Setter private Integer rankedWins = 0, rankedLosses = 0;
@@ -49,6 +53,7 @@ public class Profile {
         this.eloMap = new HashMap<>();
         this.settings = new HashMap<>();
         this.customInvs = new HashMap<>();
+        this.duelRequests = new HashMap<>();
 
         Practice.getInstance().getBackend().loadProfile(this);
 
@@ -83,7 +88,7 @@ public class Profile {
 
     public int getElo(Ladder ladder) {
         if(!eloMap.containsKey(ladder))
-            eloMap.put(ladder, RankingUtils.STARTING_ELO);
+            return RankingUtils.STARTING_ELO;
 
         return eloMap.get(ladder);
     }

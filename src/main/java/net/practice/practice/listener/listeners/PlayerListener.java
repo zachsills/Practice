@@ -2,6 +2,7 @@ package net.practice.practice.listener.listeners;
 
 import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
@@ -13,6 +14,7 @@ import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,7 +49,7 @@ public class PlayerListener implements Listener {
         Player player = (Player) event.getEntity();
         Profile profile = Profile.getByPlayer(player);
 
-        switch (profile.getProfileState()) {
+        switch(profile.getProfileState()) {
             case PLAYING:
                 break;
             default:
@@ -66,13 +68,22 @@ public class PlayerListener implements Listener {
 
         switch(profile.getProfileState()) {
             case PLAYING:
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if(event.getItemDrop().isValid() && !event.getItemDrop().isDead())
+                if(event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
                             event.getItemDrop().remove();
-                    }
-                }.runTaskLater(Practice.getInstance(), 40L);
+                        }
+                    }.runTaskLater(Practice.getInstance(), 2L);
+                } else {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if(event.getItemDrop().isValid() && !event.getItemDrop().isDead())
+                                event.getItemDrop().remove();
+                        }
+                    }.runTaskLater(Practice.getInstance(), 40L);
+                }
                 break;
             case BUILDING:
                 break;
@@ -193,6 +204,30 @@ public class PlayerListener implements Listener {
 
                         player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
                         player.closeInventory();
+                    }
+                }
+            } else if(event.getClickedInventory().getTitle().contains("Requesting")) {
+                if(item.getItemMeta().hasDisplayName()) {
+                    Player requested = Bukkit.getPlayer(event.getClickedInventory().getTitle().split(" ")[1]);
+                    if(requested == null || !requested.isOnline()) {
+                        player.sendMessage(ChatColor.RED + "The player '" + event.getClickedInventory().getTitle().split(" ")[1] + "' is no longer online.");
+                        return;
+                    }
+
+                    Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+                    if(ladder != null) {
+                        player.closeInventory();
+
+                        if(profile.getDuelRequests().containsKey(requested.getName())) {
+                            player.sendMessage(C.color("&cYou have already sent this player a request."));
+                            return;
+                        }
+
+                        DuelRequest request = new DuelRequest(player, requested, ladder);
+
+                        request.sendToRequested();
+
+                        player.sendMessage(C.color("&aYou have sent a duel request to: " + requested.getName()));
                     }
                 }
             }

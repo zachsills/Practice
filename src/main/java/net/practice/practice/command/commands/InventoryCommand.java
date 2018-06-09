@@ -29,10 +29,7 @@ public class InventoryCommand {
             return;
         }
 
-        InventorySnapshot recentSnapshot = profile.getRecentDuel().getSnapshots().stream()
-                .filter(snapshot -> snapshot.getName().equals(player.getName()))
-                .findFirst()
-                .orElse(null);
+        InventorySnapshot recentSnapshot = profile.getRecentDuel().getSnapshot(player);
 
         recentSnapshot.open(args.getPlayer());
     }

@@ -14,7 +14,8 @@ public class CommandHandler {
                 new ArenaCommand(),
                 new SpawnCommand(),
                 new StatsCommand(),
-                new InventoryCommand()
+                new InventoryCommand(),
+                new DuelCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().registerCommands(command));
     }
 
@@ -25,7 +26,8 @@ public class CommandHandler {
                 new ArenaCommand(),
                 new SpawnCommand(),
                 new StatsCommand(),
-                new InventoryCommand()
+                new InventoryCommand(),
+                new DuelCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().unregisterCommands(command));
     }
 }

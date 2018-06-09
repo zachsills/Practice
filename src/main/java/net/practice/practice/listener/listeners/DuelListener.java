@@ -4,6 +4,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
 import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
+import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.player.Profile;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -25,25 +26,11 @@ public class DuelListener implements Listener {
             return;
 
         Duel duel = profile.getCurrentDuel();
+        if(duel.getState() != DuelState.PLAYING)
+            return;
+
         duel.saveInventory(profile.getUuid());
-        switch(duel.getType()) {
-            case ONE_VS_ONE: {
-                SoloDuel soloDuel = (SoloDuel) duel;
-
-                soloDuel.setWinner(soloDuel.getPlayerOne() != profile.getPlayer() ? soloDuel.getPlayerOne() : soloDuel.getPlayerTwo());
-                soloDuel.saveInventory(soloDuel.getWinner().getUniqueId());
-                soloDuel.end(DuelEndReason.DIED);
-                break;
-            }
-            case TWO_VS_TWO: {
-
-                break;
-            }
-            case TEAM_VS_TEAM: {
-
-                break;
-            }
-        }
+        duel.kill(event.getEntity());
 
         new BukkitRunnable() {
             @Override
@@ -77,7 +64,11 @@ public class DuelListener implements Listener {
             return;
 
         Duel duel = profile.getCurrentDuel();
+        if(duel.getState() != DuelState.PLAYING)
+            return;
+
         duel.saveInventory(profile.getUuid());
+
         switch(duel.getType()) {
             case ONE_VS_ONE: {
                 SoloDuel soloDuel = (SoloDuel) duel;

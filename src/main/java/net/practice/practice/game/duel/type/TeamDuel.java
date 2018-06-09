@@ -38,7 +38,7 @@ public class TeamDuel extends Duel {
 
     @Override
     public void end(DuelEndReason reason) {
-
+        super.end(reason);
     }
 
     @Override
@@ -48,7 +48,28 @@ public class TeamDuel extends Duel {
     }
 
     @Override
+    public void kill(Player player) {
+
+    }
+
+    @Override
+    public void quit(Player player) {
+
+    }
+
+    @Override
     public boolean hasPlayer(Player player) {
         return teamOne.contains(player) || teamTwo.contains(player);
+    }
+
+    @Override
+    public void saveInventories() {
+        teamOne.getPlayers().stream()
+                .filter(player -> !hasSnapshot(player))
+                .forEach(this::saveInventory);
+
+        teamTwo.getPlayers().stream()
+                .filter(player -> !hasSnapshot(player))
+                .forEach(this::saveInventory);
     }
 }

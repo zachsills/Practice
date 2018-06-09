@@ -11,6 +11,7 @@ import net.practice.practice.game.queue.QueueRunnable;
 import net.practice.practice.listener.ListenerHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.storage.MongoBackend;
+import net.practice.practice.task.CleanerTask;
 import net.practice.practice.task.UpdateInventoryTask;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
@@ -58,6 +59,7 @@ public class Practice extends JavaPlugin {
 
         /* Tasks */
         new QueueRunnable().runTaskTimer(this, 20L, 40L);
+        new CleanerTask().runTaskTimerAsynchronously(this, 20L, 15L * 20L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 100L);
     }
 

@@ -42,8 +42,11 @@ public class InventorySnapshot {
         for(int i = 0; i < contents.length; i++)
             inventory.setItem(i, contents[i]);
 
-        for(ItemStack item : armor)
-            inventory.addItem(item);
+        int i = 36;
+        for(ItemStack item : armor) {
+            inventory.setItem(i, item);
+            i++;
+        }
 
         inventory.setItem(47, new I(Material.SPECKLED_MELON).name(C.color("&ePlayer Info")).clearLore().lore(C.color("&dHearts: &7" + (Math.round(health * 2) / 2.0))));
 

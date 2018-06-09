@@ -83,18 +83,42 @@ public abstract class Duel {
         }
     }
 
-    public abstract void sendMessage(String message);
-
     public void end(DuelEndReason reason) {
         if(countDownTask != null)
             countDownTask.cancel();
 
         setState(DuelState.ENDED);
+
+        saveInventories();
     }
+
+    public boolean hasSnapshot(Player player) {
+        return snapshots.stream()
+                .anyMatch(snapshot -> snapshot.getName().equals(player.getName()));
+    }
+
+    public InventorySnapshot getSnapshot(Player player) {
+        return snapshots.stream()
+                .filter(snapshot -> snapshot.getName().equals(player.getName()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public abstract void sendMessage(String message);
+
+    public abstract void kill(Player player);
+
+    public abstract void quit(Player player);
 
     public abstract boolean hasPlayer(Player player);
 
-    public void saveInventory(UUID uuid) {
-        snapshots.add(new InventorySnapshot(Bukkit.getPlayer(uuid)));
+    public void saveInventory(Player player) {
+        snapshots.add(new InventorySnapshot(player));
     }
+
+    public void saveInventory(UUID uuid) {
+        saveInventory(Bukkit.getPlayer(uuid));
+    }
+
+    public abstract void saveInventories();
 }

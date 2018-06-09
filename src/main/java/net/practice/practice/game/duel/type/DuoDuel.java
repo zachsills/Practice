@@ -46,6 +46,16 @@ public class DuoDuel extends Duel {
     }
 
     @Override
+    public void kill(Player player) {
+
+    }
+
+    @Override
+    public void quit(Player player) {
+
+    }
+
+    @Override
     public void sendMessage(String message) {
         duoOne.forEach(player -> player.sendMessage(C.color(message)));
         duoTwo.forEach(player -> player.sendMessage(C.color(message)));
@@ -54,5 +64,16 @@ public class DuoDuel extends Duel {
     @Override
     public boolean hasPlayer(Player player) {
         return getDuoOne().contains(player) || getDuoTwo().contains(player);
+    }
+
+    @Override
+    public void saveInventories() {
+        duoOne.stream()
+                .filter(player -> !hasSnapshot(player))
+                .forEach(this::saveInventory);
+
+        duoTwo.stream()
+                .filter(player -> !hasSnapshot(player))
+                .forEach(this::saveInventory);
     }
 }

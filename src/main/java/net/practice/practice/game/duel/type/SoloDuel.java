@@ -100,7 +100,29 @@ public class SoloDuel extends Duel {
     }
 
     @Override
+    public void kill(Player player) {
+        setWinner(playerOne != player ? playerOne : playerTwo);
+        saveInventory(winner.getUniqueId());
+
+        end(DuelEndReason.DIED);
+    }
+
+    @Override
+    public void quit(Player player) {
+
+    }
+
+    @Override
     public boolean hasPlayer(Player player) {
         return player.getUniqueId().toString().equals(getPlayerOne().getUniqueId().toString()) || player.getUniqueId().toString().equals(getPlayerTwo().getUniqueId().toString());
+    }
+
+    @Override
+    public void saveInventories() {
+        if(!hasSnapshot(playerOne))
+            saveInventory(playerOne.getUniqueId());
+
+        if(!hasSnapshot(playerTwo))
+            saveInventory(playerTwo.getUniqueId());
     }
 }
