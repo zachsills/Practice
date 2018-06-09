@@ -31,6 +31,11 @@ public class DuelCommand {
         }
 
         Profile profile = Profile.getByPlayer(player);
+        if(profile.isInGame()) {
+            args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
+            return;
+        }
+
         if(profile.getDuelRequests().containsKey(args.getPlayer().getName())) {
             args.getPlayer().sendMessage(C.color("&cYou have already sent this player a request."));
             return;
@@ -53,6 +58,11 @@ public class DuelCommand {
         }
 
         Profile profile = Profile.getByPlayer(player);
+        if(profile.isInGame()) {
+            args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
+            return;
+        }
+
         if(!profile.getDuelRequests().containsKey(args.getPlayer().getName())) {
             args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
             return;

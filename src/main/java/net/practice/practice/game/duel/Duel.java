@@ -12,9 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class Duel {
 
@@ -28,6 +26,8 @@ public abstract class Duel {
 
     @Getter private Set<InventorySnapshot> snapshots;
 
+    @Getter private Map<Player, Integer> missedPots;
+
     private BukkitRunnable countDownTask;
     @Getter private int countDown = 5;
 
@@ -37,6 +37,8 @@ public abstract class Duel {
         this.type = type;
 
         this.snapshots = new HashSet<>();
+
+        this.missedPots = new HashMap<>();
 
         this.state = DuelState.STARTING;
     }
@@ -84,6 +86,8 @@ public abstract class Duel {
     }
 
     public void end(DuelEndReason reason) {
+        endTime = System.currentTimeMillis();
+
         if(countDownTask != null)
             countDownTask.cancel();
 

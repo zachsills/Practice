@@ -109,7 +109,8 @@ public class SoloDuel extends Duel {
 
     @Override
     public void quit(Player player) {
-
+        setWinner(playerOne != player ? playerOne : playerTwo);
+        end(DuelEndReason.QUIT);
     }
 
     @Override

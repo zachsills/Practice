@@ -29,6 +29,9 @@ public class SpawnHandler {
 
         }
 
+        player.setLevel(0);
+        player.setExp(0.0F);
+
         player.getInventory().setContents(getSpawnInventory(player));
         player.updateInventory();
 
