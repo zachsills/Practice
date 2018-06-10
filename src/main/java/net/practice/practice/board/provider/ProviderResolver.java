@@ -46,8 +46,8 @@ public class ProviderResolver implements BoardProvider {
             return Collections.emptyList();
 
         BoardProvider provider = lobbyProvider;
-        if(providers.containsKey(profile.getProfileState()))
-            provider = providers.get(profile.getProfileState());
+        if(providers.containsKey(profile.getState()))
+            provider = providers.get(profile.getState());
 
         List<String> lines = provider.getLines(player);
         if(!lines.isEmpty()) {

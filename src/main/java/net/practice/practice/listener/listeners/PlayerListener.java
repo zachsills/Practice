@@ -49,7 +49,7 @@ public class PlayerListener implements Listener {
         Player player = (Player) event.getEntity();
         Profile profile = Profile.getByPlayer(player);
 
-        switch(profile.getProfileState()) {
+        switch(profile.getState()) {
             case PLAYING:
                 break;
             default:
@@ -66,7 +66,7 @@ public class PlayerListener implements Listener {
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 
-        switch(profile.getProfileState()) {
+        switch(profile.getState()) {
             case PLAYING:
                 if(event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE) {
                     new BukkitRunnable() {
@@ -101,7 +101,7 @@ public class PlayerListener implements Listener {
         Player player = (Player) event.getEntity();
         Profile profile = Profile.getByPlayer(player);
 
-        switch(profile.getProfileState()) {
+        switch(profile.getState()) {
             case PLAYING: {
                 if(event instanceof EntityDamageByEntityEvent) {
                     EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
@@ -140,7 +140,7 @@ public class PlayerListener implements Listener {
         if(item.getItemMeta().hasDisplayName()) {
             String display = item.getItemMeta().getDisplayName();
 
-            switch(profile.getProfileState()) {
+            switch(profile.getState()) {
                 case LOBBY: {
                     if(display.contains("Unranked"))
                         UnrankedInv.openInventory(player);
@@ -148,9 +148,10 @@ public class PlayerListener implements Listener {
                         RankedInv.openInventory(player);
                     else if(display.contains("Stats"))
                         Bukkit.dispatchCommand(player, "stats");
-                    else if(display.contains("Last Queue")) {
+                    else if(display.contains("Last Queue"))
                         profile.addToQueue(profile.getLastQueue());
-                    }
+                    else if(display.contains("Rematch"))
+                        profile.sendRematch();
                     event.setCancelled(true);
                     break;
                 }
@@ -181,7 +182,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if(profile.getProfileState() == ProfileState.LOBBY && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
+        if(profile.getState() == ProfileState.LOBBY && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);
 
             if(item == null || item.getItemMeta() == null) return;

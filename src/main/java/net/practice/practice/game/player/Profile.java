@@ -7,6 +7,8 @@ import lombok.Setter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelRequest;
+import net.practice.practice.game.duel.DuelType;
+import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
@@ -17,8 +19,10 @@ import net.practice.practice.inventory.item.ItemStorage;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.RankingUtils;
+import net.practice.practice.util.chat.C;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -41,7 +45,7 @@ public class Profile {
     @Getter @Setter private Queue currentQueue, lastQueue;
     @Getter @Setter private Team team;
 
-    @Getter @Setter private ProfileState profileState;
+    @Getter @Setter private ProfileState state;
 
     @Getter @Setter private Integer rankedWins = 0, rankedLosses = 0;
     @Getter @Setter private Integer unrankedWins = 0, unrankedLosses = 0;
@@ -104,38 +108,79 @@ public class Profile {
     }
 
     public boolean isQueueing() {
-        return currentQueue != null && profileState == ProfileState.QUEUING;
+        return currentQueue != null && state == ProfileState.QUEUING;
     }
 
     public boolean isInGame() {
-        return currentDuel != null && profileState == ProfileState.PLAYING;
+        return currentDuel != null && state == ProfileState.PLAYING;
     }
 
     public void setCurrentDuel(Duel duel) {
         currentDuel = duel;
         if(currentDuel == null) {
-            setProfileState(ProfileState.LOBBY);
+            setState(ProfileState.LOBBY);
             return;
         }
 
-        setProfileState(ProfileState.PLAYING);
+        if(getRecentDuel() != null) {
+            if(recentDuel.getType() == DuelType.ONE_VS_ONE) {
+                SoloDuel soloDuel = (SoloDuel) recentDuel;
+                Player opponent = soloDuel.getPlayerOne() == getPlayer() ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne();
+                if(opponent != null)
+                    Profile.getByPlayer(opponent).cleanupRecent();
+            }
+        }
+
+        setState(ProfileState.PLAYING);
     }
 
     public void setRecentDuel(Duel duel) {
         recentDuel = duel;
         if(duel == null) {
-
+            cleanupRecent();
         }
 
         getPlayer().setExp(0.0F);
         getPlayer().setLevel(0);
     }
 
+    public void cleanupRecent() {
+        if(state == ProfileState.LOBBY) {
+            if(getPlayer() != null && getPlayer().getInventory().getItem(3) != null)
+                getPlayer().getInventory().setItem(3, null);
+        }
+    }
+
+    public void sendRematch() {
+        if(recentDuel == null) {
+            cleanupRecent();
+            return;
+        }
+
+        if(recentDuel.getType() == DuelType.ONE_VS_ONE) {
+            SoloDuel soloDuel = (SoloDuel) recentDuel;
+            Player opponent = soloDuel.getPlayerOne() == getPlayer() ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne();
+            if(opponent != null) {
+                DuelRequest request = new DuelRequest(getPlayer(), opponent, soloDuel.getLadder());
+                request.setRematch(true);
+
+                request.sendToRequested();
+
+                cleanupRecent();
+                getPlayer().sendMessage(C.color("&aYou have sent a rematch request to " + opponent.getName() + "."));
+                return;
+            }
+
+            getPlayer().sendMessage(C.color("&cYour opponent was unable to accept a rematch."));
+            cleanupRecent();
+        }
+    }
+
     public void addToQueue(Queue queue) {
         queue.add(uuid);
         setCurrentQueue(queue);
 
-        setProfileState(ProfileState.QUEUING);
+        setState(ProfileState.QUEUING);
 
         Player player = getPlayer();
         if(player != null) {
@@ -151,7 +196,7 @@ public class Profile {
         getCurrentQueue().remove(uuid);
         setCurrentQueue(null);
 
-        setProfileState(ProfileState.LOBBY);
+        setState(ProfileState.LOBBY);
     }
 
     public void leaveQueue(boolean spawn) {
@@ -166,6 +211,24 @@ public class Profile {
             if(player != null)
                 SpawnHandler.spawn(player, tp);
         }
+    }
+
+    public void handleKill() {
+        Player player = getPlayer();
+
+        player.setGameMode(GameMode.CREATIVE);
+
+        player.setHealth(20.0);
+        player.setFoodLevel(20);
+
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+
+        player.setAllowFlight(true);
+        player.setFlying(true);
+        player.setVelocity(player.getVelocity().setY(1.5F));
+
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
     }
 
     public void save() {

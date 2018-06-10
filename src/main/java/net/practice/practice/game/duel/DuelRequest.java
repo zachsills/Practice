@@ -1,6 +1,7 @@
 package net.practice.practice.game.duel;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.practice.practice.game.arena.Arena;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
@@ -17,21 +18,31 @@ public class DuelRequest {
 
     @Getter private long requestedTime;
 
+    @Getter @Setter private boolean rematch;
+
     public DuelRequest(Player requester, Player requested, Ladder ladder) {
+        this.requestedTime = System.currentTimeMillis();
+
         this.requester = requester;
         this.requested = requested;
 
         this.ladder = ladder;
 
         Profile.getByPlayer(requester).getDuelRequests().putIfAbsent(requested.getName(), this);
-
-        this.requestedTime = System.currentTimeMillis();
     }
+
+
 
     public void sendToRequested() {
         requested.sendMessage(" ");
-        requested.sendMessage(C.color("&eNew Duel Request: "));
-        requested.sendMessage(C.color("  &7From: &6" + requester.getName()));
+
+        if(rematch) {
+            requested.sendMessage(C.color("&e" + requester.getName() + " wants a rematch!"));
+        } else {
+            requested.sendMessage(C.color("&eNew Duel Request: "));
+            requested.sendMessage(C.color("  &7From: &6" + requester.getName()));
+        }
+
         requested.sendMessage(C.color("  &7Ladder: &6" + ladder.getDisplayName()));
         new JsonMessage()
                 .append(ChatColor.GREEN + " ACCEPT").setClickAsExecuteCmd("/accept " + requester.getName()).save()
@@ -47,7 +58,7 @@ public class DuelRequest {
 
         new SoloDuel(Arena.getRandomArena(getLadder()), getLadder(), requester, requested).preStart();
 
-        Profile.getByPlayer(requester).getDuelRequests().remove(requested.getName());
+        deny();
     }
 
     public void deny() {

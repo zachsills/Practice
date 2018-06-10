@@ -1,6 +1,9 @@
 package net.practice.practice.spawn;
 
 import net.practice.practice.Practice;
+import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.duel.DuelType;
+import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.util.InvUtils;
@@ -36,7 +39,7 @@ public class SpawnHandler {
         player.updateInventory();
 
         Profile profile = Profile.getByPlayer(player);
-        profile.setProfileState(ProfileState.LOBBY);
+        profile.setState(ProfileState.LOBBY);
         profile.setCurrentDuel(null);
     }
 
@@ -50,6 +53,16 @@ public class SpawnHandler {
 
         if(profile.getLastQueue() != null)
             items[2] = new I(Material.EGG).name(C.color("&7Last Queue [&equeueName&7]").replace("queueName", profile.getLastQueue().getLadder().getName())).lore(C.color("&7Easily queue again and again and again and again :D."));
+
+        if(profile.getRecentDuel() != null) {
+            Duel duel = profile.getRecentDuel();
+            if(duel.getType() == DuelType.ONE_VS_ONE) {
+                SoloDuel soloDuel = (SoloDuel) duel;
+                Player rematcher = soloDuel.getPlayerOne() == player ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne();
+                if(rematcher != null)
+                    items[3] = new I(Material.DIAMOND).name(C.color("&bRematch playerName").replace("playerName", rematcher.getName())).lore(C.color("&7Easily send a rematch request to your last opponent."));
+            }
+        }
 
         items[4] = new I(getSkull(player.getName())).name(C.color("&cStats")).lore(C.color("&7Look at leaderboards and statistics."));
 

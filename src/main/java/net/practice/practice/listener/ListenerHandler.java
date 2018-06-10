@@ -1,10 +1,7 @@
 package net.practice.practice.listener;
 
 import net.practice.practice.Practice;
-import net.practice.practice.listener.listeners.DuelListener;
-import net.practice.practice.listener.listeners.PlayerListener;
-import net.practice.practice.listener.listeners.WeatherListener;
-import net.practice.practice.listener.listeners.WorldListener;
+import net.practice.practice.listener.listeners.*;
 import org.bukkit.Bukkit;
 
 import java.util.stream.Stream;
@@ -13,6 +10,7 @@ public class ListenerHandler {
 
     public static void registerListeners() {
         Stream.of(
+                new BlockListener(),
                 new DuelListener(),
                 new PlayerListener(),
                 new WeatherListener(),

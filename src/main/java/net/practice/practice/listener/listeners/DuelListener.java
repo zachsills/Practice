@@ -1,6 +1,5 @@
 package net.practice.practice.listener.listeners;
 
-import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
 import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelState;
@@ -9,7 +8,6 @@ import net.practice.practice.task.EnderPearlTask;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -24,7 +22,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class DuelListener implements Listener {
 
@@ -44,7 +41,9 @@ public class DuelListener implements Listener {
         duel.saveInventory(profile.getUuid());
         duel.kill(event.getEntity());
 
-        new BukkitRunnable() {
+        profile.handleKill();
+
+        /*new BukkitRunnable() {
             @Override
             public void run() {
                 if(event.getEntity().isDead())
@@ -52,7 +51,7 @@ public class DuelListener implements Listener {
 
                 event.getEntity().teleport(deathLoc);
             }
-        }.runTaskLater(Practice.getInstance(), 5L);
+        }.runTaskLater(Practice.getInstance(), 5L);*/
     }
 
     @EventHandler
@@ -98,6 +97,7 @@ public class DuelListener implements Listener {
 
         if(profile.getCurrentDuel().getState() != DuelState.PLAYING) {
             player.sendMessage(C.color("&cYou can not throw pearls unless the game is started."));
+            event.setCancelled(true);
             return;
         }
 
