@@ -25,7 +25,7 @@ public class InventoryCommand {
 
         Profile profile = Profile.getByPlayer(player);
         if(profile.getRecentDuel() == null) {
-            args.getPlayer().sendMessage(ChatColor.RED + "The player " + args.getArgs(0) + " doesn't have a recent inventory.");
+            args.getPlayer().sendMessage(ChatColor.RED + "The player '" + args.getArgs(0) + "' doesn't have a recent inventory.");
             return;
         }
 

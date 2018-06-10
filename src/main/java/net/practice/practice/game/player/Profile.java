@@ -17,7 +17,6 @@ import net.practice.practice.inventory.item.ItemStorage;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.RankingUtils;
-import net.practice.practice.util.chat.C;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -122,6 +121,16 @@ public class Profile {
         setProfileState(ProfileState.PLAYING);
     }
 
+    public void setRecentDuel(Duel duel) {
+        recentDuel = duel;
+        if(duel == null) {
+
+        }
+
+        getPlayer().setExp(0.0F);
+        getPlayer().setLevel(0);
+    }
+
     public void addToQueue(Queue queue) {
         queue.add(uuid);
         setCurrentQueue(queue);
@@ -154,10 +163,8 @@ public class Profile {
 
         if(spawn) {
             Player player = getPlayer();
-            if(player != null) {
+            if(player != null)
                 SpawnHandler.spawn(player, tp);
-                player.sendMessage(C.color("&f\u00BB &eLeft the queue for " + getCurrentQueue().getLadder().getDisplayName() + "."));
-            }
         }
     }
 

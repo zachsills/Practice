@@ -12,7 +12,7 @@ public class RequestInv {
         Inventory inventory = Bukkit.createInventory(requester, 18, "Requesting: " + requested.getName());
 
         for(Ladder ladder : Ladder.getLadders().values())
-            inventory.addItem(new I(ladder.getDisplayIcon()).amount(1).name(ladder.getDisplayName()));
+            inventory.addItem(new I(ladder.getDisplayIcon()).amount(1).name(ladder.getDisplayName()).clearLore());
 
         requester.openInventory(inventory);
     }

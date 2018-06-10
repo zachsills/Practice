@@ -96,7 +96,12 @@ public class DuelListener implements Listener {
             return;
         }
 
-        if(player.getExp() < 1F)
+        if(profile.getCurrentDuel().getState() != DuelState.PLAYING) {
+            player.sendMessage(C.color("&cYou can not throw pearls unless the game is started."));
+            return;
+        }
+
+        if(player.getExp() < 0.01F)
             return;
 
         event.setCancelled(true);
@@ -118,6 +123,7 @@ public class DuelListener implements Listener {
             return;
         }
 
+        player.setExp(1.0F);
         new EnderPearlTask(player).runTaskTimerAsynchronously(Practice.getInstance(), 2L, 1L);
     }
 
