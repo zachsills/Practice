@@ -75,7 +75,7 @@ public class CommandFramework implements CommandExecutor {
                 final Method method = commandMap.get(cmdLabel).getKey();
                 final Object methodObject = commandMap.get(cmdLabel).getValue();
                 final Command command = method.getAnnotation(Command.class);
-                if(command.permission() != "" && !sender.hasPermission(command.permission())) {
+                if(!command.permission().equals("") && !sender.hasPermission(command.permission())) {
                     sender.sendMessage(C.color(command.noPerm()));
                     return true;
                 }

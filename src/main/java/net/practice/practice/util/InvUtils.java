@@ -204,6 +204,7 @@ public class InvUtils {
         player.setFlying(false);
         player.setMaximumNoDamageTicks(20);
         player.setFoodLevel(20);
+        player.setSaturation(5);
         player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
         player.setFallDistance(0.0f);

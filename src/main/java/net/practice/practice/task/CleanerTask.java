@@ -13,7 +13,7 @@ public class CleanerTask extends BukkitRunnable {
     public void run() {
         for(Profile profile : Profile.getProfiles().values()) {
             if(profile.getRecentDuel() != null) {
-                if(profile.getRecentDuel().getEndTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 30000)
+                if(profile.getRecentDuel().getEndTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 1000 * 90)
                     profile.setRecentDuel(null);
             }
 
@@ -25,7 +25,7 @@ public class CleanerTask extends BukkitRunnable {
                     continue;
                 }
 
-                if(request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 30000)
+                if(request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 1000 * 90)
                     requests.remove();
             }
         }

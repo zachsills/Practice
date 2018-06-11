@@ -101,8 +101,7 @@ public class ArenaCommand {
     public void sendHelp(Player player) {
         player.sendMessage(C.color("&eArena Help"));
         player.sendMessage(C.color("&a/arena create <name>"));
-        player.sendMessage(C.color("&a/arena pos1 <name>"));
-        player.sendMessage(C.color("&a/arena pos2 <name>"));
+        player.sendMessage(C.color("&a/arena remove <name>"));
         player.sendMessage(C.color("&a/arena spawn1 <name>"));
         player.sendMessage(C.color("&a/arena spawn2 <name>"));
         player.sendMessage(C.color("&a/arena builder <name> <builder's name>"));
