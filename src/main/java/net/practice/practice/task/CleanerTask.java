@@ -25,8 +25,10 @@ public class CleanerTask extends BukkitRunnable {
                     continue;
                 }
 
-                if(request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 1000 * 90)
-                    requests.remove();
+                if(profile.getRecentDuel() != null) {
+                    if (request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 1000 * 90)
+                        requests.remove();
+                }
             }
         }
     }
