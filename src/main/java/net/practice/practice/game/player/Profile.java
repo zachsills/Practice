@@ -10,11 +10,11 @@ import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
+import net.practice.practice.game.party.Party;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
-import net.practice.practice.game.team.Team;
 import net.practice.practice.inventory.item.ItemStorage;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
@@ -43,7 +43,7 @@ public class Profile {
 
     @Getter @Setter private Duel currentDuel, recentDuel;
     @Getter @Setter private Queue currentQueue, lastQueue;
-    @Getter @Setter private Team team;
+    @Getter @Setter private Party party;
 
     @Getter @Setter private ProfileState state;
 
@@ -161,6 +161,11 @@ public class Profile {
             SoloDuel soloDuel = (SoloDuel) recentDuel;
             Player opponent = soloDuel.getPlayerOne() == getPlayer() ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne();
             if(opponent != null) {
+                if(Profile.getByPlayer(opponent).getDuelRequests().containsKey(getPlayer().getName())) {
+                    Profile.getByPlayer(opponent).getDuelRequests().get(getPlayer().getName()).accept();
+                    return;
+                }
+
                 DuelRequest request = new DuelRequest(getPlayer(), opponent, soloDuel.getLadder());
                 request.setRematch(true);
 
@@ -292,9 +297,7 @@ public class Profile {
     }
 
     public Document toDocument() {
-        Document document = new Document();
-
-        document.append("uuid", uuid);
+        Document document = new Document().append("uuid", uuid);
 
         BasicDBObject eloStore = new BasicDBObject();
         for(Map.Entry<Ladder, Integer> eloEntry : eloMap.entrySet()) {

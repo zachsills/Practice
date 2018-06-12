@@ -8,7 +8,7 @@ public enum DuelType {
     ONE_VS_ONE("One vs. One"),
     TWO_VS_TWO("Two vs. Two"),
     FREE_FOR_ALL("Free For All"),
-    TEAM_VS_TEAM("Team vs. Team");
+    TEAM_VS_TEAM("Party vs. Party");
 
     @Getter private final String friendlyName;
 

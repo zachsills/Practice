@@ -6,20 +6,20 @@ import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.DuelType;
-import net.practice.practice.game.team.Team;
+import net.practice.practice.game.party.Party;
 import org.bukkit.entity.Player;
 
 public class TeamDuel extends Duel {
 
-    @Getter private Team teamOne, teamTwo;
+    @Getter private Party partyOne, partyTwo;
 
-    @Getter private Team winner;
+    @Getter private Party winner;
 
-    public TeamDuel(Arena arena, Ladder ladder, Team teamOne, Team teamTwo) {
+    public TeamDuel(Arena arena, Ladder ladder, Party partyOne, Party partyTwo) {
         super(arena, ladder, DuelType.TEAM_VS_TEAM);
 
-        this.teamOne = teamOne;
-        this.teamTwo = teamTwo;
+        this.partyOne = partyOne;
+        this.partyTwo = partyTwo;
     }
 
     @Override
@@ -43,8 +43,8 @@ public class TeamDuel extends Duel {
 
     @Override
     public void sendMessage(String message) {
-        teamOne.sendMessage(message);
-        teamTwo.sendMessage(message);
+        partyOne.sendMessage(message);
+        partyTwo.sendMessage(message);
     }
 
     @Override
@@ -59,16 +59,16 @@ public class TeamDuel extends Duel {
 
     @Override
     public boolean hasPlayer(Player player) {
-        return teamOne.contains(player) || teamTwo.contains(player);
+        return partyOne.contains(player) || partyTwo.contains(player);
     }
 
     @Override
     public void saveInventories() {
-        teamOne.getPlayers().stream()
+        partyOne.getPlayers().stream()
                 .filter(player -> !hasSnapshot(player))
                 .forEach(this::saveInventory);
 
-        teamTwo.getPlayers().stream()
+        partyTwo.getPlayers().stream()
                 .filter(player -> !hasSnapshot(player))
                 .forEach(this::saveInventory);
     }

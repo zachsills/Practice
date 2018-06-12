@@ -1,4 +1,4 @@
-package net.practice.practice.game.team;
+package net.practice.practice.game.party;
 
 import lombok.Getter;
 import net.practice.practice.game.player.Profile;
@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class TeamManager {
+public class PartyManager {
 
-    @Getter private static final Map<UUID, Team> teams = new HashMap<>();
+    @Getter private static final Map<UUID, Party> teams = new HashMap<>();
 
     public static boolean isInTeam(Player player) {
         Profile profile = Profile.getByPlayer(player);
 
-        return profile.getTeam() != null && teams.values().contains(profile.getTeam());
+        return profile.getParty() != null && teams.values().contains(profile.getParty());
     }
 }

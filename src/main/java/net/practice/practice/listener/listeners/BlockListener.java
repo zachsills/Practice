@@ -13,6 +13,12 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
         if(event.getPlayer().isOp() && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            Profile profile = Profile.getByPlayer(event.getPlayer());
+            if(profile.isInGame()) {
+                event.setCancelled(true);
+                return;
+            }
+
             event.setCancelled(false);
             return;
         }
@@ -35,6 +41,12 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         if(event.getPlayer().isOp() && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            Profile profile = Profile.getByPlayer(event.getPlayer());
+            if(profile.isInGame()) {
+                event.setCancelled(true);
+                return;
+            }
+
             event.setCancelled(false);
             return;
         }
