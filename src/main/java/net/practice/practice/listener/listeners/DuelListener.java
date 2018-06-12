@@ -6,7 +6,6 @@ import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.task.EnderPearlTask;
 import net.practice.practice.util.chat.C;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -35,13 +34,13 @@ public class DuelListener implements Listener {
         if(duel.getState() != DuelState.PLAYING)
             return;
 
-        Location deathLoc = event.getEntity().getLocation();
+        //Location deathLoc = event.getEntity().getLocation();
         event.getDrops().clear();
 
         duel.saveInventory(profile.getUuid());
         duel.kill(event.getEntity());
 
-        profile.handleKill();
+        profile.handleDeath();
 
         /*new BukkitRunnable() {
             @Override

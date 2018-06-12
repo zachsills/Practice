@@ -24,6 +24,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class Profile {
     @Getter @Setter private Duel currentDuel, recentDuel;
     @Getter @Setter private Queue currentQueue, lastQueue;
     @Getter @Setter private Party party;
+    @Getter @Setter private Ladder editing;
 
     @Getter @Setter private ProfileState state;
 
@@ -104,7 +106,10 @@ public class Profile {
     }
 
     public Object getSetting(ProfileSetting setting) {
-        return settings.getOrDefault(setting, setting.getDefaultValue());
+        if(!settings.containsKey(setting))
+            return setting.getDefaultValue();
+
+        return settings.get(setting);
     }
 
     public boolean isQueueing() {
@@ -218,7 +223,7 @@ public class Profile {
         }
     }
 
-    public void handleKill() {
+    public void handleDeath() { // TODO: Move to duel
         Player player = getPlayer();
 
         player.setGameMode(GameMode.CREATIVE);
@@ -234,6 +239,35 @@ public class Profile {
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
+    }
+
+    public void openSettings() {
+        Inventory inventory = Bukkit.createInventory(getPlayer(), 9, "Toggle Settings");
+
+        int i = 1;
+        for(ProfileSetting setting : ProfileSetting.values()) {
+            inventory.setItem(i, ProfileSetting.getSettingItem(setting, getSetting(setting)));
+
+            i += 2;
+        }
+
+        getPlayer().openInventory(inventory);
+    }
+
+    public void toggleSetting(ProfileSetting setting) {
+        Object nextOption = ProfileSetting.getNextOption(setting, getSetting(setting));
+        settings.put(setting, nextOption);
+
+        ProfileSetting.toggleFor(getPlayer(), setting, nextOption);
+    }
+
+    public void beginEditing(Ladder ladder) {
+        editing = ladder;
+        setState(ProfileState.EDITING);
+    }
+
+    public void stopEditing() {
+        SpawnHandler.spawn(getPlayer());
     }
 
     public void save() {
@@ -297,7 +331,7 @@ public class Profile {
     }
 
     public Document toDocument() {
-        Document document = new Document().append("uuid", uuid);
+        Document document = new Document().append("uuid", uuid.toString());
 
         BasicDBObject eloStore = new BasicDBObject();
         for(Map.Entry<Ladder, Integer> eloEntry : eloMap.entrySet()) {

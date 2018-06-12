@@ -2,7 +2,6 @@ package net.practice.practice.board;
 
 import lombok.Getter;
 import net.practice.practice.Practice;
-import net.practice.practice.util.chat.C;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,7 +12,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Board {
     @Getter private static final Practice plugin = Practice.getInstance();
@@ -52,7 +50,7 @@ public class Board {
             return;
 
         List<String> lines = provider.getLines(player);
-        if(lines == null || lines.isEmpty())
+        if(lines == null)
             return;
 
         if(scoreboard.getEntries().size() != lines.size())

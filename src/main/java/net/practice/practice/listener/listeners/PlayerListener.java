@@ -6,7 +6,9 @@ import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
+import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
+import net.practice.practice.inventory.inventories.EditorInv;
 import net.practice.practice.inventory.inventories.RankedInv;
 import net.practice.practice.inventory.inventories.UnrankedInv;
 import net.practice.practice.spawn.SpawnHandler;
@@ -146,12 +148,16 @@ public class PlayerListener implements Listener {
                         UnrankedInv.openInventory(player);
                     else if(display.contains("Ranked"))
                         RankedInv.openInventory(player);
+                    else if(display.contains("Edit"))
+                        EditorInv.openInventory(player);
                     else if(display.contains("Stats"))
                         Bukkit.dispatchCommand(player, "stats");
                     else if(display.contains("Last Queue"))
                         profile.addToQueue(profile.getLastQueue());
                     else if(display.contains("Rematch"))
                         profile.sendRematch();
+                    else if(display.contains("Settings"))
+                        profile.openSettings();
                     event.setCancelled(true);
                     break;
                 }
@@ -185,52 +191,54 @@ public class PlayerListener implements Listener {
         if(profile.getState() == ProfileState.LOBBY && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);
 
-            if(item == null || item.getItemMeta() == null) return;
+            if(item == null || item.getItemMeta() == null || !item.getItemMeta().hasDisplayName())
+                return;
 
             if(event.getClickedInventory().getTitle().contains("Unranked")) {
-                if(item.getItemMeta().hasDisplayName()) {
-                    Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
-                    if(ladder != null) {
-                        profile.addToQueue(ladder.getUnrankedQueue());
+                Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+                if(ladder != null) {
+                    profile.addToQueue(ladder.getUnrankedQueue());
 
-                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
-                        player.closeInventory();
-                    }
+                    player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
+                    player.closeInventory();
                 }
             } else if(event.getClickedInventory().getTitle().contains("Ranked")) {
-                if(item.getItemMeta().hasDisplayName()) {
-                    Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
-                    if(ladder != null) {
-                        profile.addToQueue(ladder.getRankedQueue());
+                Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+                if(ladder != null) {
+                    profile.addToQueue(ladder.getRankedQueue());
 
-                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
-                        player.closeInventory();
-                    }
+                    player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
+                    player.closeInventory();
                 }
             } else if(event.getClickedInventory().getTitle().contains("Requesting")) {
-                if(item.getItemMeta().hasDisplayName()) {
-                    Player requested = Bukkit.getPlayer(event.getClickedInventory().getTitle().split(" ")[1]);
-                    if(requested == null || !requested.isOnline()) {
-                        player.sendMessage(ChatColor.RED + "The player '" + event.getClickedInventory().getTitle().split(" ")[1] + "' is no longer online.");
+                Player requested = Bukkit.getPlayer(event.getClickedInventory().getTitle().split(" ")[1]);
+                if(requested == null || !requested.isOnline()) {
+                    player.sendMessage(ChatColor.RED + "The player '" + event.getClickedInventory().getTitle().split(" ")[1] + "' is no longer online.");
+                    return;
+                }
+
+                Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+                if(ladder != null) {
+                    player.closeInventory();
+
+                    if(profile.getDuelRequests().containsKey(requested.getName())) {
+                        player.sendMessage(C.color("&cYou have already sent this player a request."));
                         return;
                     }
 
-                    Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
-                    if(ladder != null) {
-                        player.closeInventory();
+                    DuelRequest request = new DuelRequest(player, requested, ladder);
 
-                        if(profile.getDuelRequests().containsKey(requested.getName())) {
-                            player.sendMessage(C.color("&cYou have already sent this player a request."));
-                            return;
-                        }
+                    request.sendToRequested();
 
-                        DuelRequest request = new DuelRequest(player, requested, ladder);
-
-                        request.sendToRequested();
-
-                        player.sendMessage(C.color("&aYou have sent a duel request to: " + requested.getName()));
-                    }
+                    player.sendMessage(C.color("&aYou have sent a duel request to: " + requested.getName()));
                 }
+            } else if(event.getClickedInventory().getTitle().contains("Settings")) {
+                ProfileSetting setting = ProfileSetting.getByMaterial(item.getType());
+                profile.toggleSetting(setting);
+
+                event.getClickedInventory().setItem(event.getSlot(), ProfileSetting.getSettingItem(setting, profile.getSetting(setting)));
+            } else if(event.getClickedInventory().getTitle().contains("Select a Ladder...")) {
+
             }
         }
     }

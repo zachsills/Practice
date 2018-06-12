@@ -18,19 +18,15 @@ public class UnrankedQueue extends Queue {
 
     @Override
     public void setup() {
-        switch(getLadder().getDuelType()) {
-            case ONE_VS_ONE: {
-                Arena arena = Arena.getRandomArena(getLadder());
-                if(arena != null && Bukkit.getPlayer(getQueued().get(0)) != null && Bukkit.getPlayer(getQueued().get(1)) != null) {
-                    Profile profileOne = Profile.getByUuid(getQueued().get(0)), profileTwo = Profile.getByUuid(getQueued().get(1));
-                    profileOne.leaveQueue(false);
-                    profileTwo.leaveQueue(false);
+        Arena arena = Arena.getRandomArena(getLadder());
+        if(arena != null && Bukkit.getPlayer(getQueued().get(0)) != null && Bukkit.getPlayer(getQueued().get(1)) != null) {
+            Profile profileOne = Profile.getByUuid(getQueued().get(0)), profileTwo = Profile.getByUuid(getQueued().get(1));
+            profileOne.leaveQueue(false);
+            profileTwo.leaveQueue(false);
 
-                    Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
-                    duel.sendMessage(C.color("&eUnranked match found: &6" + profileOne.getPlayer().getName() + " &evs. &6" + profileTwo.getPlayer().getName()));
-                    duel.preStart();
-                }
-            }
+            Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
+            duel.sendMessage(C.color("&eUnranked match found: &6" + profileOne.getPlayer().getName() + " &evs. &6" + profileTwo.getPlayer().getName()));
+            duel.preStart();
         }
     }
 }
