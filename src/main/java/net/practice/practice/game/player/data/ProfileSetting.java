@@ -46,7 +46,7 @@ public enum ProfileSetting {
     }
 
     private static List<String> getTimeOptions() {
-        return Arrays.asList("day", "night", "dusk");
+        return Arrays.asList("day", "night", "sunrise");
     }
 
     public static Object getNextOption(ProfileSetting setting, Object value) {
@@ -126,11 +126,11 @@ public enum ProfileSetting {
             case PLAYER_TIME: {
                 String option = String.valueOf(value).toLowerCase();
                 if(option.equals("day"))
-                    player.setPlayerTime(1000L, false);
-                else if(option.equals("dusk"))
-                    player.setPlayerTime(12000L, false);
-                else
+                    player.setPlayerTime(6000L, false);
+                else if(option.equals("sunrise"))
                     player.setPlayerTime(23000L, false);
+                else
+                    player.setPlayerTime(18000L, false);
                 break;
             }
         }

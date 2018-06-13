@@ -10,6 +10,7 @@ import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.inventory.inventories.EditorInv;
 import net.practice.practice.inventory.inventories.RankedInv;
+import net.practice.practice.inventory.inventories.StatsInv;
 import net.practice.practice.inventory.inventories.UnrankedInv;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.chat.C;
@@ -151,7 +152,8 @@ public class PlayerListener implements Listener {
                     else if(display.contains("Edit"))
                         EditorInv.openInventory(player);
                     else if(display.contains("Stats"))
-                        Bukkit.dispatchCommand(player, "stats");
+                        StatsInv.openInventory(player);
+                        //Bukkit.dispatchCommand(player, "stats");
                     else if(display.contains("Rematch"))
                         profile.sendRematch();
                     else if(display.contains("Settings"))
