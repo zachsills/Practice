@@ -56,6 +56,8 @@ public class SoloDuel extends Duel {
 
         giveKits(playerOne);
         giveKits(playerTwo);
+
+        Profile.totalInGame += 2;
     }
 
     @Override
@@ -108,6 +110,8 @@ public class SoloDuel extends Duel {
 
                 if(playerTwo.isOnline())
                     SpawnHandler.spawn(playerTwo, true);
+
+                Profile.totalInGame -= 2;
             }
         }.runTaskLater(Practice.getInstance(), 100L);
     }

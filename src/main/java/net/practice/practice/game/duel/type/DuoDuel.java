@@ -7,6 +7,7 @@ import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.ladder.Ladder;
+import net.practice.practice.game.player.Profile;
 import net.practice.practice.util.chat.C;
 import org.bukkit.entity.Player;
 
@@ -30,7 +31,7 @@ public class DuoDuel extends Duel {
     public void preStart() {
         super.preStart();
 
-
+        Profile.totalInGame += 4;
     }
 
     @Override
@@ -43,6 +44,7 @@ public class DuoDuel extends Duel {
     @Override
     public void end(DuelEndReason reason) {
 
+        Profile.totalInGame -= 4;
     }
 
     @Override

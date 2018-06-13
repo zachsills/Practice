@@ -29,6 +29,10 @@ public class QueueRange {
         max += 10;
     }
 
+    public boolean isExpired() {
+        return max - middle >= 500 && middle - min >=  500;
+    }
+
     public boolean isInRange(int i, boolean inclusive) {
         return inclusive ? (i <= max && i >= min) : (i < max && i < min);
     }

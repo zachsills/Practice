@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,11 +30,24 @@ public class RankedSoloQueue extends Queue {
     }
 
     @Override
-    public void setup() {
-        ranges.forEach(((uuid, queueRange) -> {
-            queueRange.expand();
-        }));
+    public void handleRanges() {
+        Iterator<Map.Entry<UUID, QueueRange>> it = ranges.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<UUID, QueueRange> rangeEntry = it.next();
+            if(!rangeEntry.getValue().isExpired()) {
+                rangeEntry.getValue().expand();
+                continue;
+            }
 
+            Profile profile = Profile.getByUuid(rangeEntry.getKey());
+            profile.leaveQueue(true);
+
+            profile.getPlayer().sendMessage(C.color("&cYou have been removed from the queue since you're entered out of range."));
+        }
+    }
+
+    @Override
+    public void setup() {
         for(UUID uuid : getQueued()) {
             for(UUID otherUUID : getQueued()) {
                 if(uuid == otherUUID)

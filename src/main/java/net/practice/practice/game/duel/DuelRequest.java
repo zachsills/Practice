@@ -20,7 +20,9 @@ public class DuelRequest {
 
     @Getter @Setter private boolean rematch;
 
-    public DuelRequest(Player requester, Player requested, Ladder ladder) {
+    @Getter private boolean ranked;
+
+    public DuelRequest(Player requester, Player requested, Ladder ladder, boolean ranked) {
         this.requestedTime = System.currentTimeMillis();
 
         this.requester = requester;
@@ -28,10 +30,14 @@ public class DuelRequest {
 
         this.ladder = ladder;
 
+        this.ranked = ranked;
+
         Profile.getByPlayer(requester).getDuelRequests().putIfAbsent(requested.getName(), this);
     }
 
-
+    public DuelRequest(Player requester, Player requested, Ladder ladder) {
+        this(requester, requested, ladder, false);
+    }
 
     public void sendToRequested() {
         requested.sendMessage(" ");
@@ -56,7 +62,7 @@ public class DuelRequest {
         requester.sendMessage(C.color("&a" + requested.getName() + " has accepted your duel request."));
         requested.sendMessage(C.color("&aYou have accepted a duel request from " + requester.getName() + "."));
 
-        new SoloDuel(Arena.getRandomArena(getLadder()), getLadder(), requester, requested).preStart();
+        new SoloDuel(Arena.getRandomArena(getLadder()), getLadder(), requester, requested, ranked).preStart();
 
         deny();
     }

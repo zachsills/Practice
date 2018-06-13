@@ -32,4 +32,8 @@ public class Party {
 
         return false;
     }
+
+    public int getSize() {
+        return players.size();
+    }
 }

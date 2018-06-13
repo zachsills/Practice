@@ -74,5 +74,7 @@ public abstract class Queue {
         return queued.size();
     }
 
+    public void handleRanges() { }
+
     public abstract void setup();
 }

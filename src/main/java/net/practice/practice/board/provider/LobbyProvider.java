@@ -22,8 +22,8 @@ public class LobbyProvider implements BoardProvider {
 
         lines.add("&ePlayer: &c" + player.getName());
         lines.add(" ");
-        lines.add("&eQueue: &7" + Profile.getTotalQueueing());
-        lines.add("&eFighting: &7" + Profile.getTotalInGame());
+        lines.add("&eIn Game: &7" + Profile.getTotalInGame());
+        lines.add("&eIn Queue: &7" + Profile.getTotalQueueing());
 
         Profile profile = Profile.getByPlayer(player);
         if(profile.isQueueing()) {

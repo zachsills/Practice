@@ -2,11 +2,12 @@ package net.practice.practice.game.duel.type;
 
 import lombok.Getter;
 import net.practice.practice.game.arena.Arena;
-import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.DuelType;
+import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
+import net.practice.practice.game.player.Profile;
 import org.bukkit.entity.Player;
 
 public class TeamDuel extends Duel {
@@ -15,18 +16,22 @@ public class TeamDuel extends Duel {
 
     @Getter private Party winner;
 
+    private int initialSize;
+
     public TeamDuel(Arena arena, Ladder ladder, Party partyOne, Party partyTwo) {
         super(arena, ladder, DuelType.TEAM_VS_TEAM);
 
         this.partyOne = partyOne;
         this.partyTwo = partyTwo;
+
+        this.initialSize = partyOne.getSize() + partyTwo.getSize();
     }
 
     @Override
     public void preStart() {
         super.preStart();
 
-
+        Profile.totalInGame += initialSize;
     }
 
     @Override
@@ -39,6 +44,8 @@ public class TeamDuel extends Duel {
     @Override
     public void end(DuelEndReason reason) {
         super.end(reason);
+
+        Profile.totalInGame -= initialSize;
     }
 
     @Override

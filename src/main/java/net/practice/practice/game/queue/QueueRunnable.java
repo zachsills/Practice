@@ -7,6 +7,7 @@ public class QueueRunnable extends BukkitRunnable {
     @Override
     public void run() {
         for(Queue queue : Queue.getQueues()) {
+            queue.handleRanges();
             if(queue.getSize() < 2)
                 continue;
 
