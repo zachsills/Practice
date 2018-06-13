@@ -9,10 +9,13 @@ import net.practice.practice.game.queue.QueueType;
 import net.practice.practice.game.queue.type.RankedSoloQueue;
 import net.practice.practice.game.queue.type.UnkrankedSoloQueue;
 import net.practice.practice.util.InvUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +33,7 @@ public class Ladder {
     @Getter @Setter private ItemStack displayIcon;
     @Getter @Setter private boolean buildable, editable, combo, ranked;
     @Getter @Setter private PlayerInv defaultInv;
+    @Getter @Setter private Inventory editor;
     @Getter @Setter private DuelType duelType;
 
     public Ladder(String name) {
@@ -39,6 +43,8 @@ public class Ladder {
 
         this.queues = new Queue[3];
         queues[0] = new UnkrankedSoloQueue(this);
+
+        this.editor = Bukkit.createInventory(null, 54, "Editing: " + name);
 
         ladders.putIfAbsent(name, this);
     }
@@ -61,6 +67,16 @@ public class Ladder {
 
         if(section.contains("defaultInventory"))
             setDefaultInv(InvUtils.invFromString(section.getString("defaultInventory")));
+
+        if(section.contains("editorInventory")) {
+            try {
+                Inventory inventory = InvUtils.fromBase64(section.getString("editorInventory"));
+
+                editor.setContents(inventory.getContents());
+            } catch(IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public Queue getUnrankedQueue() {

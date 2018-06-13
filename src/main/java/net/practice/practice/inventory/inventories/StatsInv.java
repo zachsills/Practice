@@ -16,7 +16,8 @@ public class StatsInv {
     }
 
     public static void openInventory(Player player, Profile targetP) {
-        Inventory inventory = Bukkit.createInventory(player, 45, "Statistics");
+        String title = player.getName().equals(targetP.getName()) ? "Statistics" : "Statistics of " + targetP.getName();
+        Inventory inventory = Bukkit.createInventory(player, 45, title);
 
         int eloSum = targetP.getEloMap().values().stream().mapToInt(Integer::intValue).sum();
         int eloCount = targetP.getEloMap().values().size();

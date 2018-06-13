@@ -161,6 +161,11 @@ public class LadderCommand {
                 args.getPlayer().sendMessage(C.color("&eLoaded the inventory of " + ladder.getDisplayName() + "&e."));
                 return;
             }
+            case "editor": {
+                if(ladder.getEditor() != null)
+                    args.getPlayer().openInventory(ladder.getEditor());
+                return;
+            }
             default:
                 sendHelp(args.getPlayer());
         }
@@ -201,7 +206,7 @@ public class LadderCommand {
         player.sendMessage(C.color("&a/ladder create <name>"));
         player.sendMessage(C.color("&a/ladder remove <name>"));
         player.sendMessage(C.color("&a/ladder set <name> <ranked;editable;build;combo>"));
-        player.sendMessage(C.color("&a/ladder inv <name> <set;load>"));
+        player.sendMessage(C.color("&a/ladder inv <name> <set;load;editor>"));
         player.sendMessage(C.color("&a/ladder seticon <name>"));
         player.sendMessage(C.color("&a/ladder type <name> <type>"));
     }

@@ -7,7 +7,6 @@ import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
-import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.inventory.inventories.EditorInv;
 import net.practice.practice.inventory.inventories.RankedInv;
 import net.practice.practice.inventory.inventories.StatsInv;
@@ -42,8 +41,11 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onJoin(PlayerJoinEvent event) {
         Profile profile = Profile.getByPlayer(event.getPlayer());
+        profile.setName(event.getPlayer().getName());
 
         SpawnHandler.spawn(event.getPlayer());
+
+        ProfileSetting.toggleFor(event.getPlayer(), ProfileSetting.PLAYER_TIME, profile.getSetting(ProfileSetting.PLAYER_TIME));
     }
 
     @EventHandler
@@ -88,6 +90,15 @@ public class PlayerListener implements Listener {
                     }.runTaskLater(Practice.getInstance(), 40L);
                 }
                 break;
+            case EDITING: {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        event.getItemDrop().remove();
+                    }
+                }.runTaskLater(Practice.getInstance(), 2L);
+                break;
+            }
             case BUILDING:
                 break;
             default:
@@ -153,7 +164,6 @@ public class PlayerListener implements Listener {
                         EditorInv.openInventory(player);
                     else if(display.contains("Stats"))
                         StatsInv.openInventory(player);
-                        //Bukkit.dispatchCommand(player, "stats");
                     else if(display.contains("Rematch"))
                         profile.sendRematch();
                     else if(display.contains("Settings"))
@@ -188,7 +198,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if(profile.getState() == ProfileState.LOBBY && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
+        if(event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);
 
             if(item == null || item.getItemMeta() == null || !item.getItemMeta().hasDisplayName())
@@ -230,7 +240,7 @@ public class PlayerListener implements Listener {
 
                     request.sendToRequested();
 
-                    player.sendMessage(C.color("&aYou have sent a duel request to: " + requested.getName()));
+                    player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "."));
                 }
             } else if(event.getClickedInventory().getTitle().contains("Settings")) {
                 ProfileSetting setting = ProfileSetting.getByMaterial(item.getType());
@@ -238,7 +248,11 @@ public class PlayerListener implements Listener {
 
                 event.getClickedInventory().setItem(event.getSlot(), ProfileSetting.getSettingItem(setting, profile.getSetting(setting)));
             } else if(event.getClickedInventory().getTitle().contains("Select a Ladder...")) {
+                Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+                if(ladder == null)
+                    return;
 
+                profile.beginEditing(ladder);
             }
         }
     }

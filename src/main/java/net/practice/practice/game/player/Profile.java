@@ -36,6 +36,8 @@ public class Profile {
 
     @Getter private final UUID uuid;
 
+    @Getter @Setter private String name;
+
     @Getter private final Map<Ladder, Integer> eloMap;
     @Getter private final Map<ProfileSetting, Object> settings;
     @Getter private final Map<Ladder, List<PlayerInv>> customInvs;
@@ -264,6 +266,13 @@ public class Profile {
     public void beginEditing(Ladder ladder) {
         editing = ladder;
         setState(ProfileState.EDITING);
+
+        InvUtils.clear(getPlayer());
+
+        getPlayer().teleport(Practice.getInstance().getEditor());
+
+        if(ladder.getDefaultInv() != null)
+            ladder.getDefaultInv().apply(getPlayer());
     }
 
     public void stopEditing() {
@@ -279,6 +288,9 @@ public class Profile {
         setRankedLosses(document.getInteger("rankedLosses"));
         setUnrankedWins(document.getInteger("unrankedWins"));
         setUnrankedLosses(document.getInteger("unrankedLosses"));
+
+        if(document.containsKey("name"))
+            setName(document.getString("name"));
 
         if(document.containsKey("settings")) {
             Document settingsDoc = document.get("settings", Document.class);
@@ -302,7 +314,7 @@ public class Profile {
                 if(ladder == null)
                     continue;
 
-                eloMap.putIfAbsent(ladder, eloDoc.getInteger(ladder));
+                eloMap.putIfAbsent(ladder, eloDoc.getInteger(ladderName));
             }
         }
 
@@ -322,11 +334,6 @@ public class Profile {
                                                       .map(InvUtils::invFromString)
                                                       .collect(Collectors.toList()));
             }
-        }
-
-        for(Ladder ladder : Ladder.getAllLadders()) {
-            eloMap.putIfAbsent(ladder, RankingUtils.STARTING_ELO);
-            customInvs.putIfAbsent(ladder, null);
         }
     }
 
@@ -357,6 +364,8 @@ public class Profile {
             invStore.append(invEntry.getKey().getName(), invList);
         }
 
+        if(name != null)
+            document.append("name", name);
         document.append("rankedWins", rankedWins);
         document.append("rankedLosses", rankedLosses);
         document.append("unrankedWins", unrankedWins);

@@ -88,18 +88,11 @@ public class SoloDuel extends Duel {
             loserProfile.setUnrankedLosses(loserProfile.getUnrankedLosses() + 1);
         }
 
-        if(playerOne == winner)
-            new JsonMessage().append(ChatColor.YELLOW + "Post Match Inventories " + ChatColor.GRAY + "(Click the name)" + ChatColor.YELLOW + ":").save()
-                    .append(ChatColor.GREEN + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
-                    .append(ChatColor.GRAY + " or ").save()
-                    .append(ChatColor.RED + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerTwo.getName()).save()
-                    .send(playerOne, playerTwo);
-        else
-            new JsonMessage().append(ChatColor.YELLOW + "Post Match Inventories " + ChatColor.GRAY + "(Click the name)" + ChatColor.YELLOW + ":").save()
-                    .append(ChatColor.GREEN + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerTwo.getName()).save()
-                    .append(ChatColor.GRAY + " or ").save()
-                    .append(ChatColor.RED + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
-                    .send(playerOne, playerTwo);
+        new JsonMessage().append(ChatColor.GOLD + "Post Match Inventories " + ChatColor.GRAY + "(Click to view)").save()
+                .append(ChatColor.GREEN + winner.getName()).setClickAsExecuteCmd("/inv " + winner.getName()).save()
+                .append(ChatColor.GRAY + " or ").save()
+                .append(ChatColor.RED + getLoser().getName()).setClickAsExecuteCmd("/inv " + getLoser().getName()).save()
+                .send(playerOne, playerTwo);
         sendMessage("&7&m---------------------------------");
 
         new BukkitRunnable() {

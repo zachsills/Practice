@@ -12,6 +12,7 @@ public class ListenerHandler {
         Stream.of(
                 new BlockListener(),
                 new DuelListener(),
+                new EditorListener(),
                 new PlayerListener(),
                 new WeatherListener(),
                 new WorldListener()
