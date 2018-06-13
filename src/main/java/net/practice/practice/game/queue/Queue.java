@@ -1,6 +1,8 @@
 package net.practice.practice.game.queue;
 
 import lombok.Getter;
+import net.practice.practice.game.duel.DuelType;
+import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 
@@ -42,11 +44,16 @@ public abstract class Queue {
         return total;
     }
 
-    public static int getNumberInGame(Ladder ladder) {
+    public static int getNumberInGame(Ladder ladder, boolean ranked) {
         int total = 0;
 
-        for(Profile profile : Profile.getProfiles().values().stream().filter(Profile::isInGame).collect(Collectors.toList()))
-            total += profile.getCurrentDuel().getLadder() == ladder ? 1 : 0;
+        if(ranked) {
+            for(Profile profile : Profile.getProfiles().values().stream().filter(Profile::isInGame).filter(profile -> profile.getCurrentDuel().getType() == DuelType.ONE_VS_ONE && ((SoloDuel) profile.getCurrentDuel()).isRanked()).collect(Collectors.toList()))
+                total += profile.getCurrentDuel().getLadder() == ladder ? 1 : 0;
+        } else {
+            for(Profile profile : Profile.getProfiles().values().stream().filter(Profile::isInGame).collect(Collectors.toList()))
+                total += profile.getCurrentDuel().getLadder() == ladder ? 1 : 0;
+        }
 
         return total;
     }

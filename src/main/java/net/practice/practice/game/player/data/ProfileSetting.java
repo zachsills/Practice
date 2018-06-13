@@ -126,11 +126,11 @@ public enum ProfileSetting {
             case PLAYER_TIME: {
                 String option = String.valueOf(value).toLowerCase();
                 if(option.equals("day"))
-                    player.setPlayerTime(0L, false);
+                    player.setPlayerTime(1000L, false);
                 else if(option.equals("dusk"))
-                    player.setPlayerTime(1200L, false);
+                    player.setPlayerTime(12000L, false);
                 else
-                    player.setPlayerTime(2400L, false);
+                    player.setPlayerTime(23000L, false);
                 break;
             }
         }

@@ -2,6 +2,7 @@ package net.practice.practice.command.commands;
 
 import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.player.Profile;
+import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.inventory.inventories.RequestInv;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.command.Command;
@@ -31,6 +32,11 @@ public class DuelCommand {
         }
 
         Profile profile = Profile.getByPlayer(player);
+        if(!(boolean) profile.getSetting(ProfileSetting.DUEL_REQUESTS)) {
+            args.getPlayer().sendMessage(C.color("&cThat player is currently not accepting any duels."));
+            return;
+        }
+
         if(profile.isInGame()) {
             args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
             return;

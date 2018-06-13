@@ -10,6 +10,7 @@ import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.spawn.SpawnHandler;
+import net.practice.practice.util.EloUtils;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.chat.JsonMessage;
@@ -23,11 +24,19 @@ public class SoloDuel extends Duel {
 
     @Getter @Setter private Player winner;
 
-    public SoloDuel(Arena arena, Ladder ladder, Player playerOne, Player playerTwo) {
+    @Getter private boolean ranked;
+
+    public SoloDuel(Arena arena, Ladder ladder, Player playerOne, Player playerTwo, boolean ranked) {
         super(arena, ladder, DuelType.ONE_VS_ONE);
 
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
+
+        this.ranked = ranked;
+    }
+
+    public SoloDuel(Arena arena, Ladder ladder, Player playerOne, Player playerTwo) {
+        this(arena, ladder, playerOne, playerTwo, false);
     }
 
     @Override
@@ -58,28 +67,38 @@ public class SoloDuel extends Duel {
     public void end(DuelEndReason reason) {
         super.end(reason);
 
-        if(reason == DuelEndReason.DIED)
-            sendMessage("&6" + winner.getName() + " &ehas won the match.");
-        else
-            sendMessage("&6" + winner.getName() + " &ehas forcefully won through forfeit.");
+        sendMessage("&7&m---------------------------------");
+        sendMessage("&6Winner: &e" + winner.getName());
 
-        Profile profileOne = Profile.getByPlayer(playerOne);
-        Profile profileTwo = Profile.getByPlayer(playerTwo);
-        profileOne.setRecentDuel(this);
-        profileTwo.setRecentDuel(this);
+        Profile winnerProfile = Profile.getByPlayer(winner);
+        Profile loserProfile = Profile.getByPlayer(getLoser());
+        winnerProfile.setRecentDuel(this);
+        loserProfile.setRecentDuel(this);
+
+        if(ranked) {
+            winnerProfile.setRankedWins(winnerProfile.getRankedWins() + 1);
+            loserProfile.setRankedLosses(loserProfile.getRankedLosses() + 1);
+
+            int eloChange = handleElo(winnerProfile, loserProfile, getLadder());
+            sendMessage("&6Elo Changes: &e" + winner.getName() + "&7(&a+" + eloChange + "&7) &6- &e" + getLoser().getName() + "&7(&c-" + eloChange + "&7)");
+        } else {
+            winnerProfile.setUnrankedWins(winnerProfile.getUnrankedWins() + 1);
+            loserProfile.setUnrankedLosses(loserProfile.getUnrankedLosses() + 1);
+        }
 
         if(playerOne == winner)
-            new JsonMessage().append(ChatColor.YELLOW + "Inventories: ").save()
+            new JsonMessage().append(ChatColor.YELLOW + "Post Match Inventories " + ChatColor.GRAY + "(Click the name)" + ChatColor.YELLOW + ":").save()
                     .append(ChatColor.GREEN + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
                     .append(ChatColor.GRAY + " or ").save()
                     .append(ChatColor.RED + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerTwo.getName()).save()
                     .send(playerOne, playerTwo);
         else
-            new JsonMessage().append(ChatColor.YELLOW + "Inventories: ").save()
+            new JsonMessage().append(ChatColor.YELLOW + "Post Match Inventories " + ChatColor.GRAY + "(Click the name)" + ChatColor.YELLOW + ":").save()
                     .append(ChatColor.GREEN + playerTwo.getName()).setClickAsExecuteCmd("/inv " + playerTwo.getName()).save()
                     .append(ChatColor.GRAY + " or ").save()
                     .append(ChatColor.RED + playerOne.getName()).setClickAsExecuteCmd("/inv " + playerOne.getName()).save()
                     .send(playerOne, playerTwo);
+        sendMessage("&7&m---------------------------------");
 
         new BukkitRunnable() {
             @Override
@@ -91,6 +110,22 @@ public class SoloDuel extends Duel {
                     SpawnHandler.spawn(playerTwo, true);
             }
         }.runTaskLater(Practice.getInstance(), 100L);
+    }
+
+    private Player getLoser() {
+        return playerOne == winner ? playerTwo : playerOne;
+    }
+
+    private int handleElo(Profile winnerProfile, Profile loserProfile, Ladder ladder) {
+        int winnerNewElo = EloUtils.getNewRating(winnerProfile.getElo(ladder), loserProfile.getElo(ladder), 1);
+        int loserNewElo = EloUtils.getNewRating(loserProfile.getElo(ladder), winnerProfile.getElo(ladder), 0);
+
+        int winnderOldElo = winnerProfile.getElo(ladder);
+
+        winnerProfile.getEloMap().put(ladder, winnerNewElo);
+        loserProfile.getEloMap().put(ladder, loserNewElo);
+
+        return (winnerNewElo - winnderOldElo);
     }
 
     @Override

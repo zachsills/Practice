@@ -39,6 +39,9 @@ public class SpawnHandler {
         player.updateInventory();
 
         Profile profile = Profile.getByPlayer(player);
+        if(profile.isQueueing())
+            profile.leaveQueue(false);
+
         profile.setState(ProfileState.LOBBY);
         profile.setCurrentDuel(null);
     }
@@ -51,17 +54,13 @@ public class SpawnHandler {
         items[0] = new I(Material.IRON_SWORD).name(C.color("&eUnranked")).lore(C.color("&7Queue for an Unranked match."));
         items[1] = new I(Material.DIAMOND_SWORD).name(C.color("&6Ranked")).lore(C.color("&7Queue for an Ranked match."));
 
-        if(profile.getLastQueue() != null)
-            items[2] = new I(Material.INK_SACK).durability(10).name(C.color("&7Last Queue [&equeueName&7]")
-                    .replace("queueName", profile.getLastQueue().getLadder().getName())).lore(C.color("&7Easily queue again and again and again and again :D."));
-
         if(profile.getRecentDuel() != null) {
             Duel duel = profile.getRecentDuel();
             if(duel.getType() == DuelType.ONE_VS_ONE && Math.abs(System.currentTimeMillis() - duel.getEndTime()) < 1000 * 20) {
                 SoloDuel soloDuel = (SoloDuel) duel;
                 Player rematcher = soloDuel.getPlayerOne() == player ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne();
                 if(rematcher != null)
-                    items[3] = new I(Material.DIAMOND).name(C.color("&bRematch playerName")
+                    items[2] = new I(Material.INK_SACK).durability(10).name(C.color("&bRematch playerName")
                             .replace("playerName", rematcher.getName())).lore(C.color("&7Easily send a rematch request to your last opponent."));
             }
         }

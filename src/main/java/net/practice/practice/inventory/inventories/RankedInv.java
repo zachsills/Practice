@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.queue.Queue;
+import net.practice.practice.game.queue.QueueType;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
 import org.bukkit.Material;
@@ -23,8 +24,8 @@ public class RankedInv {
                 if(!ladder.isRanked())
                     continue;
 
-                int queuing = Queue.getNumberQueuing(ladder);
-                int inGame = Queue.getNumberInGame(ladder);
+                int queuing = ladder.getTotalQueuing(QueueType.RANKED);
+                int inGame = Queue.getNumberInGame(ladder, true);
                 inventory.setItem(index, new I(ladder.getDisplayIcon()).amount(1).clearLore().lore(C.color("&f&m------------")).lore(C.color("&7Queuing: &c" + queuing))
                         .lore(C.color("&7In Game: &c") + inGame).lore(C.color("&f&m------------")));
                 index++;

@@ -6,10 +6,10 @@ public class QueueRange {
     private int min;
     private int max;
 
-    public QueueRange(int middle, int expand) {
+    public QueueRange(int middle) {
         this.middle = middle;
-        this.min = middle - expand;
-        this.max = middle + expand;
+        this.min = middle - 10;
+        this.max = middle + 10;
     }
 
     public int getMin() {
@@ -22,6 +22,11 @@ public class QueueRange {
 
     public int getMiddle() {
         return middle;
+    }
+
+    public void expand() {
+        min -= 10;
+        max += 10;
     }
 
     public boolean isInRange(int i, boolean inclusive) {

@@ -102,7 +102,7 @@ public class Profile {
         if(!customInvs.containsKey(ladder))
             return false;
 
-        return customInvs.get(ladder).isEmpty();
+        return customInvs.get(ladder) != null && customInvs.get(ladder).isEmpty();
     }
 
     public Object getSetting(ProfileSetting setting) {
@@ -151,8 +151,8 @@ public class Profile {
 
     public void cleanupRecent() {
         if(state == ProfileState.LOBBY) {
-            if(getPlayer() != null && getPlayer().getInventory().getItem(3) != null)
-                getPlayer().getInventory().setItem(3, null);
+            if(getPlayer() != null && getPlayer().getInventory().getItem(2) != null)
+                getPlayer().getInventory().setItem(2, null);
         }
     }
 
@@ -171,7 +171,7 @@ public class Profile {
                     return;
                 }
 
-                DuelRequest request = new DuelRequest(getPlayer(), opponent, soloDuel.getLadder());
+                DuelRequest request = new DuelRequest(getPlayer(), opponent, recentDuel.getLadder());
                 request.setRematch(true);
 
                 request.sendToRequested();

@@ -10,9 +10,9 @@ import net.practice.practice.game.queue.QueueType;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 
-public class UnrankedQueue extends Queue {
+public class UnkrankedSoloQueue extends Queue {
 
-    public UnrankedQueue(Ladder ladder) {
+    public UnkrankedSoloQueue(Ladder ladder) {
         super(ladder, QueueType.UNRANKED);
     }
 

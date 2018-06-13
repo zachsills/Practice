@@ -5,8 +5,9 @@ import lombok.Setter;
 import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.queue.Queue;
-import net.practice.practice.game.queue.type.RankedQueue;
-import net.practice.practice.game.queue.type.UnrankedQueue;
+import net.practice.practice.game.queue.QueueType;
+import net.practice.practice.game.queue.type.RankedSoloQueue;
+import net.practice.practice.game.queue.type.UnkrankedSoloQueue;
 import net.practice.practice.util.InvUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,7 +38,7 @@ public class Ladder {
         this.duelType = DuelType.ONE_VS_ONE;
 
         this.queues = new Queue[3];
-        queues[0] = new UnrankedQueue(this);
+        queues[0] = new UnkrankedSoloQueue(this);
 
         ladders.putIfAbsent(name, this);
     }
@@ -70,11 +71,22 @@ public class Ladder {
         return queues[1];
     }
 
+    public int getTotalQueuing(QueueType type) {
+        switch(type) {
+            case UNRANKED:
+                return getUnrankedQueue().getSize();
+            case RANKED:
+                return getRankedQueue().getSize();
+        }
+
+        return 0;
+    }
+
     public void setRanked(boolean value) {
         ranked = value;
 
         if(ranked)
-            queues[1] = new RankedQueue(this);
+            queues[1] = new RankedSoloQueue(this);
         else
             queues[1] = null;
     }

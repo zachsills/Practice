@@ -152,8 +152,6 @@ public class PlayerListener implements Listener {
                         EditorInv.openInventory(player);
                     else if(display.contains("Stats"))
                         Bukkit.dispatchCommand(player, "stats");
-                    else if(display.contains("Last Queue"))
-                        profile.addToQueue(profile.getLastQueue());
                     else if(display.contains("Rematch"))
                         profile.sendRematch();
                     else if(display.contains("Settings"))
