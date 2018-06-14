@@ -45,15 +45,15 @@ public class DuelRequest {
         if(rematch) {
             requested.sendMessage(C.color("&e" + requester.getName() + " wants a rematch!"));
         } else {
-            requested.sendMessage(C.color("&eNew Duel Request: "));
+            requested.sendMessage(C.color("&cNew Duel Request: "));
             requested.sendMessage(C.color("  &7From: &6" + requester.getName()));
         }
 
         requested.sendMessage(C.color("  &7Ladder: &6" + ladder.getDisplayName()));
         new JsonMessage()
-                .append(ChatColor.GREEN + " ACCEPT").setClickAsExecuteCmd("/accept " + requester.getName()).save()
+                .append(ChatColor.GREEN + "  ACCEPT").setClickAsExecuteCmd("/accept " + requester.getName()).setHoverAsTooltip(ChatColor.GREEN + "Accept " + requester.getName()).save()
                 .append(C.color(" &7or ")).save()
-                .append(ChatColor.RED + "DENY").setClickAsExecuteCmd("/deny " + requester.getName()).save()
+                .append(ChatColor.RED + "DENY").setClickAsExecuteCmd("/deny " + requester.getName()).setHoverAsTooltip(ChatColor.RED + "Deny " + requester.getName()).save()
                 .send(requested);
         requested.sendMessage(" ");
     }

@@ -69,7 +69,7 @@ public class SoloDuel extends Duel {
     public void end(DuelEndReason reason) {
         super.end(reason);
 
-        sendMessage("&6&m---------------------------------");
+        sendMessage("&f&m---------------------------------");
         sendMessage("&6Winner: &e" + winner.getName());
 
         Profile winnerProfile = Profile.getByPlayer(winner);
@@ -98,7 +98,7 @@ public class SoloDuel extends Duel {
         if(spectatorMessage != null)
             sendMessage(spectatorMessage);
 
-        sendMessage("&6&m---------------------------------");
+        sendMessage("&f&m---------------------------------");
 
         new BukkitRunnable() {
             @Override
