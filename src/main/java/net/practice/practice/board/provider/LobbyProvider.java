@@ -5,6 +5,7 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.type.RankedSoloQueue;
 import net.practice.practice.util.PlayerUtils;
+import net.practice.practice.util.chat.C;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -21,23 +22,29 @@ public class LobbyProvider implements BoardProvider {
     public List<String> getLines(Player player) {
         List<String> lines = new ArrayList<>();
 
-        lines.add("&eIn Game: &7" + Profile.getTotalInGame());
-        lines.add("&eIn Queue: &7" + Profile.getTotalQueueing());
+        lines.add("&6In Game: &f" + Profile.getTotalInGame());
+        lines.add("&6In Queue: &f" + Profile.getTotalQueueing());
         lines.add(" ");
-        lines.add("&ePing: &7" + PlayerUtils.getPing(player) + "ms");
+        lines.add("&6Ping: &f" + PlayerUtils.getPing(player) + "ms");
 
         Profile profile = Profile.getByPlayer(player);
         if(profile.isQueueing()) {
             Queue queue = profile.getCurrentQueue();
             lines.add(" ");
-            lines.add("&eCurrent: " + queue.getLadder().getDisplayName());
-            lines.add("  &7Queue: &c" + queue.getSize());
-            lines.add("  &7Position: &c" + (queue.getQueued().indexOf(player.getUniqueId()) + 1));
+            lines.add("&6Current: &e" + C.strip(queue.getLadder().getDisplayName()));
+            lines.add("  &7Queue: &e" + queue.getSize());
+            lines.add("  &7Position: &e" + (queue.getQueued().indexOf(player.getUniqueId()) + 1));
             if(queue instanceof RankedSoloQueue) {
                 RankedSoloQueue rankedQueue = (RankedSoloQueue) queue;
 
                 lines.add("  &7Range: &c" + rankedQueue.getRanges().get(player.getUniqueId()).getMin() + " &7-> &c" + rankedQueue.getRanges().get(player.getUniqueId()).getMax());
             }
+
+            lines.add(" ");
+            lines.add("&6nub.land");
+        } else {
+            lines.add(" ");
+            lines.add("&6nub.land");
         }
 
         return lines;
