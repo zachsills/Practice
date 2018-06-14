@@ -265,7 +265,7 @@ public class Profile {
     }
 
     public void openSettings() {
-        Inventory inventory = Bukkit.createInventory(getPlayer(), 9, "Toggle Settings");
+        Inventory inventory = Bukkit.createInventory(getPlayer(), 9, C.color("&6Toggle Settings"));
 
         int i = 1;
         for(ProfileSetting setting : ProfileSetting.values()) {

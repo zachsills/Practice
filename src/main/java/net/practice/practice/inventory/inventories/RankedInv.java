@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 
 public class RankedInv {
 
-    @Getter private static Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("&aRanked"));
+    @Getter private static Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("&6Ranked"));
 
     public static void updateInventory() {
         if(Ladder.getLadders().values().size() == 0) {

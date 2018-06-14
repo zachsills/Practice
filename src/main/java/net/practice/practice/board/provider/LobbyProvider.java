@@ -32,8 +32,8 @@ public class LobbyProvider implements BoardProvider {
             Queue queue = profile.getCurrentQueue();
             lines.add(" ");
             lines.add("&6Current: &e" + C.strip(queue.getLadder().getDisplayName()));
-            lines.add("  &7Queue: &e" + queue.getSize());
-            lines.add("  &7Position: &e" + (queue.getQueued().indexOf(player.getUniqueId()) + 1));
+            lines.add("  &7Queue: &f" + queue.getSize());
+            lines.add("  &7Position: &f" + (queue.getQueued().indexOf(player.getUniqueId()) + 1));
             if(queue instanceof RankedSoloQueue) {
                 RankedSoloQueue rankedQueue = (RankedSoloQueue) queue;
 

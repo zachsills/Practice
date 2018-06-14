@@ -16,7 +16,7 @@ public class StatsInv {
     }
 
     public static void openInventory(Player player, Profile targetP) {
-        String title = player.getName().equals(targetP.getName()) ? "Statistics" : "Statistics of " + targetP.getName();
+        String title = player.getName().equals(targetP.getName()) ? C.color("&cStats") : C.color("&cStats of &6" + targetP.getName());
         Inventory inventory = Bukkit.createInventory(player, 45, title);
 
         int eloSum = Ladder.getLadders().values().stream().mapToInt(targetP::getElo).sum();

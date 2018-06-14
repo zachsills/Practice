@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 public class EditorInv {
 
     public static void openInventory(Player player) {
-        Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("Select a Ladder..."));
+        Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("&eSelect a Ladder..."));
          for(Ladder ladder : Ladder.getLadders().values()) {
              if(!ladder.isEditable())
                  continue;

@@ -69,7 +69,7 @@ public class SoloDuel extends Duel {
     public void end(DuelEndReason reason) {
         super.end(reason);
 
-        sendMessage("&7&m---------------------------------");
+        sendMessage("&6&m---------------------------------");
         sendMessage("&6Winner: &e" + winner.getName());
 
         Profile winnerProfile = Profile.getByPlayer(winner);
@@ -88,17 +88,17 @@ public class SoloDuel extends Duel {
             loserProfile.setUnrankedLosses(loserProfile.getUnrankedLosses() + 1);
         }
 
-        new JsonMessage().append(ChatColor.GOLD + "Post Match Inventories " + ChatColor.GRAY + "(click to view)").save()
-                .append(ChatColor.GREEN + winner.getName()).setClickAsExecuteCmd("/_ " + winner.getName()).save()
+        new JsonMessage().append(ChatColor.GOLD + "Inventories " + ChatColor.GRAY + "(Click to view) ").save()
+                .append(ChatColor.GREEN + winner.getName()).setClickAsExecuteCmd("/_ " + winner.getName()).setHoverAsTooltip(ChatColor.GREEN + winner.getName() + "'s Inventory").save()
                 .append(ChatColor.GRAY + " - ").save()
-                .append(ChatColor.RED + getLoser().getName()).setClickAsExecuteCmd("/_ " + getLoser().getName()).save()
+                .append(ChatColor.RED + getLoser().getName()).setClickAsExecuteCmd("/_ " + getLoser().getName()).setHoverAsTooltip(ChatColor.RED + getLoser().getName() + "'s Inventory").save()
                 .send(playerOne, playerTwo);
 
         String spectatorMessage = getSpectatorMessage();
         if(spectatorMessage != null)
             sendMessage(spectatorMessage);
 
-        sendMessage("&7&m---------------------------------");
+        sendMessage("&6&m---------------------------------");
 
         new BukkitRunnable() {
             @Override

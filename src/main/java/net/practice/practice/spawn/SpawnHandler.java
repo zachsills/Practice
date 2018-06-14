@@ -56,8 +56,6 @@ public class SpawnHandler {
         items[0] = new I(Material.IRON_SWORD).name(C.color("&eUnranked")).lore(C.color("&7Queue for an Unranked match."));
         items[1] = new I(Material.DIAMOND_SWORD).name(C.color("&6Ranked")).lore(C.color("&7Queue for an Ranked match."));
 
-        items[3] = new I(Material.PUMPKIN_PIE).name(C.color("&bParty?")).lore(C.color("&7PARRRRRRR-TAY!"));
-
         if(profile.getRecentDuel() != null) {
             Duel duel = profile.getRecentDuel();
             if(duel.getType() == DuelType.ONE_VS_ONE && Math.abs(System.currentTimeMillis() - duel.getEndTime()) < 1000 * 20) {
@@ -69,9 +67,11 @@ public class SpawnHandler {
             }
         }
 
-        items[5] = new I(Material.PAPER).name(C.color("&cStats")).lore(C.color("&7Look at leaderboards and statistics."));
+        items[3] = new I(getSkull(player.getName())).name(C.color("&cStats")).lore(C.color("&7Look at leaderboards and statistics."));
 
-        items[7] = new I(Material.WATCH).name(C.color("&dSettings")).lore(C.color("&7View and change your settings."));
+        items[5] = new I(Material.REDSTONE_TORCH_ON).name(C.color("&bParty?")).lore(C.color("&7PARRRRRRR-TAY!"));
+
+        items[7] = new I(Material.WATCH).name(C.color("&6Settings")).lore(C.color("&7View and change your settings."));
         items[8] = new I(Material.BOOK).name(C.color("&eKit Editor")).lore(C.color("&7Select kit and edit."));
 
         return items;
