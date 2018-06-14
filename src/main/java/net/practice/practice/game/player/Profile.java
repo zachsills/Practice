@@ -1,6 +1,5 @@
 package net.practice.practice.game.player;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +10,7 @@ import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
-import net.practice.practice.game.player.data.PlayerInv;
+import net.practice.practice.game.player.data.PlayerKit;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
@@ -27,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Profile {
 
@@ -40,7 +38,7 @@ public class Profile {
 
     @Getter private final Map<Ladder, Integer> eloMap;
     @Getter private final Map<ProfileSetting, Object> settings;
-    @Getter private final Map<Ladder, List<PlayerInv>> customInvs;
+    @Getter private final Map<Ladder, List<PlayerKit>> customKits;
 
     @Getter private Map<String, DuelRequest> duelRequests;
 
@@ -59,7 +57,7 @@ public class Profile {
 
         this.eloMap = new HashMap<>();
         this.settings = new HashMap<>();
-        this.customInvs = new HashMap<>();
+        this.customKits = new HashMap<>();
         this.duelRequests = new HashMap<>();
 
         Practice.getInstance().getBackend().loadProfile(this);
@@ -101,10 +99,10 @@ public class Profile {
     }
 
     public boolean hasCustomKits(Ladder ladder) {
-        if(!customInvs.containsKey(ladder))
+        if(!customKits.containsKey(ladder))
             return false;
 
-        return customInvs.get(ladder) != null && customInvs.get(ladder).isEmpty();
+        return customKits.get(ladder) != null && !customKits.get(ladder).isEmpty();
     }
 
     public Object getSetting(ProfileSetting setting) {
@@ -284,6 +282,9 @@ public class Profile {
     }
 
     public void load(Document document) {
+        customKits.clear();
+        eloMap.clear();
+
         setRankedWins(document.getInteger("rankedWins"));
         setRankedLosses(document.getInteger("rankedLosses"));
         setUnrankedWins(document.getInteger("unrankedWins"));
@@ -318,22 +319,56 @@ public class Profile {
             }
         }
 
-        if(document.containsKey("inventories")) {
-            Document invDoc = document.get("inventories", Document.class);
+        if(document.containsKey("kits")) {
+            Document invDoc = document.get("kits", Document.class);
 
             for(String ladderName : invDoc.keySet()) {
                 Ladder ladder = Ladder.getLadder(ladderName);
                 if(ladder == null)
                     continue;
 
-                List<String> invList = (ArrayList<String>) invDoc.get(ladderName, ArrayList.class);
-                if(invList.size() <= 0) // Just a safe check
+                Document kitDoc = invDoc.get(ladderName, Document.class);
+                if(kitDoc.size() <= 0) // Just a safe check
                     continue;
 
-                customInvs.putIfAbsent(ladder, invList.stream()
-                                                      .map(InvUtils::invFromString)
-                                                      .collect(Collectors.toList()));
+                List<PlayerKit> playerKits = new ArrayList<>();
+                for(String key : kitDoc.keySet()) {
+                    Document kitStore = kitDoc.get(key, Document.class);
+                    PlayerKit kit = new PlayerKit(kitStore.getString("name"));
+                    if(kitStore.containsKey("inv"))
+                        kit.setPlayerInv(InvUtils.invFromString(kitStore.getString("inv")));
+                }
+
+                if(!playerKits.isEmpty()) {
+                    customKits.put(ladder, playerKits);
+                    Bukkit.broadcastMessage("success");
+                } else {
+                    List<PlayerKit> kits = new ArrayList<>();
+                    for(int i = 0; i < 5; i++)
+                        kits.add(new PlayerKit("&b&lKit " + (i + 1)));
+
+                    customKits.put(ladder, kits);
+                    Bukkit.broadcastMessage("fail");
+                }
+
+                int i = 0;
+                for(PlayerKit playerKit : customKits.get(ladder)) {
+                    Bukkit.broadcastMessage("Kit #" + i);
+                    Bukkit.broadcastMessage(playerKit.getName());
+                    Bukkit.broadcastMessage(playerKit.getPlayerInv() != null ? playerKit.getPlayerInv().toString() : "null");
+                }
             }
+        }
+
+        for(Ladder ladder : Ladder.getLadders().values()) {
+            if(customKits.containsKey(ladder))
+                continue;
+
+            List<PlayerKit> kits = new ArrayList<>();
+            for(int i = 0; i < 5; i++)
+                kits.add(new PlayerKit("&b&lKit " + (i + 1)));
+
+            customKits.putIfAbsent(ladder, kits);
         }
     }
 
@@ -352,16 +387,25 @@ public class Profile {
         for(ProfileSetting setting : settings.keySet())
             settingsStore.append(setting.getKey(), settings.get(setting));
 
-        BasicDBObject invStore = new BasicDBObject();
-        for(Map.Entry<Ladder, List<PlayerInv>> invEntry : customInvs.entrySet()) {
+        BasicDBObject kitStore = new BasicDBObject();
+        for(Map.Entry<Ladder, List<PlayerKit>> invEntry : customKits.entrySet()) {
             if(invEntry.getValue() == null || invEntry.getValue().size() <= 0)
                 continue;
 
-            BasicDBList invList = new BasicDBList();
-            for(PlayerInv inv : invEntry.getValue())
-                invList.add(inv.toString());
+            BasicDBObject kitDocument = new BasicDBObject();
+            int i = 1;
+            for(PlayerKit kit : invEntry.getValue()) {
+//                kitDocument.append("name", kit.getName());
+//                kitDocument.append("inv", (kit.getPlayerInv() != null) ? kit.getPlayerInv().toString() : null);
+                BasicDBObject object = new BasicDBObject();
+                object.append("name", kit.getName());
+                object.append("inv", (kit.getPlayerInv() != null) ? kit.getPlayerInv().toString() : null);
 
-            invStore.append(invEntry.getKey().getName(), invList);
+                kitDocument.append(i + "", object);
+                i += 1;
+            }
+
+            kitStore.append(invEntry.getKey().getName(), kitDocument);
         }
 
         if(name != null)
@@ -374,8 +418,8 @@ public class Profile {
             document.append("elo", eloStore);
         if(!settingsStore.isEmpty())
             document.append("settings", settingsStore);
-        if(!invStore.isEmpty())
-            document.append("inventories", invStore);
+        if(!kitStore.isEmpty())
+            document.append("kits", kitStore);
 
         return document;
     }

@@ -1,5 +1,6 @@
 package net.practice.practice.util.itemstack;
 
+import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -64,7 +65,7 @@ public class I extends ItemStack {
      */
     public I name(final String name) {
         final ItemMeta meta = getItemMeta();
-        meta.setDisplayName(name);
+        meta.setDisplayName(C.color(name));
         setItemMeta(meta);
         return this;
     }
@@ -82,7 +83,7 @@ public class I extends ItemStack {
         if (lore == null) {
             lore = new ArrayList<>();
         }
-        lore.add(text);
+        lore.add(C.color(text));
         meta.setLore(lore);
         setItemMeta(meta);
         return this;

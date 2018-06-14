@@ -4,6 +4,7 @@ import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.player.Profile;
+import net.practice.practice.game.player.data.PlayerKit;
 import net.practice.practice.task.EnderPearlTask;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Material;
@@ -21,6 +22,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class DuelListener implements Listener {
 
@@ -106,6 +109,38 @@ public class DuelListener implements Listener {
         event.setCancelled(true);
 
         player.sendMessage(C.color("&cYou are still on ender pearl cooldown."));
+    }
+
+    @EventHandler
+    public void onKitSelect(PlayerInteractEvent event) {
+        if(!event.getAction().name().contains("RIGHT"))
+            return;
+
+        ItemStack item = event.getItem();
+        if(item == null || item.getType() != Material.ENCHANTED_BOOK || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName())
+            return;
+
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByPlayer(player);
+        if(!profile.isInGame()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        event.setCancelled(true);
+
+        if(event.getItem().getItemMeta().getDisplayName().contains("Default " + profile.getCurrentDuel().getLadder().getName() + " Kit")) {
+            profile.getCurrentDuel().getLadder().getDefaultInv().apply(player);
+            return;
+        }
+
+        List<PlayerKit> playerKits = profile.getCustomKits().get(profile.getCurrentDuel().getLadder());
+        for(PlayerKit playerKit : playerKits) {
+            if(C.strip(playerKit.getName()).contains(C.strip(event.getItem().getItemMeta().getDisplayName()))) {
+                playerKit.getPlayerInv().apply(player);
+                break;
+            }
+        }
     }
 
     @EventHandler

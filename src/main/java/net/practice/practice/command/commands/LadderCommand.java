@@ -1,7 +1,6 @@
 package net.practice.practice.command.commands;
 
 import net.practice.practice.Practice;
-import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.util.chat.C;
@@ -171,35 +170,6 @@ public class LadderCommand {
         }
     }
 
-    @Command(name = "ladder.type", aliases = { "game.type" }, permission = "practice.ladder", playerOnly = true, description = "Manager ladders.")
-    public void onLadderType(CommandArgs args) {
-        if (args.length() == 1) {
-            args.getPlayer().sendMessage(C.color("&cUse /ladder type <name> <one_vs_one, two_vs_two, or team_vs_team>"));
-            return;
-        }
-        if (args.length() > 2) {
-            sendHelp(args.getPlayer());
-            return;
-        }
-
-        String name = args.getArgs(0);
-        if(Ladder.getLadder(name) == null) {
-            args.getPlayer().sendMessage(ChatColor.RED + "That ladder doesn't exist.");
-            return;
-        }
-
-        Ladder ladder = Ladder.getLadder(name);
-        DuelType type;
-        try {
-            type = DuelType.valueOf(args.getArgs(1));
-        } catch (IllegalArgumentException e) {
-            args.getPlayer().sendMessage(C.color("&cUse /ladder type <name> <one_vs_one, two_vs_two, or team_vs_team>"));
-            return;
-        }
-        ladder.setDuelType(type);
-        args.getPlayer().sendMessage(C.color("&eSet the DuelType of ladder " + ladder.getDisplayName() + " to " + type.getFriendlyName()));
-    }
-
     public void sendHelp(Player player) {
         player.sendMessage(C.color("&eLadder Help"));
         player.sendMessage(C.color("&a/ladder list"));
@@ -208,6 +178,5 @@ public class LadderCommand {
         player.sendMessage(C.color("&a/ladder set <name> <ranked;editable;build;combo>"));
         player.sendMessage(C.color("&a/ladder inv <name> <set;load;editor>"));
         player.sendMessage(C.color("&a/ladder seticon <name>"));
-        player.sendMessage(C.color("&a/ladder type <name> <type>"));
     }
 }

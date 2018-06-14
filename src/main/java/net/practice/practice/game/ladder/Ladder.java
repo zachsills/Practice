@@ -2,7 +2,6 @@ package net.practice.practice.game.ladder;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueType;
@@ -34,12 +33,10 @@ public class Ladder {
     @Getter @Setter private boolean buildable, editable, combo, ranked;
     @Getter @Setter private PlayerInv defaultInv;
     @Getter @Setter private Inventory editor;
-    @Getter @Setter private DuelType duelType;
 
     public Ladder(String name) {
         this.name = name;
         this.displayName = ChatColor.GREEN + name;
-        this.duelType = DuelType.ONE_VS_ONE;
 
         this.queues = new Queue[3];
         queues[0] = new UnkrankedSoloQueue(this);

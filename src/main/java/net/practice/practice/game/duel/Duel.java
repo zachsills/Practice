@@ -7,8 +7,11 @@ import net.practice.practice.game.arena.Arena;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.InventorySnapshot;
+import net.practice.practice.game.player.data.PlayerKit;
 import net.practice.practice.util.chat.C;
+import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -81,7 +84,17 @@ public abstract class Duel {
 
             player.sendMessage(C.color("&eYou were given the default " + ladder.getDisplayName() + " &ekit."));
         } else {
-            // TODO: Give custom kit selection
+            int i = 0;
+            for(PlayerKit kit : profile.getCustomKits().get(ladder)) {
+                if(kit.getPlayerInv() == null)
+                    continue;
+
+                player.getInventory().setItem(i, new I(Material.ENCHANTED_BOOK).name(kit.getName()));
+
+                i++;
+            }
+
+            player.getInventory().setItem(8, new I(Material.ENCHANTED_BOOK).name("&e&lDefault " + ladder.getName() + " Kit"));
         }
     }
 

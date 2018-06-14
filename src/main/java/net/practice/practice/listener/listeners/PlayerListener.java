@@ -198,7 +198,21 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if(event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
+        if(event.getClickedInventory().getTitle() != null && event.getClickedInventory().getTitle().contains("Settings")) {
+            event.setCancelled(true);
+            ProfileSetting setting = ProfileSetting.getByMaterial(item.getType());
+            profile.toggleSetting(setting);
+
+            event.getClickedInventory().setItem(event.getSlot(), ProfileSetting.getSettingItem(setting, profile.getSetting(setting)));
+            return;
+        }
+
+        if(event.getClickedInventory().getTitle() != null && event.getClickedInventory().getTitle().contains("Editing")) {
+            event.setCancelled(false);
+            return;
+        }
+
+        if(!profile.isInGame() && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
             event.setCancelled(true);
 
             if(item == null || item.getItemMeta() == null || !item.getItemMeta().hasDisplayName())
@@ -242,11 +256,6 @@ public class PlayerListener implements Listener {
 
                     player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "."));
                 }
-            } else if(event.getClickedInventory().getTitle().contains("Settings")) {
-                ProfileSetting setting = ProfileSetting.getByMaterial(item.getType());
-                profile.toggleSetting(setting);
-
-                event.getClickedInventory().setItem(event.getSlot(), ProfileSetting.getSettingItem(setting, profile.getSetting(setting)));
             } else if(event.getClickedInventory().getTitle().contains("Select a Ladder...")) {
                 Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
                 if(ladder == null)
