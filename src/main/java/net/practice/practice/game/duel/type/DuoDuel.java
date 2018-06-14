@@ -59,6 +59,8 @@ public class DuoDuel extends Duel {
 
     @Override
     public void sendMessage(String message) {
+        super.sendMessage(message);
+
         duoOne.forEach(player -> player.sendMessage(C.color(message)));
         duoTwo.forEach(player -> player.sendMessage(C.color(message)));
     }

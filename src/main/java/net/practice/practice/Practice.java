@@ -74,6 +74,8 @@ public class Practice extends JavaPlugin {
 
         backend.saveProfiles();
         backend.close();
+
+        Profile.getProfiles().clear();
     }
 
     public Location getSpawn() {

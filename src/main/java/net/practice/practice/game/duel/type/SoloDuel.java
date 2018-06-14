@@ -82,17 +82,22 @@ public class SoloDuel extends Duel {
             loserProfile.setRankedLosses(loserProfile.getRankedLosses() + 1);
 
             int eloChange = handleElo(winnerProfile, loserProfile, getLadder());
-            sendMessage("&6Elo Changes: &e" + winner.getName() + "&7(&a+" + eloChange + "&7) &6- &e" + getLoser().getName() + "&7(&c-" + eloChange + "&7)");
+            sendMessage("&6Elo Changes: &e" + winner.getName() + " &7(&a+" + eloChange + "&7) &6- &e" + getLoser().getName() + " &7(&c-" + eloChange + "&7)");
         } else {
             winnerProfile.setUnrankedWins(winnerProfile.getUnrankedWins() + 1);
             loserProfile.setUnrankedLosses(loserProfile.getUnrankedLosses() + 1);
         }
 
-        new JsonMessage().append(ChatColor.GOLD + "Post Match Inventories " + ChatColor.GRAY + "(Click to view)").save()
-                .append(ChatColor.GREEN + winner.getName()).setClickAsExecuteCmd("/inv " + winner.getName()).save()
-                .append(ChatColor.GRAY + " or ").save()
-                .append(ChatColor.RED + getLoser().getName()).setClickAsExecuteCmd("/inv " + getLoser().getName()).save()
+        new JsonMessage().append(ChatColor.GOLD + "Post Match Inventories " + ChatColor.GRAY + "(click to view)").save()
+                .append(ChatColor.GREEN + winner.getName()).setClickAsExecuteCmd("/_ " + winner.getName()).save()
+                .append(ChatColor.GRAY + " - ").save()
+                .append(ChatColor.RED + getLoser().getName()).setClickAsExecuteCmd("/_ " + getLoser().getName()).save()
                 .send(playerOne, playerTwo);
+
+        String spectatorMessage = getSpectatorMessage();
+        if(spectatorMessage != null)
+            sendMessage(spectatorMessage);
+
         sendMessage("&7&m---------------------------------");
 
         new BukkitRunnable() {
@@ -127,6 +132,8 @@ public class SoloDuel extends Duel {
 
     @Override
     public void sendMessage(String message) {
+        super.sendMessage(message);
+
         playerOne.sendMessage(C.color(message));
         playerTwo.sendMessage(C.color(message));
     }

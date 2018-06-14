@@ -31,6 +31,8 @@ public abstract class Duel {
 
     @Getter private Map<Player, Integer> missedPots;
 
+    @Getter private List<Profile> spectators;
+
     private BukkitRunnable countDownTask;
     @Getter private int countDown = 5;
 
@@ -42,6 +44,8 @@ public abstract class Duel {
         this.snapshots = new HashSet<>();
 
         this.missedPots = new HashMap<>();
+
+        this.spectators = new ArrayList<>();
 
         this.state = DuelState.STARTING;
     }
@@ -90,7 +94,6 @@ public abstract class Duel {
                     continue;
 
                 player.getInventory().setItem(i, new I(Material.ENCHANTED_BOOK).name(kit.getName()));
-
                 i++;
             }
 
@@ -121,7 +124,22 @@ public abstract class Duel {
                 .orElse(null);
     }
 
-    public abstract void sendMessage(String message);
+    public String getSpectatorMessage() {
+        if(spectators.size() == 0)
+            return null;
+
+        StringBuilder sb = new StringBuilder();
+        for(Profile profile : spectators)
+            sb.append(profile.getName()).append((spectators.indexOf(profile) + 1 >= spectators.size() ? "" : ", "));
+
+        return C.color("&bSpectators (" + spectators.size() + "): &7" + sb.toString());
+    }
+
+    public void sendMessage(String message) {
+        spectators.stream()
+                .map(Profile::getPlayer)
+                .forEach(player -> player.sendMessage(C.color(message)));
+    }
 
     public abstract void kill(Player player);
 

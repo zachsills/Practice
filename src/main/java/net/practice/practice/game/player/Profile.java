@@ -42,7 +42,7 @@ public class Profile {
 
     @Getter private Map<String, DuelRequest> duelRequests;
 
-    @Getter @Setter private Duel currentDuel, recentDuel;
+    @Getter @Setter private Duel currentDuel, recentDuel, spectating;
     @Getter @Setter private Queue currentQueue, lastQueue;
     @Getter @Setter private Party party;
     @Getter @Setter private Ladder editing;
@@ -120,6 +120,10 @@ public class Profile {
         return currentDuel != null && state == ProfileState.PLAYING;
     }
 
+    public boolean isSpectating() {
+        return spectating != null && state == ProfileState.SPECTATING;
+    }
+
     public void setCurrentDuel(Duel duel) {
         currentDuel = duel;
         if(currentDuel == null) {
@@ -147,6 +151,25 @@ public class Profile {
 
         getPlayer().setExp(0.0F);
         getPlayer().setLevel(0);
+    }
+
+    public void setSpectating(Duel spectating) {
+        if(spectating == null) {
+            if(this.spectating != null)
+                this.spectating.getSpectators().remove(this);
+
+            SpawnHandler.spawn(getPlayer());
+            this.spectating = null;
+            return;
+        }
+
+        this.spectating = spectating;
+
+        InvUtils.clear(getPlayer());
+
+        setState(ProfileState.SPECTATING);
+
+        spectating.getSpectators().add(this);
     }
 
     public void cleanupRecent() {
@@ -337,25 +360,18 @@ public class Profile {
                     PlayerKit kit = new PlayerKit(kitStore.getString("name"));
                     if(kitStore.containsKey("inv"))
                         kit.setPlayerInv(InvUtils.invFromString(kitStore.getString("inv")));
+
+                    playerKits.add(kit);
                 }
 
                 if(!playerKits.isEmpty()) {
                     customKits.put(ladder, playerKits);
-                    Bukkit.broadcastMessage("success");
                 } else {
                     List<PlayerKit> kits = new ArrayList<>();
                     for(int i = 0; i < 5; i++)
                         kits.add(new PlayerKit("&b&lKit " + (i + 1)));
 
                     customKits.put(ladder, kits);
-                    Bukkit.broadcastMessage("fail");
-                }
-
-                int i = 0;
-                for(PlayerKit playerKit : customKits.get(ladder)) {
-                    Bukkit.broadcastMessage("Kit #" + i);
-                    Bukkit.broadcastMessage(playerKit.getName());
-                    Bukkit.broadcastMessage(playerKit.getPlayerInv() != null ? playerKit.getPlayerInv().toString() : "null");
                 }
             }
         }

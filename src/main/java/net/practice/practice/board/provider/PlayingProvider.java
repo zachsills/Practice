@@ -31,7 +31,7 @@ public class PlayingProvider implements BoardProvider {
                 Player opponent = (soloDuel.getPlayerOne() == player ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne());
                 if(duel.getState() == DuelState.PLAYING) {
                     lines.add("&eOpponent: &7" + opponent.getName());
-                    lines.add("&eTime: &7" + TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime()));
+                    lines.add("&eDuration: &7" + TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime()));
                     lines.add("&ePing: &6" + PlayerUtils.getPing(player) + " &7| &6" + PlayerUtils.getPing(opponent));
                 } else if(duel.getState() == DuelState.STARTING) {
                     lines.add("&eOpponent: &7" + opponent.getName());

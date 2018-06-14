@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class InventoryCommand {
 
-    @Command(name = "inventory", aliases = { "inv" }, playerOnly = true, description = "View a player's inventory.")
+    @Command(name = "inventory", aliases = { "inv", "_" }, playerOnly = true, description = "View a player's inventory.")
     public void onInventory(CommandArgs args) {
         if(args.length() != 1) {
             args.getPlayer().sendMessage(ChatColor.RED + "/" + args.getLabel() + " <player>");

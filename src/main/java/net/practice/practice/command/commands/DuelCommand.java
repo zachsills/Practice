@@ -3,6 +3,7 @@ package net.practice.practice.command.commands;
 import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
+import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.inventory.inventories.RequestInv;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.command.Command;
@@ -25,24 +26,30 @@ public class DuelCommand {
             return;
         }
 
+        Profile profile = Profile.getByPlayer(args.getPlayer());
+        if(profile.getState() != ProfileState.LOBBY) {
+            args.getPlayer().sendMessage(ChatColor.RED + "You cannot perform this action in your current state.");
+            return;
+        }
+
         Player player = Bukkit.getPlayer(args.getArgs(0));
         if(player == null || !player.isOnline()) {
             args.getPlayer().sendMessage(ChatColor.RED + "The player '" + args.getArgs(0) + "' is not online.");
             return;
         }
 
-        Profile profile = Profile.getByPlayer(player);
-        if(!(boolean) profile.getSetting(ProfileSetting.DUEL_REQUESTS)) {
+        Profile targetProfile = Profile.getByPlayer(player);
+        if(!(boolean) targetProfile.getSetting(ProfileSetting.DUEL_REQUESTS)) {
             args.getPlayer().sendMessage(C.color("&cThat player is currently not accepting any duels."));
             return;
         }
 
-        if(profile.isInGame()) {
+        if(targetProfile.isInGame()) {
             args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
             return;
         }
 
-        if(profile.getDuelRequests().containsKey(args.getPlayer().getName())) {
+        if(targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
             args.getPlayer().sendMessage(C.color("&cYou have already sent this player a request."));
             return;
         }
@@ -57,24 +64,30 @@ public class DuelCommand {
             return;
         }
 
+        Profile profile = Profile.getByPlayer(args.getPlayer());
+        if(profile.getState() != ProfileState.LOBBY) {
+            args.getPlayer().sendMessage(ChatColor.RED + "You cannot perform this action in your current state.");
+            return;
+        }
+
         Player player = Bukkit.getPlayer(args.getArgs(0));
         if(player == null || !player.isOnline()) {
             args.getPlayer().sendMessage(ChatColor.RED + "The player '" + args.getArgs(0) + "' is not online.");
             return;
         }
 
-        Profile profile = Profile.getByPlayer(player);
-        if(profile.isInGame()) {
+        Profile targetProfile = Profile.getByPlayer(player);
+        if(targetProfile.isInGame()) {
             args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
             return;
         }
 
-        if(!profile.getDuelRequests().containsKey(args.getPlayer().getName())) {
+        if(!targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
             args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
             return;
         }
 
-        DuelRequest request = profile.getDuelRequests().get(args.getPlayer().getName());
+        DuelRequest request = targetProfile.getDuelRequests().get(args.getPlayer().getName());
 
         request.accept();
     }
@@ -86,19 +99,25 @@ public class DuelCommand {
             return;
         }
 
+        Profile profile = Profile.getByPlayer(args.getPlayer());
+        if(profile.getState() != ProfileState.LOBBY) {
+            args.getPlayer().sendMessage(ChatColor.RED + "You cannot perform this action in your current state.");
+            return;
+        }
+
         Player player = Bukkit.getPlayer(args.getArgs(0));
         if(player == null || !player.isOnline()) {
             args.getPlayer().sendMessage(ChatColor.RED + "The player '" + args.getArgs(0) + "' is not online.");
             return;
         }
 
-        Profile profile = Profile.getByPlayer(player);
-        if(!profile.getDuelRequests().containsKey(args.getPlayer().getName())) {
+        Profile targetProfile = Profile.getByPlayer(player);
+        if(!targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
             args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
             return;
         }
 
-        DuelRequest request = profile.getDuelRequests().get(args.getPlayer().getName());
+        DuelRequest request = targetProfile.getDuelRequests().get(args.getPlayer().getName());
 
         request.deny();
 

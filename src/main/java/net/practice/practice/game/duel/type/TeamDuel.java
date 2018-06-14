@@ -50,6 +50,8 @@ public class TeamDuel extends Duel {
 
     @Override
     public void sendMessage(String message) {
+        super.sendMessage(message);
+
         partyOne.sendMessage(message);
         partyTwo.sendMessage(message);
     }

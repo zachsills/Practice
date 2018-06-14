@@ -34,15 +34,13 @@ public class RankedSoloQueue extends Queue {
         Iterator<Map.Entry<UUID, QueueRange>> it = ranges.entrySet().iterator();
         while(it.hasNext()) {
             Map.Entry<UUID, QueueRange> rangeEntry = it.next();
-            if(!rangeEntry.getValue().isExpired()) {
+            if(!rangeEntry.getValue().isExpired())
                 rangeEntry.getValue().expand();
-                continue;
-            }
 
-            Profile profile = Profile.getByUuid(rangeEntry.getKey());
-            profile.leaveQueue(true);
-
-            profile.getPlayer().sendMessage(C.color("&cYou have been removed from the queue since you're entered out of range."));
+//            Profile profile = Profile.getByUuid(rangeEntry.getKey());
+//            profile.leaveQueue(true);
+//
+//            profile.getPlayer().sendMessage(C.color("&cYou have been removed from the queue since you're entered out of range."));
         }
     }
 

@@ -19,8 +19,8 @@ public class StatsInv {
         String title = player.getName().equals(targetP.getName()) ? "Statistics" : "Statistics of " + targetP.getName();
         Inventory inventory = Bukkit.createInventory(player, 45, title);
 
-        int eloSum = targetP.getEloMap().values().stream().mapToInt(Integer::intValue).sum();
-        int eloCount = targetP.getEloMap().values().size();
+        int eloSum = Ladder.getLadders().values().stream().mapToInt(targetP::getElo).sum();
+        int eloCount = Ladder.getAllLadders().size();
         int globalElo = eloCount > 0 ? (eloSum / eloCount) : 1000;
 
         inventory.setItem(13, new I(SpawnHandler.getSkull(targetP.getUuid().toString())).name(C.color("&6&lGlobal Stats"))
