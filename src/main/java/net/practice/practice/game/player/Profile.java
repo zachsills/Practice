@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.*;
 
@@ -170,6 +171,14 @@ public class Profile {
         setState(ProfileState.SPECTATING);
 
         spectating.getSpectators().add(this);
+        spectating.getPlayers().forEach(player -> player.hidePlayer(getPlayer()));
+
+        PlayerInventory inventory = getPlayer().getInventory();
+        inventory.setItem(0, ItemStorage.SPECTATOR_INVENTORY);
+        inventory.setItem(1, ItemStorage.SPECTATOR_INFO);
+        inventory.setItem(8, ItemStorage.SPECTATOR_LEAVE);
+
+        spectating.sendMessage("&b" + getName() + " &eis now spectating.");
     }
 
     public void cleanupRecent() {
@@ -194,7 +203,7 @@ public class Profile {
                     return;
                 }
 
-                DuelRequest request = new DuelRequest(getPlayer(), opponent, recentDuel.getLadder());
+                DuelRequest request = new DuelRequest(getPlayer(), opponent, recentDuel.getLadder(), ((SoloDuel) recentDuel).isRanked());
                 request.setRematch(true);
 
                 request.sendToRequested();

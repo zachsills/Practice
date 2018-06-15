@@ -10,6 +10,10 @@ import net.practice.practice.game.party.Party;
 import net.practice.practice.game.player.Profile;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class TeamDuel extends Duel {
 
     @Getter private Party partyOne, partyTwo;
@@ -39,6 +43,12 @@ public class TeamDuel extends Duel {
         super.start();
 
 
+    }
+
+    @Override
+    public Collection<Player> getPlayers() {
+        return Stream.concat(partyOne.getPlayers().stream(), partyTwo.getPlayers().stream())
+                .collect(Collectors.toList());
     }
 
     @Override

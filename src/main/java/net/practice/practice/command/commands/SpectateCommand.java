@@ -2,11 +2,13 @@ package net.practice.practice.command.commands;
 
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
+import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.command.Command;
 import net.practice.practice.util.command.CommandArgs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 public class SpectateCommand {
@@ -44,5 +46,10 @@ public class SpectateCommand {
 
         profile.setSpectating(targetProfile.getCurrentDuel());
         profile.getPlayer().teleport(player.getLocation());
+
+        RunnableShorthand.runNextTick(() -> {
+            profile.getPlayer().setGameMode(GameMode.CREATIVE);
+            profile.getPlayer().setFlying(true);
+        });
     }
 }

@@ -8,6 +8,7 @@ import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 
 public class StatsInv {
 
@@ -41,7 +42,7 @@ public class StatsInv {
             String name = C.color("&e&l" + C.strip(ladder.getDisplayIcon().getItemMeta().getDisplayName()));
             inventory.setItem(index, new I(ladder.getDisplayIcon()).name(name).clearLore().amount(1).lore(C.color("&f&m------------"))
                     .lore(C.color("&6ELO &7- &f" + targetP.getElo(ladder)))
-                    .lore(C.color("&f&m------------")));
+                    .lore(C.color("&f&m------------")).flag(ItemFlag.HIDE_POTION_EFFECTS));
             index++;
         }
 

@@ -110,6 +110,11 @@ public abstract class Duel {
         setState(DuelState.ENDED);
 
         saveInventories();
+
+        for(Player player : getPlayers()) {
+            for(Profile profile : getSpectators())
+                player.showPlayer(profile.getPlayer());
+        }
     }
 
     public boolean hasSnapshot(Player player) {
@@ -140,6 +145,8 @@ public abstract class Duel {
                 .map(Profile::getPlayer)
                 .forEach(player -> player.sendMessage(C.color(message)));
     }
+
+    public abstract Collection<Player> getPlayers();
 
     public abstract void kill(Player player);
 

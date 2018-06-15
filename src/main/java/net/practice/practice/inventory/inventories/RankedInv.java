@@ -10,6 +10,7 @@ import net.practice.practice.util.itemstack.I;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 
 public class RankedInv {
 
@@ -27,7 +28,7 @@ public class RankedInv {
                 int queuing = ladder.getTotalQueuing(QueueType.RANKED);
                 int inGame = Queue.getNumberInGame(ladder, true);
                 inventory.setItem(index, new I(ladder.getDisplayIcon()).amount(1).clearLore().lore(C.color("&f&m------------")).lore(C.color("&7Queuing: &c" + queuing))
-                        .lore(C.color("&7In Game: &c") + inGame).lore(C.color("&f&m------------")));
+                        .lore(C.color("&7In Game: &c") + inGame).lore(C.color("&f&m------------")).flag(ItemFlag.HIDE_POTION_EFFECTS));
                 index++;
             }
         }

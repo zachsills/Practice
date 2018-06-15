@@ -10,6 +10,7 @@ import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.entity.Player;
@@ -29,8 +30,10 @@ public class SpawnHandler {
                 player.teleport(Practice.getInstance().getSpawn());
             else
                 player.sendMessage(C.color("&cSpawn has not been set!"));
-
         }
+
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setFlying(false);
 
         player.setLevel(0);
         player.setExp(0.0F);
