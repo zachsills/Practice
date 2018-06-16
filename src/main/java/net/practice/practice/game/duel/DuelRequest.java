@@ -49,7 +49,7 @@ public class DuelRequest {
             requested.sendMessage(C.color("  &7From: &6" + requester.getName()));
         }
 
-        requested.sendMessage(C.color("  &7Ladder: &6" + ladder.getDisplayName()));
+        requested.sendMessage(C.color("  &7Ladder: &6" + ladder.getDisplayName() + (ranked ? " (R)" : "")));
         new JsonMessage()
                 .append(ChatColor.GREEN + "  ACCEPT").setClickAsExecuteCmd("/accept " + requester.getName()).setHoverAsTooltip(ChatColor.GREEN + "Accept " + requester.getName()).save()
                 .append(C.color(" &7or ")).save()

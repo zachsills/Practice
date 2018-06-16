@@ -18,6 +18,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class SoloDuel extends Duel {
 
     @Getter private final Player playerOne, playerTwo;
@@ -92,7 +96,7 @@ public class SoloDuel extends Duel {
                 .append(ChatColor.GREEN + winner.getName()).setClickAsExecuteCmd("/_ " + winner.getName()).setHoverAsTooltip(ChatColor.GREEN + winner.getName() + "'s Inventory").save()
                 .append(ChatColor.GRAY + " - ").save()
                 .append(ChatColor.RED + getLoser().getName()).setClickAsExecuteCmd("/_ " + getLoser().getName()).setHoverAsTooltip(ChatColor.RED + getLoser().getName() + "'s Inventory").save()
-                .send(playerOne, playerTwo);
+                .send(getPlayers().toArray(new Player[] {}));
 
         String spectatorMessage = getSpectatorMessage();
         if(spectatorMessage != null)
@@ -108,6 +112,10 @@ public class SoloDuel extends Duel {
 
                 if(playerTwo.isOnline())
                     SpawnHandler.spawn(playerTwo, true);
+
+                getSpectators().forEach(profile -> {
+                    SpawnHandler.spawn(profile.getPlayer());
+                });
 
                 Profile.totalInGame -= 2;
             }
@@ -128,6 +136,12 @@ public class SoloDuel extends Duel {
         loserProfile.getEloMap().put(ladder, loserNewElo);
 
         return (winnerNewElo - winnderOldElo);
+    }
+
+    @Override
+    public Collection<Player> getPlayers() {
+        return Stream.of(playerOne, playerTwo)
+                .collect(Collectors.toList());
     }
 
     @Override

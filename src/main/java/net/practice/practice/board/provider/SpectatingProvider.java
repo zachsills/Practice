@@ -30,12 +30,12 @@ public class SpectatingProvider implements BoardProvider {
                 SoloDuel soloDuel = (SoloDuel) duel;
                 if(duel.getState() == DuelState.PLAYING) {
                     lines.add("&eDuration: &7" + TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime()));
-                    lines.add("&a" + soloDuel.getPlayerOne().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerOne()) + "ms )");
-                    lines.add("&c" + soloDuel.getPlayerTwo().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerTwo()) + "ms )");
+                    lines.add("&a" + soloDuel.getPlayerOne().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerOne()) + "ms)");
+                    lines.add("&c" + soloDuel.getPlayerTwo().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerTwo()) + "ms)");
                 } else if(duel.getState() == DuelState.STARTING) {
                     lines.add("&eStarting: &7" + duel.getCountDown());
-                    lines.add("&a" + soloDuel.getPlayerOne().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerOne()) + "ms )");
-                    lines.add("&c" + soloDuel.getPlayerTwo().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerTwo()) + "ms )");
+                    lines.add("&a" + soloDuel.getPlayerOne().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerOne()) + "ms)");
+                    lines.add("&c" + soloDuel.getPlayerTwo().getName() + " &7(" + PlayerUtils.getPing(soloDuel.getPlayerTwo()) + "ms)");
                 } else if(duel.getState() == DuelState.ENDED) {
                     lines.add("&eWinner: &7" + soloDuel.getWinner().getName());
                 }

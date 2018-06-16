@@ -14,6 +14,7 @@ public class ListenerHandler {
                 new DuelListener(),
                 new EditorListener(),
                 new PlayerListener(),
+                new SpectatorListener(),
                 new WeatherListener(),
                 new WorldListener()
         ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, Practice.getInstance()));

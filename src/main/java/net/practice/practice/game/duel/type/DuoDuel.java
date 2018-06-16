@@ -11,8 +11,11 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.util.chat.C;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DuoDuel extends Duel {
 
@@ -55,6 +58,12 @@ public class DuoDuel extends Duel {
     @Override
     public void quit(Player player) {
 
+    }
+
+    @Override
+    public Collection<Player> getPlayers() {
+        return Stream.concat(duoOne.stream(), duoTwo.stream())
+                .collect(Collectors.toList());
     }
 
     @Override

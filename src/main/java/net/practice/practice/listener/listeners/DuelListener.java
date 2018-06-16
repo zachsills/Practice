@@ -9,7 +9,6 @@ import net.practice.practice.task.EnderPearlTask;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,13 +66,8 @@ public class DuelListener implements Listener {
             return;
 
         boolean missed = true;
-        for(LivingEntity entity : event.getAffectedEntities()) {
-            if(entity.getType() != EntityType.PLAYER)
-                continue;
-
-            if(entity.getName().equals(player.getName()))
-                missed = false;
-        }
+        if(event.getIntensity(player) >= .5)
+            missed = false;
 
         if(missed) {
             int missedPots = profile.getCurrentDuel().getMissedPots().containsKey(player) ? profile.getCurrentDuel().getMissedPots().get(player) : 0;

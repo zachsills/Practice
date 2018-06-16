@@ -6,6 +6,7 @@ import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 
 public class RequestInv {
 
@@ -13,7 +14,7 @@ public class RequestInv {
         Inventory inventory = Bukkit.createInventory(requester, 18, C.color("&eRequesting: " + requested.getName()));
 
         for(Ladder ladder : Ladder.getLadders().values())
-            inventory.addItem(new I(ladder.getDisplayIcon()).amount(1).name(ladder.getDisplayName()).clearLore());
+            inventory.addItem(new I(ladder.getDisplayIcon()).amount(1).name(ladder.getDisplayName()).clearLore().flag(ItemFlag.HIDE_POTION_EFFECTS));
 
         requester.openInventory(inventory);
     }
