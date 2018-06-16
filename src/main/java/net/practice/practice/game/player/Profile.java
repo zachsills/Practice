@@ -103,7 +103,12 @@ public class Profile {
         if(!customKits.containsKey(ladder))
             return false;
 
-        return customKits.get(ladder) != null && !customKits.get(ladder).isEmpty();
+        return customKits.get(ladder) != null && !customKits.get(ladder).isEmpty() && hasKit(customKits.get(ladder));
+    }
+
+    private static boolean hasKit(List<PlayerKit> playerKits) {
+        return playerKits.stream()
+                .anyMatch(PlayerKit::hasKit);
     }
 
     public Object getSetting(ProfileSetting setting) {

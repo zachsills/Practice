@@ -6,6 +6,5 @@ public enum ProfileState {
     QUEUING,
     EDITING,
     SPECTATING,
-    PLAYING,
-    BUILDING
+    PLAYING
 }

@@ -99,8 +99,6 @@ public class PlayerListener implements Listener {
                 }.runTaskLater(Practice.getInstance(), 2L);
                 break;
             }
-            case BUILDING:
-                break;
             default:
                 event.setCancelled(true);
                 event.getPlayer().updateInventory();

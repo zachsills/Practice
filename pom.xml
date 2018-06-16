@@ -122,6 +122,15 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--ProtocolLib-->
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.4.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--WorldEdit-->
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>

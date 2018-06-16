@@ -29,7 +29,6 @@ public class ProviderResolver implements BoardProvider {
 
         lobbyProvider = new LobbyProvider();
         providers.put(ProfileState.LOBBY, lobbyProvider);
-        providers.put(ProfileState.BUILDING, lobbyProvider);
         providers.put(ProfileState.EDITING, lobbyProvider);
         providers.put(ProfileState.QUEUING, lobbyProvider);
     }

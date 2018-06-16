@@ -74,7 +74,7 @@ public class SpectatorListener implements Listener {
         if(player.getItemInHand() == null || player.getItemInHand().getType() != Material.BOOK)
             return;
 
-        Player other = event.getPlayer();
+        Player other = (Player) event.getRightClicked();
         player.openInventory(other.getInventory());
     }
 }

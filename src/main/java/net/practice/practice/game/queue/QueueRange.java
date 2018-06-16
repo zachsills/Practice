@@ -1,27 +1,15 @@
 package net.practice.practice.game.queue;
 
+import lombok.Getter;
+
 public class QueueRange {
 
-    private int middle;
-    private int min;
-    private int max;
+    @Getter private int middle, min, max;
 
     public QueueRange(int middle) {
         this.middle = middle;
         this.min = middle - 10;
         this.max = middle + 10;
-    }
-
-    public int getMin() {
-        return min;
-    }
-
-    public int getMax() {
-        return max;
-    }
-
-    public int getMiddle() {
-        return middle;
     }
 
     public void expand() {

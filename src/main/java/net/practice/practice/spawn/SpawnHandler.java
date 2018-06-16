@@ -6,6 +6,7 @@ import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
+import net.practice.practice.inventory.item.ItemStorage;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
@@ -56,8 +57,8 @@ public class SpawnHandler {
 
         Profile profile = Profile.getByPlayer(player);
 
-        items[0] = new I(Material.IRON_SWORD).name(C.color("&eUnranked")).lore(C.color("&7Queue for an Unranked match."));
-        items[1] = new I(Material.DIAMOND_SWORD).name(C.color("&6Ranked")).lore(C.color("&7Queue for an Ranked match."));
+        items[0] = ItemStorage.LOBBY_UNRANKED;
+        items[1] = ItemStorage.LOBBY_RANKED;
 
         if(profile.getRecentDuel() != null) {
             Duel duel = profile.getRecentDuel();
@@ -72,10 +73,10 @@ public class SpawnHandler {
 
         items[3] = new I(getSkull(player.getName())).name(C.color("&cStats")).lore(C.color("&7Look at leaderboards and statistics."));
 
-        items[5] = new I(Material.REDSTONE_TORCH_ON).name(C.color("&bParty?")).lore(C.color("&7PARRRRRRR-TAY!"));
+        items[5] = ItemStorage.PARTY_LOBBY_CREATE;
 
-        items[7] = new I(Material.WATCH).name(C.color("&6Settings")).lore(C.color("&7View and change your settings."));
-        items[8] = new I(Material.BOOK).name(C.color("&eKit Editor")).lore(C.color("&7Select kit and edit."));
+        items[7] = ItemStorage.LOBBY_WATCH;
+        items[8] = ItemStorage.LOBBY_EDITOR;
 
         return items;
     }

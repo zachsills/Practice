@@ -2,7 +2,6 @@ package net.practice.practice.game.player.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,8 +16,8 @@ public class PlayerKit {
         this.name = name;
     }
 
-    public String getDisplay() {
-        return C.color(name);
+    public static boolean hasKit(PlayerKit kit) {
+        return kit.getPlayerInv() != null;
     }
 
     public void save(Player player) {
