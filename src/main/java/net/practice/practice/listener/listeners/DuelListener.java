@@ -106,6 +106,31 @@ public class DuelListener implements Listener {
     }
 
     @EventHandler
+    public void onInteractPot(PlayerInteractEvent event) {
+        if(!event.getAction().name().contains("RIGHT"))
+            return;
+
+        ItemStack item = event.getItem();
+        if(item == null || item.getType() != Material.POTION)
+            return;
+
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByPlayer(player);
+        if(!profile.isInGame()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if(profile.getCurrentDuel().getState() != DuelState.PLAYING)
+            return;
+
+        if(item.getDurability() == 16421) {
+            int thrownPots = profile.getCurrentDuel().getThrownPots().containsKey(player) ? profile.getCurrentDuel().getThrownPots().get(player) : 0;
+            profile.getCurrentDuel().getThrownPots().put(player, thrownPots + 1);
+        }
+    }
+
+    @EventHandler
     public void onKitSelect(PlayerInteractEvent event) {
         if(!event.getAction().name().contains("RIGHT"))
             return;

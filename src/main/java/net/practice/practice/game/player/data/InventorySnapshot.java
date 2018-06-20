@@ -23,6 +23,7 @@ public class InventorySnapshot {
     @Getter private double health;
 
     @Getter private int missedPots;
+    @Getter private double accuracy;
 
     @Getter private Inventory inventory;
 
@@ -43,6 +44,12 @@ public class InventorySnapshot {
 
         if(Profile.getByPlayer(player).getCurrentDuel().getMissedPots().containsKey(player))
             this.missedPots = Profile.getByPlayer(player).getCurrentDuel().getMissedPots().get(player);
+
+        if(Profile.getByPlayer(player).getCurrentDuel().getThrownPots().containsKey(player)) {
+            int thrownPots = Profile.getByPlayer(player).getCurrentDuel().getThrownPots().get(player);
+            //this.accuracy = (((double) initialPots - this.missedPots) / (double) initialPots) * 100.0;
+            this.accuracy = ((thrownPots - missedPots) / (double) thrownPots) * 100.0;
+        }
     }
 
     public void loadInventory() {
@@ -63,7 +70,7 @@ public class InventorySnapshot {
                 .filter(Objects::nonNull)
                 .filter(itemStack -> itemStack.getType() == Material.POTION && itemStack.getDurability() == 16421)
                 .count();
-        inventory.setItem(49, new I(Material.POTION).durability(16461).amount(potsRemaining).name(C.color("&6Potion Info")).lore(C.color("&dMissed: &e" + missedPots)).lore(C.color("&dPots Remaining: &e" + potsRemaining)));
+        inventory.setItem(49, new I(Material.POTION).durability(16461).amount(potsRemaining).name(C.color("&6Potion Info")).lore(C.color("&dMissed: &e" + missedPots)).lore(C.color("&dPots Remaining: &e" + potsRemaining)).lore(C.color("&dPotion Accuracy: &e" + String.format("%.1f", accuracy) + "%")));
 
         inventory.setItem(51, new I(Material.DIAMOND_SWORD).name(C.color("&eMatch Info")).lore(C.color("&bLongest Combo: " + 0)));
     }

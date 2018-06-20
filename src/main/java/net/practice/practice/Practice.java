@@ -55,7 +55,6 @@ public class Practice extends JavaPlugin {
         ListenerHandler.registerListeners();
 
         getServer().getOnlinePlayers().forEach(SpawnHandler::spawn);
-        getServer().getOnlinePlayers().forEach(Profile::getByPlayer);
 
         /* Tasks */
         new QueueRunnable().runTaskTimer(this, 20L, 40L);

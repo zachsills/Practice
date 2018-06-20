@@ -29,7 +29,7 @@ public abstract class Duel {
 
     @Getter private Set<InventorySnapshot> snapshots;
 
-    @Getter private Map<Player, Integer> missedPots;
+    @Getter private Map<Player, Integer> missedPots, thrownPots;
 
     @Getter private List<Profile> spectators;
 
@@ -44,6 +44,7 @@ public abstract class Duel {
         this.snapshots = new HashSet<>();
 
         this.missedPots = new HashMap<>();
+        this.thrownPots = new HashMap<>();
 
         this.spectators = new ArrayList<>();
 
@@ -77,6 +78,12 @@ public abstract class Duel {
         setState(DuelState.PLAYING);
 
         sendMessage(C.color("&aThe match has now started!"));
+
+//        new BukkitRunnable() {
+//            public void run() {
+//                saveInitialPots();
+//            }
+//        }.runTaskLaterAsynchronously(Practice.getInstance(), 20L * 5L);
     }
 
     public void giveKits(Player player) {
@@ -100,6 +107,16 @@ public abstract class Duel {
             player.getInventory().setItem(8, new I(Material.ENCHANTED_BOOK).name("&e&lDefault " + ladder.getName() + " Kit"));
         }
     }
+
+//    public void saveInitialPots() {
+//        getPlayers().forEach(player -> {
+//           initialPots.put(player, (int) Arrays.stream(player.getInventory().getContents())
+//                   .filter(Objects::nonNull)
+//                   .filter(itemStack -> itemStack.getType() == Material.POTION && itemStack.getDurability() == 16421)
+//                   .count());
+//           Bukkit.broadcastMessage(player.getName() + "'s Pots: " + initialPots.get(player));
+//        });
+//    }
 
     public void end(DuelEndReason reason) {
         endTime = System.currentTimeMillis();
