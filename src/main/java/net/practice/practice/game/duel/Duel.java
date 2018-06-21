@@ -30,6 +30,7 @@ public abstract class Duel {
     @Getter private Set<InventorySnapshot> snapshots;
 
     @Getter private Map<Player, Integer> missedPots, thrownPots;
+    @Getter private Map<Player, List<Integer>> comboes;
 
     @Getter private List<Profile> spectators;
 
@@ -45,6 +46,7 @@ public abstract class Duel {
 
         this.missedPots = new HashMap<>();
         this.thrownPots = new HashMap<>();
+        this.comboes = new HashMap<>();
 
         this.spectators = new ArrayList<>();
 
@@ -161,6 +163,14 @@ public abstract class Duel {
         spectators.stream()
                 .map(Profile::getPlayer)
                 .forEach(player -> player.sendMessage(C.color(message)));
+    }
+
+    public int getLongestCombo(Player player) {
+        Profile.getByPlayer(player).setLongestCombo(0);
+        if(!comboes.containsKey(player))
+            return 0;
+
+        return Collections.max(comboes.get(player));
     }
 
     public abstract Collection<Player> getPlayers();

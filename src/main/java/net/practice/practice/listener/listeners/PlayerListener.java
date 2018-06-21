@@ -31,6 +31,9 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -129,8 +132,22 @@ public class PlayerListener implements Listener {
                     Player other = (Player) e.getDamager();
                     if(!duel.hasPlayer(other))
                         event.setCancelled(true);
-                    else
+                    else {
+                        Profile otherProfile = Profile.getByPlayer(other);
+                        otherProfile.setLongestCombo(otherProfile.getLongestCombo() + 1);
+
+                        if(profile.getLongestCombo() != 0) {
+                            if(!duel.getComboes().containsKey(player))
+                                duel.getComboes().put(player, new ArrayList<>());
+
+                            List<Integer> comboes = duel.getComboes().get(player);
+                            comboes.add(profile.getLongestCombo());
+                            profile.setLongestCombo(0);
+                            duel.getComboes().put(player, comboes);
+                        }
+
                         event.setCancelled(false);
+                    }
                 }
                 break;
             }

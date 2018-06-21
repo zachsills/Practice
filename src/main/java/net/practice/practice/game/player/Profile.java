@@ -47,6 +47,7 @@ public class Profile {
     @Getter @Setter private Queue currentQueue, lastQueue;
     @Getter @Setter private Party party;
     @Getter @Setter private Ladder editing;
+    @Getter @Setter private int longestCombo;
 
     @Getter @Setter private ProfileState state;
 

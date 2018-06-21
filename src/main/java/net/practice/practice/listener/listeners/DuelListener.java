@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class DuelListener implements Listener {
 
         //Location deathLoc = event.getEntity().getLocation();
         event.getDrops().clear();
+        event.setDroppedExp(0);
 
         duel.saveInventory(profile.getUuid());
         duel.kill(event.getEntity());
@@ -65,10 +67,10 @@ public class DuelListener implements Listener {
         if(!profile.isInGame())
             return;
 
-        boolean missed = true;
-        if(event.getIntensity(player) >= .5)
-            missed = false;
+        if(event.getEntity().getEffects().stream().noneMatch(potionEffect -> potionEffect.getType().equals(PotionEffectType.HEAL)))
+            return;
 
+        boolean missed = event.getIntensity(player) < .5;
         if(missed) {
             int missedPots = profile.getCurrentDuel().getMissedPots().containsKey(player) ? profile.getCurrentDuel().getMissedPots().get(player) : 0;
             profile.getCurrentDuel().getMissedPots().put(player, missedPots + 1);

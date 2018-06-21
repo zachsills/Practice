@@ -22,7 +22,7 @@ public class InventorySnapshot {
     @Getter private int hunger;
     @Getter private double health;
 
-    @Getter private int missedPots;
+    @Getter private int missedPots, longestCombo;
     @Getter private double accuracy;
 
     @Getter private Inventory inventory;
@@ -41,6 +41,8 @@ public class InventorySnapshot {
 
         if(Profile.getByPlayer(player).getCurrentDuel() == null)
             return;
+
+        this.longestCombo = Profile.getByPlayer(player).getCurrentDuel().getLongestCombo(player);
 
         if(Profile.getByPlayer(player).getCurrentDuel().getMissedPots().containsKey(player))
             this.missedPots = Profile.getByPlayer(player).getCurrentDuel().getMissedPots().get(player);
@@ -72,7 +74,7 @@ public class InventorySnapshot {
                 .count();
         inventory.setItem(49, new I(Material.POTION).durability(16461).amount(potsRemaining).name(C.color("&6Potion Info")).lore(C.color("&dMissed: &e" + missedPots)).lore(C.color("&dPots Remaining: &e" + potsRemaining)).lore(C.color("&dPotion Accuracy: &e" + String.format("%.1f", accuracy) + "%")));
 
-        inventory.setItem(51, new I(Material.DIAMOND_SWORD).name(C.color("&eMatch Info")).lore(C.color("&bLongest Combo: " + 0)));
+        inventory.setItem(51, new I(Material.DIAMOND_SWORD).name(C.color("&eMatch Info")).lore(C.color("&bLongest Combo: " + longestCombo)));
     }
 
     public void open(Player player) {
