@@ -76,13 +76,16 @@ public class PlayerListener implements Listener {
 
         switch(profile.getState()) {
             case PLAYING:
-                if(event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE) {
+                if(event.getItemDrop().getItemStack().getType().name().contains("SWORD") || event.getItemDrop().getItemStack().getType().name().contains("AXE")
+                        || event.getItemDrop().getItemStack().getType().name().contains("SHOVEL")) {
+                    event.setCancelled(true);
+                } else if(event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE) {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             event.getItemDrop().remove();
                         }
-                    }.runTaskLater(Practice.getInstance(), 2L);
+                    }.runTaskLater(Practice.getInstance(), 3L);
                 } else {
                     new BukkitRunnable() {
                         @Override
@@ -90,7 +93,7 @@ public class PlayerListener implements Listener {
                             if(event.getItemDrop().isValid() && !event.getItemDrop().isDead())
                                 event.getItemDrop().remove();
                         }
-                    }.runTaskLater(Practice.getInstance(), 40L);
+                    }.runTaskLater(Practice.getInstance(), 20L * 5);
                 }
                 break;
             case EDITING: {
