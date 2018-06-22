@@ -96,7 +96,7 @@ public class SoloDuel extends Duel {
                 .append(ChatColor.GREEN + winner.getName()).setClickAsExecuteCmd("/_ " + winner.getName()).setHoverAsTooltip(ChatColor.GREEN + winner.getName() + "'s Inventory").save()
                 .append(ChatColor.GRAY + " - ").save()
                 .append(ChatColor.RED + getLoser().getName()).setClickAsExecuteCmd("/_ " + getLoser().getName()).setHoverAsTooltip(ChatColor.RED + getLoser().getName() + "'s Inventory").save()
-                .send(getPlayers().toArray(new Player[] {}));
+                .send(Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer)).collect(Collectors.toList()).toArray(new Player[] {}));
 
         String spectatorMessage = getSpectatorMessage();
         if(spectatorMessage != null)

@@ -35,14 +35,19 @@ public class SpawnHandler {
 
         player.setGameMode(GameMode.SURVIVAL);
         player.setFlying(false);
+        player.setAllowFlight(false);
 
         player.setLevel(0);
         player.setExp(0.0F);
 
-        player.getInventory().setContents(getSpawnInventory(player));
+        Profile profile = Profile.getByPlayer(player);
+
+        if(profile.isInParty())
+            PartyHandler.spawn(player, profile.getParty().getLeader().equals(profile.getUuid()));
+        else
+            player.getInventory().setContents(getSpawnInventory(player));
         player.updateInventory();
 
-        Profile profile = Profile.getByPlayer(player);
         if(profile.isQueueing())
             profile.leaveQueue(false);
 
@@ -53,9 +58,9 @@ public class SpawnHandler {
     }
 
     public static ItemStack[] getSpawnInventory(Player player) {
-        ItemStack[] items = new ItemStack[36];
-
         Profile profile = Profile.getByPlayer(player);
+
+        ItemStack[] items = new ItemStack[36];
 
         items[0] = ItemStorage.LOBBY_UNRANKED;
         items[1] = ItemStorage.LOBBY_RANKED;

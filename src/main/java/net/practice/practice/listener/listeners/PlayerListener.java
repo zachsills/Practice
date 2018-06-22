@@ -174,18 +174,35 @@ public class PlayerListener implements Listener {
 
             switch(profile.getState()) {
                 case LOBBY: {
-                    if(display.contains("Unranked"))
-                        UnrankedInv.openInventory(player);
-                    else if(display.contains("Ranked"))
-                        RankedInv.openInventory(player);
-                    else if(display.contains("Edit"))
-                        EditorInv.openInventory(player);
-                    else if(display.contains("Stats"))
-                        StatsInv.openInventory(player);
-                    else if(display.contains("Rematch"))
-                        profile.sendRematch();
-                    else if(display.contains("Settings"))
-                        profile.openSettings();
+                    if(!profile.isInParty()) {
+                        if(display.contains("Unranked"))
+                            UnrankedInv.openInventory(player);
+                        else if(display.contains("Ranked"))
+                            RankedInv.openInventory(player);
+                        else if(display.contains("Edit"))
+                            EditorInv.openInventory(player);
+                        else if(display.contains("Stats"))
+                            StatsInv.openInventory(player);
+                        else if(display.contains("Rematch"))
+                            profile.sendRematch();
+                        else if(display.contains("Settings"))
+                            profile.openSettings();
+                        else if(display.contains("Party"))
+                            profile.createParty();
+                    } else {
+                        if(display.contains("Unranked"))
+                            UnrankedInv.openInventory(player);
+                        else if(display.contains("Ranked"))
+                            RankedInv.openInventory(player);
+                        else if(display.contains("Info"))
+                            profile.sendPartyInfo();
+                        else if(display.contains("Event"))
+                            return;
+                        else if(display.contains("Other Parties"))
+                            return;
+                        else if(display.contains("Leave"))
+                            profile.leaveParty();
+                    }
                     event.setCancelled(true);
                     break;
                 }

@@ -15,9 +15,11 @@ import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.inventory.item.ItemStorage;
+import net.practice.practice.spawn.PartyHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.RankingUtils;
+import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -129,6 +131,10 @@ public class Profile {
 
     public boolean isSpectating() {
         return spectating != null && state == ProfileState.SPECTATING;
+    }
+
+    public boolean isInParty() {
+        return party != null;
     }
 
     public void setCurrentDuel(Duel duel) {
@@ -277,6 +283,43 @@ public class Profile {
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
+    }
+
+    public void createParty() {
+        setParty(Party.createParty(getPlayer()));
+
+        RunnableShorthand.runNextTick(() -> {
+            SpawnHandler.spawn(getPlayer(), false);
+        });
+
+        getPlayer().sendMessage(C.color("&aYou have successfully created a party."));
+    }
+
+    public void joinParty(Party party) {
+        setParty(party);
+
+        PartyHandler.spawn(getPlayer(), true);
+    }
+
+    public void leaveParty() {
+        setParty(null);
+
+        SpawnHandler.spawn(getPlayer(), false);
+    }
+
+    public void sendPartyInfo() {
+        Player player = getPlayer();
+        player.sendMessage(C.color("&f&m---------------------------------"));
+        player.sendMessage(C.color("&6" + Bukkit.getPlayer(party.getLeader()).getName() + "&e's Party (" + party.getSize() + "): "));
+        if(party.getSize() == 1) {
+            player.sendMessage(C.color("&e  * No Members *"));
+        } else {
+            StringBuilder builder = new StringBuilder("&e");
+            for(int i = 0; i < party.getPlayers().size(); i++)
+                builder.append(party.getPlayers().get(i).getName()).append(i - 1 >= party.getPlayers().size() ? "" : "&7,&e ");
+            player.sendMessage(C.color(builder.toString()));
+        }
+        player.sendMessage(C.color("&f&m---------------------------------"));
     }
 
     public void openSettings() {

@@ -5,20 +5,18 @@ import lombok.Setter;
 import net.practice.practice.util.chat.C;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Party {
 
     @Getter @Setter private UUID leader;
 
-    @Getter private Set<Player> players;
+    @Getter private List<Player> players;
 
     public Party(UUID leader) {
         this.leader = leader;
 
-        this.players = new HashSet<>();
+        this.players = new ArrayList<>();
     }
 
     public void sendMessage(String message) {
@@ -34,6 +32,10 @@ public class Party {
     }
 
     public int getSize() {
-        return players.size();
+        return players.size() + 1;
+    }
+
+    public static Party createParty(Player player) {
+        return new Party(player.getUniqueId());
     }
 }
