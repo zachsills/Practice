@@ -3,7 +3,7 @@ package net.practice.practice.game.duel.type;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
-import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.DuelType;
@@ -14,6 +14,7 @@ import net.practice.practice.util.EloUtils;
 import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.chat.JsonMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,8 +31,8 @@ public class SoloDuel extends Duel {
 
     @Getter private boolean ranked;
 
-    public SoloDuel(Arena arena, Ladder ladder, Player playerOne, Player playerTwo, boolean ranked) {
-        super(arena, ladder, DuelType.ONE_VS_ONE);
+    public SoloDuel(MapLoc map, Ladder ladder, Player playerOne, Player playerTwo, boolean ranked) {
+        super(map, ladder, DuelType.ONE_VS_ONE);
 
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
@@ -39,8 +40,8 @@ public class SoloDuel extends Duel {
         this.ranked = ranked;
     }
 
-    public SoloDuel(Arena arena, Ladder ladder, Player playerOne, Player playerTwo) {
-        this(arena, ladder, playerOne, playerTwo, false);
+    public SoloDuel(MapLoc map, Ladder ladder, Player playerOne, Player playerTwo) {
+        this(map, ladder, playerOne, playerTwo, false);
     }
 
     @Override
@@ -50,8 +51,8 @@ public class SoloDuel extends Duel {
         InvUtils.clear(playerOne);
         InvUtils.clear(playerTwo);
 
-        playerOne.teleport(getArena().getSpawnOne());
-        playerTwo.teleport(getArena().getSpawnTwo());
+        playerOne.teleport(getMap().getSpawnOne());
+        playerTwo.teleport(getMap().getSpawnTwo());
 
         Profile profileOne = Profile.getByPlayer(playerOne);
         Profile profileTwo = Profile.getByPlayer(playerTwo);

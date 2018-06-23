@@ -3,6 +3,7 @@ package net.practice.practice.game.duel;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
@@ -62,7 +63,8 @@ public class DuelRequest {
         requester.sendMessage(C.color("&a" + requested.getName() + " has accepted your duel request."));
         requested.sendMessage(C.color("&aYou have accepted a duel request from " + requester.getName() + "."));
 
-        new SoloDuel(Arena.getRandomArena(getLadder()), getLadder(), requester, requested, ranked).preStart();
+        //new SoloDuel(Arena.getRandomArena(getLadder()), getLadder(), requester, requested, ranked).preStart();
+        new SoloDuel(new MapLoc(net.practice.practice.game.arenatest.Arena.getRandomArena()), getLadder(), requester, requested, ranked).preStart();
 
         deny();
     }

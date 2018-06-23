@@ -2,6 +2,7 @@ package net.practice.practice.game.duel.type;
 
 import lombok.Getter;
 import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.DuelType;
@@ -22,8 +23,8 @@ public class TeamDuel extends Duel {
 
     private int initialSize;
 
-    public TeamDuel(Arena arena, Ladder ladder, Party partyOne, Party partyTwo) {
-        super(arena, ladder, DuelType.TEAM_VS_TEAM);
+    public TeamDuel(MapLoc map, Ladder ladder, Party partyOne, Party partyTwo) {
+        super(map, ladder, DuelType.TEAM_VS_TEAM);
 
         this.partyOne = partyOne;
         this.partyTwo = partyTwo;

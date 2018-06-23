@@ -2,6 +2,7 @@ package net.practice.practice.command;
 
 import net.practice.practice.Practice;
 import net.practice.practice.command.commands.*;
+import org.junit.Test;
 
 import java.util.stream.Stream;
 
@@ -11,7 +12,8 @@ public class CommandHandler {
         Stream.of(
                 new LadderCommand(),
                 new PracticeCommand(),
-                new ArenaCommand(),
+                //new ArenaCommand(),
+                new TestArenaCommand(),
                 new SpawnCommand(),
                 new StatsCommand(),
                 new InventoryCommand(),
@@ -26,7 +28,8 @@ public class CommandHandler {
         Stream.of(
                 new LadderCommand(),
                 new PracticeCommand(),
-                new ArenaCommand(),
+                //new ArenaCommand(),
+                new TestArenaCommand(),
                 new SpawnCommand(),
                 new StatsCommand(),
                 new InventoryCommand(),

@@ -48,8 +48,8 @@ public class SpectateCommand {
         profile.getPlayer().teleport(player.getLocation());
 
         RunnableShorthand.runNextTick(() -> {
-            profile.getPlayer().setFlying(true);
             profile.getPlayer().setAllowFlight(true);
+            profile.getPlayer().setFlying(true);
             profile.getPlayer().setGameMode(GameMode.CREATIVE);
         });
     }

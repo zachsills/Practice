@@ -3,6 +3,7 @@ package net.practice.practice.game.duel.type;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelEndReason;
 import net.practice.practice.game.duel.DuelType;
@@ -23,8 +24,8 @@ public class DuoDuel extends Duel {
 
     @Getter @Setter private UUID winner;
 
-    public DuoDuel(Arena arena, Ladder ladder, List<Player> duoOne, List<Player> duoTwo) {
-        super(arena, ladder, DuelType.TWO_VS_TWO);
+    public DuoDuel(MapLoc map, Ladder ladder, List<Player> duoOne, List<Player> duoTwo) {
+        super(map, ladder, DuelType.TWO_VS_TWO);
 
         this.duoOne = duoOne;
         this.duoTwo = duoTwo;

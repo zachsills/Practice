@@ -4,7 +4,8 @@ import lombok.Getter;
 import net.practice.practice.board.BoardManager;
 import net.practice.practice.board.provider.ProviderResolver;
 import net.practice.practice.command.CommandHandler;
-import net.practice.practice.game.arena.ArenaManager;
+import net.practice.practice.game.arenatest.ArenaManager;
+import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.ladder.LadderManager;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.QueueRunnable;
@@ -18,6 +19,8 @@ import net.practice.practice.util.command.CommandFramework;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public class Practice extends JavaPlugin {
 
     @Getter private static Practice instance;
@@ -26,6 +29,7 @@ public class Practice extends JavaPlugin {
 
     @Getter private BoardManager boardManager;
     @Getter private ArenaManager arenaManager;
+    @Getter private net.practice.practice.game.arenatest.ArenaManager testArenaManager;
     @Getter private LadderManager ladderManager;
 
     @Getter private CommandFramework commandFramework;
@@ -41,11 +45,14 @@ public class Practice extends JavaPlugin {
 
         backend = new MongoBackend(this);
 
+        MapLoc.createWorld();
+
         /* Initialize managers */
         boardManager = new BoardManager(new ProviderResolver());
         boardManager.setupAll();
         //getServer().getPluginManager().registerEvents(boardManager, this);
         arenaManager = new ArenaManager();
+        testArenaManager = new net.practice.practice.game.arenatest.ArenaManager();
         ladderManager = new LadderManager();
 
         /* Commands and Listeners */
@@ -75,6 +82,12 @@ public class Practice extends JavaPlugin {
         backend.close();
 
         Profile.getProfiles().clear();
+
+        getServer().unloadWorld(MapLoc.getArenaWorld(), false);
+        File region = new File("arenas1");
+        if (region.exists()) {
+            region.delete();
+        }
     }
 
     public Location getSpawn() {

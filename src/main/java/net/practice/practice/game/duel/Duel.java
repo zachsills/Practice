@@ -3,7 +3,7 @@ package net.practice.practice.game.duel;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
-import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.InventorySnapshot;
@@ -19,7 +19,8 @@ import java.util.*;
 
 public abstract class Duel {
 
-    @Getter private Arena arena;
+    //@Getter private Arena arena;
+    @Getter private MapLoc map;
     @Getter private Ladder ladder;
     @Getter private DuelType type;
 
@@ -37,8 +38,8 @@ public abstract class Duel {
     private BukkitRunnable countDownTask;
     @Getter private int countDown = 5;
 
-    public Duel(Arena arena, Ladder ladder, DuelType type) {
-        this.arena = arena;
+    public Duel(MapLoc map, Ladder ladder, DuelType type) {
+        this.map = map;
         this.ladder = ladder;
         this.type = type;
 
