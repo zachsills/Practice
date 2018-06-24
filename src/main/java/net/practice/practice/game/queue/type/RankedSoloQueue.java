@@ -11,6 +11,7 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueRange;
 import net.practice.practice.game.queue.QueueType;
+import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -66,9 +67,18 @@ public class RankedSoloQueue extends Queue {
                                 int eloOne = profileOne.getElo(getLadder()), eloTwo = profileTwo.getElo(getLadder());
 
                                 //Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
-                                Duel duel = new SoloDuel(new MapLoc(arena), getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
-                                duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " [" + eloOne + "]" + " &evs. &6" + profileTwo.getPlayer().getName() + " [" + eloTwo + "]"));
-                                duel.preStart();
+                                MapLoc map = MapLoc.getRandomMap();
+                                if (map != null) {
+                                    Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
+                                    duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " [" + eloOne + "]" + " &evs. &6" + profileTwo.getPlayer().getName() + " [" + eloTwo + "]"));
+                                    duel.preStart();
+                                } else {
+                                    profileOne.getPlayer().sendMessage("No open arenas available!");
+                                    profileTwo.getPlayer().sendMessage("No open arenas available!");
+                                    SpawnHandler.spawn(profileOne.getPlayer());
+                                    SpawnHandler.spawn(profileTwo.getPlayer());
+                                }
+
                             }
                         }.runTaskLater(Practice.getInstance(), 10L);
                         return;

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.arenatest.map.MapLoc;
+import net.practice.practice.game.arenatest.map.MapState;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.InventorySnapshot;
@@ -60,6 +61,7 @@ public abstract class Duel {
 
     public void preStart() {
         setState(DuelState.STARTING);
+        getMap().setState(MapState.INGAME);
 
         countDownTask = new BukkitRunnable() {
             @Override
@@ -123,6 +125,8 @@ public abstract class Duel {
 
     public void end(DuelEndReason reason) {
         endTime = System.currentTimeMillis();
+
+        getMap().clean();
 
         if(countDownTask != null)
             countDownTask.cancel();

@@ -34,7 +34,6 @@ public class ArenaManager {
 
         config.getArenaSection().set(id + ".name", id);
         config.getArenaSection().set(id + ".schematicName", arena.getSchematicName());
-        Bukkit.broadcastMessage(arena.getRelSpawnOne() + "");
         config.getArenaSection().set(id + ".relSpawn.1", LocUtils.serializeLocation(arena.getRelSpawnOne()));
         config.getArenaSection().set(id + ".relSpawn.2", LocUtils.serializeLocation(arena.getRelSpawnTwo()));
         config.getArenaSection().set(id + ".pastePoint", LocUtils.serializeLocation(arena.getPastePoint()));

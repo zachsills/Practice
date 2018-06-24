@@ -7,6 +7,7 @@ import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
+import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.chat.JsonMessage;
 import org.bukkit.ChatColor;
@@ -64,7 +65,15 @@ public class DuelRequest {
         requested.sendMessage(C.color("&aYou have accepted a duel request from " + requester.getName() + "."));
 
         //new SoloDuel(Arena.getRandomArena(getLadder()), getLadder(), requester, requested, ranked).preStart();
-        new SoloDuel(new MapLoc(net.practice.practice.game.arenatest.Arena.getRandomArena()), getLadder(), requester, requested, ranked).preStart();
+        MapLoc map = MapLoc.getRandomMap();
+        if (map != null)
+            new SoloDuel(map, getLadder(), requester, requested, ranked).preStart();
+        else {
+            requester.sendMessage("No open arenas available!");
+            requested.sendMessage("No open arenas available!");
+            SpawnHandler.spawn(requester);
+            SpawnHandler.spawn(requested);
+        }
 
         deny();
     }

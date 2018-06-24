@@ -6,6 +6,7 @@ import net.practice.practice.board.provider.ProviderResolver;
 import net.practice.practice.command.CommandHandler;
 import net.practice.practice.game.arenatest.ArenaManager;
 import net.practice.practice.game.arenatest.map.MapLoc;
+import net.practice.practice.game.arenatest.map.MapManager;
 import net.practice.practice.game.ladder.LadderManager;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.QueueRunnable;
@@ -19,8 +20,6 @@ import net.practice.practice.util.command.CommandFramework;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-
 public class Practice extends JavaPlugin {
 
     @Getter private static Practice instance;
@@ -31,6 +30,7 @@ public class Practice extends JavaPlugin {
     @Getter private ArenaManager arenaManager;
     @Getter private net.practice.practice.game.arenatest.ArenaManager testArenaManager;
     @Getter private LadderManager ladderManager;
+    @Getter private MapManager mapManager;
 
     @Getter private CommandFramework commandFramework;
 
@@ -45,8 +45,6 @@ public class Practice extends JavaPlugin {
 
         backend = new MongoBackend(this);
 
-        MapLoc.createWorld();
-
         /* Initialize managers */
         boardManager = new BoardManager(new ProviderResolver());
         boardManager.setupAll();
@@ -54,6 +52,7 @@ public class Practice extends JavaPlugin {
         arenaManager = new ArenaManager();
         testArenaManager = new net.practice.practice.game.arenatest.ArenaManager();
         ladderManager = new LadderManager();
+        mapManager = new MapManager();
 
         /* Commands and Listeners */
         commandFramework = new CommandFramework(this);
@@ -77,17 +76,14 @@ public class Practice extends JavaPlugin {
 
         arenaManager.saveArenas();
         ladderManager.saveLadders();
+        mapManager.saveMaps();
 
         backend.saveProfiles();
         backend.close();
 
-        Profile.getProfiles().clear();
-
         getServer().unloadWorld(MapLoc.getArenaWorld(), false);
-        File region = new File("arenas1");
-        if (region.exists()) {
-            region.delete();
-        }
+
+        Profile.getProfiles().clear();
     }
 
     public Location getSpawn() {
