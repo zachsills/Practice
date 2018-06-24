@@ -1,6 +1,7 @@
 package net.practice.practice.listener.listeners;
 
 import net.practice.practice.Practice;
+import net.practice.practice.game.arenatest.map.MapLoc;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.SkullType;
@@ -12,6 +13,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -40,5 +44,32 @@ public class WorldListener implements Listener {
             return;
 
         event.getEntity().teleport(Practice.getInstance().getSpawn());
+    }
+
+    @EventHandler
+    public void onBlockSpread(BlockSpreadEvent event) {
+        if (MapLoc.getArenaWorld() == null) return;
+        if (event.getBlock().getWorld().getUID().equals(MapLoc.getArenaWorld().getUID())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        if (MapLoc.getArenaWorld() == null) return;
+        if (event.getIgnitingBlock().getWorld().getUID().equals(MapLoc.getArenaWorld().getUID())) {
+            if (event.getCause() == BlockIgniteEvent.IgniteCause.EXPLOSION || event.getCause() == BlockIgniteEvent.IgniteCause.LAVA
+                    || event.getCause() == BlockIgniteEvent.IgniteCause.LIGHTNING || event.getCause() == BlockIgniteEvent.IgniteCause.SPREAD) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockFade(BlockFadeEvent event) {
+        if (MapLoc.getArenaWorld() == null) return;
+        if (event.getBlock().getWorld().getUID().equals(MapLoc.getArenaWorld().getUID())) {
+            event.setCancelled(true);
+        }
     }
 }

@@ -1,15 +1,23 @@
 package net.practice.practice.game.arenatest.map;
 
+import com.boydti.fawe.object.schematic.Schematic;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.arenatest.Arena;
 import net.practice.practice.spawn.SpawnHandler;
+import net.practice.practice.util.CustomLoc;
 import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,14 +31,16 @@ public class MapLoc {
     @Getter @Setter private static World arenaWorld;
     @Getter @Setter private static int[] grid = null;
     @Getter @Setter private static List<MapLoc> maps = new ArrayList<>();
-    @Getter @Setter private Location spawnOne, spawnTwo;
+    @Getter @Setter private CustomLoc spawnOne, spawnTwo;
     @Getter @Setter private Arena arena;
     @Getter @Setter private MapState state;
-    @Getter @Setter private Set<Block> blocksToReplace = new HashSet<>();
+    @Getter @Setter private Set<BlockState> blocksToReplace = new HashSet<>();
+    @Getter @Setter private boolean generated = false;
+    @Getter @Setter private CustomLoc pastePoint;
 
     public MapLoc() {
-        setArena(Arena.getRandomArena());
-        setState(MapState.READY);
+        this.arena = Arena.getRandomArena();
+        this.state = MapState.READY;
 
         if (Bukkit.getWorld("arenas1") == null) {
             loadWorld();
@@ -41,10 +51,12 @@ public class MapLoc {
         Vector point = getNextPoint();
         pasteAndSet(point);
 
+        generated = true;
+
         getMaps().add(this);
     }
 
-    public MapLoc(Location spawnOne, Location spawnTwo, Arena arena) {
+    public MapLoc(Location spawnOne, Location spawnTwo, Arena arena, Location pastePoint) {
 
         if (Bukkit.getWorld("arenas1") == null) {
             loadWorld();
@@ -52,10 +64,13 @@ public class MapLoc {
             setArenaWorld(Bukkit.getWorld("arenas1"));
         }
 
-        this.spawnOne = spawnOne;
-        this.spawnTwo = spawnTwo;
+        //getNextPoint(); // Increment the points in case we decide to generate more maps while saved maps are loaded.
+
+        this.spawnOne = CustomLoc.fromBukkit(spawnOne, getArenaWorld());
+        this.spawnTwo = CustomLoc.fromBukkit(spawnTwo, getArenaWorld());
         this.arena = arena;
         this.state = MapState.READY;
+        this.pastePoint = CustomLoc.fromBukkit(pastePoint, getArenaWorld());
         getMaps().add(this);
     }
 
@@ -72,6 +87,16 @@ public class MapLoc {
 
         int random = ThreadLocalRandom.current().nextInt(0, readyMaps.size());
         return readyMaps.get(random);
+    }
+
+    public static List<MapLoc> getGeneratedMaps() {
+        List<MapLoc> generated = new ArrayList<>();
+        for (MapLoc map : getMaps()) {
+            if (map.isGenerated()) {
+                generated.add(map);
+            }
+        }
+        return generated;
     }
 
     public static void recreateWorld() {
@@ -142,35 +167,110 @@ public class MapLoc {
         if (schem.exists()) {
             try {
                 ClipboardFormat.SCHEMATIC.load(schem).paste(new BukkitWorld(getArenaWorld()), pastePoint, false, false, null).setFastMode(true);
+                this.pastePoint = new CustomLoc(getArenaWorld().getName(), pastePoint.getX(), pastePoint.getY(), pastePoint.getZ(), 0, 0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            this.spawnOne = new Location(getArenaWorld(), pastePoint.getX() + arena.getRelSpawnOne().getX(), pastePoint.getY() + arena.getRelSpawnOne().getY(),
+            this.spawnOne = new CustomLoc(getArenaWorld().getName(), pastePoint.getX() + arena.getRelSpawnOne().getX(), pastePoint.getY() + arena.getRelSpawnOne().getY(),
                     pastePoint.getZ() + arena.getRelSpawnOne().getZ(), arena.getRelSpawnOne().getYaw(), arena.getRelSpawnOne().getPitch());
-            this.spawnTwo = new Location(getArenaWorld(), pastePoint.getX() + arena.getRelSpawnTwo().getX(), pastePoint.getY() + arena.getRelSpawnTwo().getY(),
+            this.spawnTwo = new CustomLoc(getArenaWorld().getName(), pastePoint.getX() + arena.getRelSpawnTwo().getX(), pastePoint.getY() + arena.getRelSpawnTwo().getY(),
                     pastePoint.getZ() + arena.getRelSpawnTwo().getZ(), arena.getRelSpawnTwo().getYaw(), arena.getRelSpawnTwo().getPitch());
         }
     }
 
+    public void addBlockToReplace(BlockState blockState) {
+        for (BlockState state : getBlocksToReplace()) {
+            if (blockState.getLocation().equals(state.getLocation())) {
+                return;
+            }
+        }
+        getBlocksToReplace().add(blockState);
+    }
+
     @SuppressWarnings("deprecation")
+    public void clean() {
+        File schem = new File("plugins/WorldEdit/schematics/" + arena.getSchematicName() + ".schematic");
+        if (schem.exists()) {
+            try {
+                /*List<Block> blocksToChange = new ArrayList<>();
+
+                Clipboard c = ClipboardFormat.SCHEMATIC.load(schem).getClipboard();
+                if (c != null) {
+                    for (int x = c.getMinimumPoint().getBlockX(); x < c.getMaximumPoint().getBlockX(); x++) {
+                        for (int y = c.getMinimumPoint().getBlockY(); y < c.getMaximumPoint().getBlockY(); y++) {
+                            for (int z = c.getMinimumPoint().getBlockZ(); z < c.getMaximumPoint().getBlockZ(); z++) {
+                                Block realBlock = getArenaWorld().getBlockAt(x, y, z);
+                                BaseBlock clipBlock = c.getBlock(new Vector(x, y, z));
+                                if (realBlock.getTypeId() != clipBlock.getType()) {
+                                    realBlock.setTypeId(clipBlock.getType());
+                                    realBlock.setData((byte) clipBlock.getData());
+                                    blocksToChange.add(realBlock);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Iterator<Block> replaceBlocks = blocksToChange.iterator();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (replaceBlocks.hasNext()) {
+                            Block oldBlock = replaceBlocks.next();
+                            Block replace = getArenaWorld().getBlockAt(oldBlock.getLocation());
+                            replace.setType(oldBlock.getType());
+                            replace.setData(oldBlock.getData());
+                            Bukkit.broadcastMessage(oldBlock.getType().name());
+                        } else {
+                            Bukkit.broadcastMessage("done");
+                            setState(MapState.READY);
+                            getBlocksToReplace().clear();
+                            this.cancel();
+                        }
+                    }
+                }.runTaskTimer(Practice.getInstance(), 1L, 1L);*/
+
+                ClipboardFormat.SCHEMATIC.load(schem).paste(new BukkitWorld(getArenaWorld()), new Vector(pastePoint.getX(), pastePoint.getY(), pastePoint.getZ()),
+                        false, true, null).setFastMode(true);
+                //Bukkit.broadcastMessage("ye ye");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*@SuppressWarnings("deprecation")
     public void clean() {
         setState(MapState.CLEANING);
 
-        Iterator<Block> replaceBlocks = getBlocksToReplace().iterator();
+        Bukkit.broadcastMessage(getBlocksToReplace().size() + "");
+
+        //EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(getArenaWorld()), 238479835);
+
+
+        Iterator<BlockState> replaceBlocks = getBlocksToReplace().iterator();
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (replaceBlocks.hasNext()) {
-                    Block oldBlock = replaceBlocks.next();
+                    BlockState oldBlock = replaceBlocks.next();
                     Block replace = getArenaWorld().getBlockAt(oldBlock.getLocation());
                     replace.setType(oldBlock.getType());
-                    replace.setData(oldBlock.getData());
+                    replace.setData(oldBlock.getRawData());
+                    Bukkit.broadcastMessage(oldBlock.getType().name());
+                    *//*Vector oldBlockPos = new Vector(oldBlock.getX(), oldBlock.getY(), oldBlock.getZ());
+                    if (replace.getType().name().contains("WATER") || replace.getType().name().contains("LAVA")) {
+                        session.drainArea(oldBlockPos, 9);
+                        Bukkit.broadcastMessage("drained");
+                    }*//*
                 } else {
+                    Bukkit.broadcastMessage("done");
                     setState(MapState.READY);
+                    getBlocksToReplace().clear();
                     this.cancel();
                 }
             }
         }.runTaskTimer(Practice.getInstance(), 1L, 1L);
-    }
+    }*/
 }

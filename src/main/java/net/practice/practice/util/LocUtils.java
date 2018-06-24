@@ -21,6 +21,22 @@ public class LocUtils {
                 + ":@p;" + pitch;
     }
 
+    public static String serializeLocation(CustomLoc location) {
+        // This is so that we can see which part is null.
+        String world = location.getWorld();
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+        float yaw = location.getYaw();
+        float pitch = location.getPitch();
+        return "@w;" + world
+                + ":@x;" + x
+                + ":@y;" + y
+                + ":@z;" + z
+                + ":@ya;" + yaw
+                + ":@p;" + pitch;
+    }
+
     public static Location deserializeLocation(final String string) {
         final Location location = new Location(Bukkit.getWorlds().get(0), 0.0D, 0.0D, 0.0D);
         final String[] arr = string.split(":");

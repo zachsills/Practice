@@ -16,8 +16,7 @@ public class ListenerHandler {
                 new PlayerListener(),
                 new SpectatorListener(),
                 new WeatherListener(),
-                new WorldListener(),
-                new MapCleaningListener()
+                new WorldListener()
         ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, Practice.getInstance()));
 
         new ServerListener();

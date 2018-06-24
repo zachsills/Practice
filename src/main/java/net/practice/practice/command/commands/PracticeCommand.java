@@ -44,14 +44,19 @@ public class PracticeCommand {
 
     @Command(name = "practice.arenagen", permission = "practice.admin", description = "Generate maps arena")
     public void onPracticeArenaGen(CommandArgs args) {
+        if (args.length() != 1) {
+            sendHelp(args.getPlayer());
+            return;
+        }
+
         MapLoc.recreateWorld();
-        new MapCreateTask().runTaskTimer(Practice.getInstance(), 1L, 2L);
+        new MapCreateTask(Integer.parseInt(args.getArgs(0))).runTaskTimer(Practice.getInstance(), 1L, 2L);
         args.getPlayer().sendMessage(C.color("&eStarted generating/re-generating the arena world."));
     }
 
     public void sendHelp(Player player) {
         player.sendMessage(C.color("&ePractice Help"));
         player.sendMessage(C.color("&a/practice set <spawn;editor>"));
-        player.sendMessage(C.color("&a/practice arenagen"));
+        player.sendMessage(C.color("&a/practice arenagen <number>"));
     }
 }

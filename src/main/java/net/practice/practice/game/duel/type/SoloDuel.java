@@ -51,8 +51,8 @@ public class SoloDuel extends Duel {
         InvUtils.clear(playerOne);
         InvUtils.clear(playerTwo);
 
-        playerOne.teleport(getMap().getSpawnOne());
-        playerTwo.teleport(getMap().getSpawnTwo());
+        playerOne.teleport(getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
+        playerTwo.teleport(getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
 
         Profile profileOne = Profile.getByPlayer(playerOne);
         Profile profileTwo = Profile.getByPlayer(playerTwo);
