@@ -231,8 +231,10 @@ public class MapLoc {
                     }
                 }.runTaskTimer(Practice.getInstance(), 1L, 1L);*/
 
+                setState(MapState.CLEANING);
                 ClipboardFormat.SCHEMATIC.load(schem).paste(new BukkitWorld(getArenaWorld()), new Vector(pastePoint.getX(), pastePoint.getY(), pastePoint.getZ()),
                         false, true, null).setFastMode(true);
+                setState(MapState.READY);
                 //Bukkit.broadcastMessage("ye ye");
             } catch (IOException e) {
                 e.printStackTrace();
