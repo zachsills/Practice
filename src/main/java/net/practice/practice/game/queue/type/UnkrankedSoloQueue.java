@@ -28,7 +28,7 @@ public class UnkrankedSoloQueue extends Queue {
             profileTwo.leaveQueue(false);
 
             //Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
-            MapLoc map = MapLoc.getRandomMap();
+            MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable());
             if (map != null) {
                 Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
                 duel.sendMessage(C.color("&eUnranked match found: &6" + profileOne.getPlayer().getName() + " &evs. &6" + profileTwo.getPlayer().getName()));

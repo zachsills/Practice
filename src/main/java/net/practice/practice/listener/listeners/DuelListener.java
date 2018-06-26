@@ -7,12 +7,16 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.PlayerKit;
 import net.practice.practice.task.EnderPearlTask;
 import net.practice.practice.util.chat.C;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -23,6 +27,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class DuelListener implements Listener {
@@ -180,6 +185,27 @@ public class DuelListener implements Listener {
 
         player.setExp(1.0F);
         new EnderPearlTask(player).runTaskTimerAsynchronously(Practice.getInstance(), 2L, 1L);
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player target = (Player)event.getEntity();
+            if (event.getDamager() instanceof Arrow) {
+                Arrow arrow = (Arrow)event.getDamager();
+                if (arrow.getShooter() instanceof Player) {
+                    Player shooter = (Player)arrow.getShooter();
+                    if (target.getHealth() - event.getFinalDamage() > 0.0) {
+                        double n = (target.getHealth() - event.getFinalDamage()) / 2.0;
+                        double rounded = Math.round(n * 2.0) / 2.0;
+                        shooter.sendMessage(C.color("&6%player% &eis now at &6%health%&4%heartEmoji%")
+                                .replace("%player%", target.getName())
+                                .replace("%health%", new DecimalFormat("#0.0").format(rounded))
+                                .replace("%heartEmoji%", StringEscapeUtils.unescapeJava("\u2764")));
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)

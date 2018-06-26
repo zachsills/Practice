@@ -67,7 +67,7 @@ public class RankedSoloQueue extends Queue {
                                 int eloOne = profileOne.getElo(getLadder()), eloTwo = profileTwo.getElo(getLadder());
 
                                 //Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
-                                MapLoc map = MapLoc.getRandomMap();
+                                MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable());
                                 if (map != null) {
                                     Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
                                     duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " [" + eloOne + "]" + " &evs. &6" + profileTwo.getPlayer().getName() + " [" + eloTwo + "]"));

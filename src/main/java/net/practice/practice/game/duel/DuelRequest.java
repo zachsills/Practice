@@ -65,7 +65,7 @@ public class DuelRequest {
         requested.sendMessage(C.color("&aYou have accepted a duel request from " + requester.getName() + "."));
 
         //new SoloDuel(Arena.getRandomArena(getLadder()), getLadder(), requester, requested, ranked).preStart();
-        MapLoc map = MapLoc.getRandomMap();
+        MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable());
         if (map != null)
             new SoloDuel(map, getLadder(), requester, requested, ranked).preStart();
         else {

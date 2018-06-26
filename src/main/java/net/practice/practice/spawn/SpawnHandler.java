@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -39,6 +40,8 @@ public class SpawnHandler {
 
         player.setLevel(0);
         player.setExp(0.0F);
+
+        ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) -1);
 
         Profile profile = Profile.getByPlayer(player);
 

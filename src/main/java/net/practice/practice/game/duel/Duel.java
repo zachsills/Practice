@@ -63,6 +63,15 @@ public abstract class Duel {
         setState(DuelState.STARTING);
         getMap().setState(MapState.INGAME);
 
+        for(Player dueler : getPlayers()) {
+            for(Player player : Bukkit.getOnlinePlayers()) {
+                if(!getPlayers().contains(player)) {
+                    dueler.hidePlayer(player);
+                    player.hidePlayer(dueler);
+                }
+            }
+        }
+
         countDownTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -126,7 +135,8 @@ public abstract class Duel {
     public void end(DuelEndReason reason) {
         endTime = System.currentTimeMillis();
 
-        getMap().clean();
+        if(getLadder().isBuildable())
+            getMap().clean();
 
         if(countDownTask != null)
             countDownTask.cancel();

@@ -183,7 +183,11 @@ public class Profile {
         setState(ProfileState.SPECTATING);
 
         spectating.getSpectators().add(this);
-        spectating.getPlayers().forEach(player -> player.hidePlayer(getPlayer()));
+
+        for (Player player : spectating.getPlayers()) {
+            player.hidePlayer(getPlayer());
+            getPlayer().showPlayer(player);
+        }
 
         PlayerInventory inventory = getPlayer().getInventory();
         inventory.setItem(0, ItemStorage.SPECTATOR_INVENTORY);

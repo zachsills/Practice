@@ -1,13 +1,8 @@
 package net.practice.practice.game.arenatest.map;
 
-import com.boydti.fawe.object.schematic.Schematic;
-import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
@@ -16,10 +11,8 @@ import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.CustomLoc;
 import org.bukkit.*;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +67,15 @@ public class MapLoc {
         getMaps().add(this);
     }
 
-    public static MapLoc getRandomMap() {
+    public static MapLoc getRandomMap(boolean readyOnly) {
+        if (readyOnly) {
+            return getReadyRandomMap();
+        } else {
+            return getAnyRandomMap();
+        }
+    }
+
+    public static MapLoc getReadyRandomMap() {
 
         List<MapLoc> readyMaps = new ArrayList<>();
         for (MapLoc map : getMaps()) {
@@ -87,6 +88,13 @@ public class MapLoc {
 
         int random = ThreadLocalRandom.current().nextInt(0, readyMaps.size());
         return readyMaps.get(random);
+    }
+
+    public static MapLoc getAnyRandomMap() {
+        if (maps.isEmpty()) return null;
+
+        int random = ThreadLocalRandom.current().nextInt(0, maps.size());
+        return maps.get(random);
     }
 
     public static List<MapLoc> getGeneratedMaps() {
