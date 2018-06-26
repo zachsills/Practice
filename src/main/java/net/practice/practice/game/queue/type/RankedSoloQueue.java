@@ -2,6 +2,7 @@ package net.practice.practice.game.queue.type;
 
 import lombok.Getter;
 import net.practice.practice.Practice;
+import net.practice.practice.game.arena.ArenaType;
 import net.practice.practice.game.arenatest.Arena;
 import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
@@ -55,8 +56,7 @@ public class RankedSoloQueue extends Queue {
 
                 if(ranges.get(uuid).isInRange(ranges.get(otherUUID).getMiddle())) {
                     //Arena arena = Arena.getRandomArena(getLadder());
-                    Arena arena = Arena.getRandomArena();
-                    if(arena != null && Bukkit.getPlayer(uuid) != null && Bukkit.getPlayer(otherUUID) != null) {
+                    if(Bukkit.getPlayer(uuid) != null && Bukkit.getPlayer(otherUUID) != null) {
                         Profile profileOne = Profile.getByUuid(uuid), profileTwo = Profile.getByUuid(otherUUID);
                         profileOne.leaveQueue(false);
                         profileTwo.leaveQueue(false);
@@ -69,6 +69,10 @@ public class RankedSoloQueue extends Queue {
                                 //Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
                                 MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable());
                                 if (map != null) {
+                                    if(getLadder().isBuildable())
+                                        map.setArena(getLadder().isSpleef() ? Arena.getArenaByType(ArenaType.SPLEEF) : Arena.getArenaByType(ArenaType.SINGLE));
+                                    else
+                                        map.setArena(Arena.getArenaByType(ArenaType.MULTI));
                                     Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
                                     duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " [" + eloOne + "]" + " &evs. &6" + profileTwo.getPlayer().getName() + " [" + eloTwo + "]"));
                                     duel.preStart();

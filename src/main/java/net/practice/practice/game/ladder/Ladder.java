@@ -104,6 +104,10 @@ public class Ladder {
             queues[1] = null;
     }
 
+    public boolean isSpleef() {
+        return name.contains("Spleef");
+    }
+
     public boolean isEqual(Ladder other) {
         if (!getName().equals(other.getName()))
             return false;

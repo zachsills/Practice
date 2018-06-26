@@ -2,6 +2,7 @@ package net.practice.practice.game.arenatest;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.practice.practice.game.arena.ArenaType;
 import net.practice.practice.util.LocUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,6 +18,7 @@ public class Arena {
 
     @Getter private final String name;
 
+    @Getter @Setter private ArenaType type;
     @Getter @Setter private String displayName, builder, schematicName;
     @Getter @Setter private Location relSpawnOne, relSpawnTwo;
     @Getter @Setter private Location pastePoint;
@@ -38,6 +40,13 @@ public class Arena {
 
         int random = ThreadLocalRandom.current().nextInt(0, getArenas().values().size());
         return (Arena) getArenas().values().toArray()[random];
+    }
+
+    public static Arena getArenaByType(ArenaType type) {
+        if(getArenas().values().isEmpty())
+            return null;
+
+        return getArenas().values().stream().filter(arena -> arena.getType() == type).findAny().orElse(null);
     }
 
     public boolean setRelSpawnOneRelative(Location location) {

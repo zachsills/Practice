@@ -1,5 +1,6 @@
 package net.practice.practice.game.queue.type;
 
+import net.practice.practice.game.arena.ArenaType;
 import net.practice.practice.game.arenatest.Arena;
 import net.practice.practice.game.arenatest.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
@@ -21,8 +22,7 @@ public class UnkrankedSoloQueue extends Queue {
     @Override
     public void setup() {
         //Arena arena = Arena.getRandomArena(getLadder());
-        Arena arena = Arena.getRandomArena();
-        if(arena != null && Bukkit.getPlayer(getQueued().get(0)) != null && Bukkit.getPlayer(getQueued().get(1)) != null) {
+        if(Bukkit.getPlayer(getQueued().get(0)) != null && Bukkit.getPlayer(getQueued().get(1)) != null) {
             Profile profileOne = Profile.getByUuid(getQueued().get(0)), profileTwo = Profile.getByUuid(getQueued().get(1));
             profileOne.leaveQueue(false);
             profileTwo.leaveQueue(false);
@@ -30,6 +30,10 @@ public class UnkrankedSoloQueue extends Queue {
             //Duel duel = new SoloDuel(arena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
             MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable());
             if (map != null) {
+                if(getLadder().isBuildable())
+                    map.setArena(getLadder().isSpleef() ? Arena.getArenaByType(ArenaType.SPLEEF) : Arena.getArenaByType(ArenaType.SINGLE));
+                else
+                    map.setArena(Arena.getArenaByType(ArenaType.MULTI));
                 Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer());
                 duel.sendMessage(C.color("&eUnranked match found: &6" + profileOne.getPlayer().getName() + " &evs. &6" + profileTwo.getPlayer().getName()));
                 duel.preStart();

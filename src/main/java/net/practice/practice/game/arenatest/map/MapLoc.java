@@ -32,7 +32,6 @@ public class MapLoc {
     @Getter @Setter private CustomLoc pastePoint;
 
     public MapLoc() {
-        this.arena = Arena.getRandomArena();
         this.state = MapState.READY;
 
         if (Bukkit.getWorld("arenas1") == null) {
@@ -147,6 +146,10 @@ public class MapLoc {
                 file.delete();
             }*/
         }
+    }
+
+    public void setArena(Arena arena) {
+
     }
 
     private Vector getNextPoint() {
