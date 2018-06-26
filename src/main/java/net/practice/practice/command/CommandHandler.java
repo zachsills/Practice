@@ -19,7 +19,8 @@ public class CommandHandler {
                 new DuelCommand(),
                 new SettingsCommand(),
                 new SpectateCommand(),
-                new PartyCommand()
+                new PartyCommand(),
+                new MapCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().registerCommands(command));
     }
 
@@ -35,7 +36,8 @@ public class CommandHandler {
                 new DuelCommand(),
                 new SettingsCommand(),
                 new SpectateCommand(),
-                new PartyCommand()
+                new PartyCommand(),
+                new MapCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().unregisterCommands(command));
     }
 }

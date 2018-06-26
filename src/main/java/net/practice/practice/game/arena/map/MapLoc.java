@@ -33,7 +33,7 @@ public class MapLoc {
     @Getter @Setter private CustomLoc pastePoint;
 
     public MapLoc() {
-        this.arena = Arena.getRandomArena();
+        this.arena = Arena.getNextArena();
         this.state = MapState.READY;
 
         if (Bukkit.getWorld("arenas1") == null) {

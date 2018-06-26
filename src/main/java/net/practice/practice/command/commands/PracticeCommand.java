@@ -42,21 +42,8 @@ public class PracticeCommand {
         args.getPlayer().sendMessage(C.color("&eSet the &a" + attribute.toLowerCase() + "&e to &ayour location &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
     }
 
-    @Command(name = "practice.arenagen", permission = "practice.admin", description = "Generate maps oldarena")
-    public void onPracticeArenaGen(CommandArgs args) {
-        if (args.length() != 1) {
-            sendHelp(args.getPlayer());
-            return;
-        }
-
-        MapLoc.recreateWorld();
-        new MapCreateTask(Integer.parseInt(args.getArgs(0))).runTaskTimer(Practice.getInstance(), 1L, 2L);
-        args.getPlayer().sendMessage(C.color("&eStarted generating/re-generating the oldarena world."));
-    }
-
     public void sendHelp(Player player) {
         player.sendMessage(C.color("&ePractice Help"));
         player.sendMessage(C.color("&a/practice set <spawn;editor>"));
-        player.sendMessage(C.color("&a/practice arenagen <number>"));
     }
 }

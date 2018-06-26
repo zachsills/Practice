@@ -14,6 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Arena {
 
     @Getter private static final Map<String, Arena> arenas = new HashMap<>();
+    private static int index = -1;
 
     @Getter private final String name;
 
@@ -40,6 +41,19 @@ public class Arena {
 
         int random = ThreadLocalRandom.current().nextInt(0, getArenas().values().size());
         return (Arena) getArenas().values().toArray()[random];
+    }
+
+    public static Arena getNextArena() {
+        if(getArenas().values().isEmpty())
+            return null;
+
+        index++;
+        if (index < getArenas().values().size()) {
+            return (Arena) getArenas().values().toArray()[index];
+        } else {
+            index = 0;
+            return (Arena) getArenas().values().toArray()[index];
+        }
     }
 
     public static Arena getArenaByType(ArenaType type) {
@@ -69,6 +83,6 @@ public class Arena {
         setRelSpawnOne(LocUtils.deserializeLocation(section.getString("relSpawn.1")));
         setRelSpawnTwo(LocUtils.deserializeLocation(section.getString("relSpawn.2")));
         setPastePoint(LocUtils.deserializeLocation(section.getString("pastePoint")));
-        setType(ArenaType.valueOf(section.getString("type")));
+        setType(section.getString("type") != null ? ArenaType.valueOf(section.getString("type")) : ArenaType.NORMAL);
     }
 }
