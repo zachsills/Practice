@@ -4,9 +4,9 @@ import lombok.Getter;
 import net.practice.practice.board.BoardManager;
 import net.practice.practice.board.provider.ProviderResolver;
 import net.practice.practice.command.CommandHandler;
-import net.practice.practice.game.arenatest.ArenaManager;
-import net.practice.practice.game.arenatest.map.MapLoc;
-import net.practice.practice.game.arenatest.map.MapManager;
+import net.practice.practice.game.arena.ArenaManager;
+import net.practice.practice.game.arena.map.MapLoc;
+import net.practice.practice.game.arena.map.MapManager;
 import net.practice.practice.game.ladder.LadderManager;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.QueueRunnable;
@@ -28,7 +28,7 @@ public class Practice extends JavaPlugin {
 
     @Getter private BoardManager boardManager;
     @Getter private ArenaManager arenaManager;
-    @Getter private net.practice.practice.game.arenatest.ArenaManager testArenaManager;
+    @Getter private net.practice.practice.game.arena.ArenaManager testArenaManager;
     @Getter private LadderManager ladderManager;
     @Getter private MapManager mapManager;
 
@@ -50,7 +50,7 @@ public class Practice extends JavaPlugin {
         boardManager.setupAll();
         //getServer().getPluginManager().registerEvents(boardManager, this);
         arenaManager = new ArenaManager();
-        testArenaManager = new net.practice.practice.game.arenatest.ArenaManager();
+        testArenaManager = new net.practice.practice.game.arena.ArenaManager();
         ladderManager = new LadderManager();
         mapManager = new MapManager();
 

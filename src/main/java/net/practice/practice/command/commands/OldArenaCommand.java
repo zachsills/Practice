@@ -1,8 +1,6 @@
 package net.practice.practice.command.commands;
 
-import net.practice.practice.Practice;
-import net.practice.practice.game.arenatest.Arena;
-import net.practice.practice.game.ladder.Ladder;
+import net.practice.practice.game.oldarena.Arena;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.command.Command;
@@ -10,7 +8,7 @@ import net.practice.practice.util.command.CommandArgs;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class TestArenaCommand {
+public class OldArenaCommand {
 
     @Command(name = "arena", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
     public void onArena(CommandArgs args) {
@@ -43,7 +41,7 @@ public class TestArenaCommand {
 
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
-            Practice.getInstance().getTestArenaManager().removeArena(arena);
+            //Practice.getInstance().getArenaManager().removeArena(arena);
             args.getPlayer().sendMessage(C.color("&eRemoved arena " + arena.getDisplayName() + "&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
@@ -59,12 +57,8 @@ public class TestArenaCommand {
 
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
-            if (arena.setRelSpawnOneRelative(args.getPlayer().getLocation())) {
-                args.getPlayer().sendMessage(C.color("&eSet spawnOne in arena " + arena.getName() + " to &7(&a"
-                        + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
-            } else {
-                args.getPlayer().sendMessage(C.color("&cYou must set the paste point first!"));
-            }
+            arena.setSpawnOne(args.getPlayer().getLocation());
+            args.getPlayer().sendMessage(C.color("&eSet spawnOne in arena " + arena.getName() + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
         }
@@ -79,52 +73,25 @@ public class TestArenaCommand {
 
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
-            if (arena.setRelSpawnTwoRelative(args.getPlayer().getLocation())) {
-                args.getPlayer().sendMessage(C.color("&eSet spawnTwo in arena " + arena.getName() + " to &7(&a"
-                        + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
-            } else {
-                args.getPlayer().sendMessage(C.color("&cYou must set the paste point first!"));
-            }
+            arena.setSpawnTwo(args.getPlayer().getLocation());
+            args.getPlayer().sendMessage(C.color("&eSet spawnTwo in arena " + arena.getName() + " to &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
         }
     }
 
-    @Command(name = "arena.pastePoint", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
-    public void onArenaPastePoint(CommandArgs args) {
-        if (args.length() != 1) {
-            sendHelp(args.getPlayer());
-            return;
-        }
-
-        Arena arena = Arena.getArena(args.getArgs(0));
-        if (arena != null) {
-            arena.setPastePoint(args.getPlayer().getLocation());
-            args.getPlayer().sendMessage(C.color("&eSet paste point in arena " + arena.getName() + " to &7(&a"
-                    + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
-        } else {
-            args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
-        }
-    }
-
-    @Command(name = "arena.list", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
-    public void onArenaList(CommandArgs args) {
-        args.getPlayer().sendMessage(ChatColor.YELLOW + "Current Arenas: ");
-        for(Arena arena : Arena.getArenas().values())
-            args.getPlayer().sendMessage(C.color("&7- " + arena.getDisplayName()));
-    }
-
-    @Command(name = "arena.schemName", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
-    public void onArenaSchemName(CommandArgs args) {
+    @Command(name = "arena.builder", permission = "practice.arena", playerOnly = true, description = "Manage arenas.")
+    public void onArenaSetBuilder(CommandArgs args) {
         if (args.length() != 2) {
             sendHelp(args.getPlayer());
             return;
         }
 
         Arena arena = Arena.getArena(args.getArgs(0));
+        String builderName = args.getArgs(1);
         if (arena != null) {
-            arena.setSchematicName(args.getArgs(1));
-            args.getPlayer().sendMessage(C.color("&eSet the schematic name for arena " + arena.getName() + " to '" + args.getArgs(1) + "'"));
+            arena.setBuilder(builderName);
+            args.getPlayer().sendMessage(C.color("&eSet builder for arena " + arena.getName() + " to &7" + builderName + "&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));
         }
@@ -134,10 +101,8 @@ public class TestArenaCommand {
         player.sendMessage(C.color("&eArena Help"));
         player.sendMessage(C.color("&a/arena create <name>"));
         player.sendMessage(C.color("&a/arena remove <name>"));
-        player.sendMessage(C.color("&a/arena schemName <name> <schematic name>"));
-        player.sendMessage(C.color("&a/arena pastePoint <name>"));
         player.sendMessage(C.color("&a/arena spawn1 <name>"));
         player.sendMessage(C.color("&a/arena spawn2 <name>"));
-        player.sendMessage(C.color("&a/arena list <name>"));
+        player.sendMessage(C.color("&a/arena builder <name> <builder's name>"));
     }
 }

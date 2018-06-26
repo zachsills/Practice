@@ -32,8 +32,11 @@ public class ArenaManager {
         String id = arena.getName();
 
         config.getArenaSection().set(id + ".name", id);
-        config.getArenaSection().set(id + ".spawn.1", LocUtils.serializeLocation(arena.getSpawnOne()));
-        config.getArenaSection().set(id + ".spawn.2", LocUtils.serializeLocation(arena.getSpawnTwo()));
+        config.getArenaSection().set(id + ".schematicName", arena.getSchematicName());
+        config.getArenaSection().set(id + ".relSpawn.1", LocUtils.serializeLocation(arena.getRelSpawnOne()));
+        config.getArenaSection().set(id + ".relSpawn.2", LocUtils.serializeLocation(arena.getRelSpawnTwo()));
+        config.getArenaSection().set(id + ".pastePoint", LocUtils.serializeLocation(arena.getPastePoint()));
+        config.getArenaSection().set(id + ".type", arena.getType().name());
 
         config.save();
     }

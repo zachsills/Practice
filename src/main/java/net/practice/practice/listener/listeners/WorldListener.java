@@ -1,7 +1,7 @@
 package net.practice.practice.listener.listeners;
 
 import net.practice.practice.Practice;
-import net.practice.practice.game.arenatest.map.MapLoc;
+import net.practice.practice.game.arena.map.MapLoc;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.SkullType;

@@ -2,7 +2,6 @@ package net.practice.practice.game.arena;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.util.LocUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,13 +18,14 @@ public class Arena {
     @Getter private final String name;
 
     @Getter @Setter private ArenaType type;
-    @Getter @Setter private String displayName, builder;
-    @Getter @Setter private Location spawnOne, spawnTwo;
+    @Getter @Setter private String displayName, builder, schematicName;
+    @Getter @Setter private Location relSpawnOne, relSpawnTwo;
+    @Getter @Setter private Location pastePoint;
 
     public Arena(String name) {
         this.name = name;
-        this.type = ArenaType.MULTI;
         this.displayName = ChatColor.YELLOW + this.getName();
+        this.type = ArenaType.NORMAL;
 
         getArenas().putIfAbsent(name, this);
     }
@@ -42,29 +42,33 @@ public class Arena {
         return (Arena) getArenas().values().toArray()[random];
     }
 
-    public static Arena getRandomArena(Ladder ladder) {
-        if(ladder.isBuildable()) {
-            return getArenas().values().stream()
-                    .filter(Arena::isSingle)
-                    .findFirst()
-                    .orElse(null);
-        }
+    public static Arena getArenaByType(ArenaType type) {
+        if(getArenas().values().isEmpty())
+            return null;
 
-        return getRandomArena();
+        return getArenas().values().stream().filter(arena -> arena.getType() == type).findAny().orElse(null);
     }
 
-    public boolean isMulti() {
-        return type == ArenaType.MULTI;
-    }
+    public boolean setRelSpawnOneRelative(Location location) {
+        if (pastePoint == null) return false;
 
-    public boolean isSingle() {
-        return type == ArenaType.SINGLE;
+        relSpawnOne = (new Location(location.getWorld(), location.getX() - pastePoint.getX(), location.getY() - pastePoint.getY(), location.getZ() - pastePoint.getZ(),
+                location.getYaw(), location.getPitch()));
+        return true;
+    }
+    public boolean setRelSpawnTwoRelative(Location location) {
+        if (pastePoint == null) return false;
+
+        relSpawnTwo = (new Location(location.getWorld(), location.getX() - pastePoint.getX(), location.getY() - pastePoint.getY(), location.getZ() - pastePoint.getZ(),
+                location.getYaw(), location.getPitch()));
+        return true;
     }
 
     public void load(ConfigurationSection section) {
-        setBuilder(section.contains("builder") ? section.getString("builder") : "");
-
-        setSpawnOne(LocUtils.deserializeLocation(section.getString("spawn.1")));
-        setSpawnTwo(LocUtils.deserializeLocation(section.getString("spawn.2")));
+        setSchematicName(section.getString("schematicName"));
+        setRelSpawnOne(LocUtils.deserializeLocation(section.getString("relSpawn.1")));
+        setRelSpawnTwo(LocUtils.deserializeLocation(section.getString("relSpawn.2")));
+        setPastePoint(LocUtils.deserializeLocation(section.getString("pastePoint")));
+        setType(ArenaType.valueOf(section.getString("type")));
     }
 }

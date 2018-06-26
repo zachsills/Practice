@@ -1,7 +1,7 @@
 package net.practice.practice.command.commands;
 
 import net.practice.practice.Practice;
-import net.practice.practice.game.arenatest.map.MapLoc;
+import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.task.MapCreateTask;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.chat.C;
@@ -42,7 +42,7 @@ public class PracticeCommand {
         args.getPlayer().sendMessage(C.color("&eSet the &a" + attribute.toLowerCase() + "&e to &ayour location &7(&a" + LocUtils.serializeLocation(args.getPlayer().getLocation()) + "&7)&e."));
     }
 
-    @Command(name = "practice.arenagen", permission = "practice.admin", description = "Generate maps arena")
+    @Command(name = "practice.arenagen", permission = "practice.admin", description = "Generate maps oldarena")
     public void onPracticeArenaGen(CommandArgs args) {
         if (args.length() != 1) {
             sendHelp(args.getPlayer());
@@ -51,7 +51,7 @@ public class PracticeCommand {
 
         MapLoc.recreateWorld();
         new MapCreateTask(Integer.parseInt(args.getArgs(0))).runTaskTimer(Practice.getInstance(), 1L, 2L);
-        args.getPlayer().sendMessage(C.color("&eStarted generating/re-generating the arena world."));
+        args.getPlayer().sendMessage(C.color("&eStarted generating/re-generating the oldarena world."));
     }
 
     public void sendHelp(Player player) {

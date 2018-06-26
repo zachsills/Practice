@@ -1,6 +1,7 @@
 package net.practice.practice.listener.listeners;
 
 import net.practice.practice.Practice;
+import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.player.Profile;
@@ -20,10 +21,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -204,6 +203,24 @@ public class DuelListener implements Listener {
                                 .replace("%heartEmoji%", StringEscapeUtils.unescapeJava("\u2764")));
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        if (MapLoc.getArenaWorld() != null) {
+            if (event.getWorld().getUID().equals(MapLoc.getArenaWorld().getUID())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void enderPearlGlitchFix(PlayerTeleportEvent event) {
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            if (event.getTo().getBlock().getType() != Material.AIR) {
+                event.setTo(event.getTo().clone().subtract(0, 0.5, 0));
             }
         }
     }

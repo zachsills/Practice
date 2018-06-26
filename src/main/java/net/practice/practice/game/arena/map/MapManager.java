@@ -1,14 +1,11 @@
-package net.practice.practice.game.arenatest.map;
+package net.practice.practice.game.arena.map;
 
-import com.sk89q.worldedit.Vector;
 import lombok.Getter;
-import net.practice.practice.game.arenatest.Arena;
+import net.practice.practice.game.arena.Arena;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.file.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.Map;
 
 public class MapManager {
 
@@ -29,7 +26,7 @@ public class MapManager {
             for (String id : config.getMapSection().getKeys(false)) {
                 new MapLoc(LocUtils.deserializeLocation(configuration.getString("maps." + id + ".spawnOne")),
                         LocUtils.deserializeLocation(configuration.getString("maps." + id + ".spawnTwo")),
-                        Arena.getArena(configuration.getString("maps." + id + ".arena")),
+                        Arena.getArena(configuration.getString("maps." + id + ".oldarena")),
                         LocUtils.deserializeLocation(configuration.getString("maps." + id + ".pastePoint")));
             }
         }
@@ -40,7 +37,7 @@ public class MapManager {
 
         config.getMapSection().set(id + ".spawnOne", LocUtils.serializeLocation(map.getSpawnOne()));
         config.getMapSection().set(id + ".spawnTwo", LocUtils.serializeLocation(map.getSpawnTwo()));
-        config.getMapSection().set(id + ".arena", map.getArena().getName());
+        config.getMapSection().set(id + ".oldarena", map.getArena().getName());
         config.getMapSection().set(id + ".pastePoint", LocUtils.serializeLocation(map.getPastePoint()));
 
         config.save();

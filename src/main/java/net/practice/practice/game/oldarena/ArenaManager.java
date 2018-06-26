@@ -1,9 +1,8 @@
-package net.practice.practice.game.arenatest;
+package net.practice.practice.game.oldarena;
 
 import lombok.Getter;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.file.Configuration;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -33,10 +32,8 @@ public class ArenaManager {
         String id = arena.getName();
 
         config.getArenaSection().set(id + ".name", id);
-        config.getArenaSection().set(id + ".schematicName", arena.getSchematicName());
-        config.getArenaSection().set(id + ".relSpawn.1", LocUtils.serializeLocation(arena.getRelSpawnOne()));
-        config.getArenaSection().set(id + ".relSpawn.2", LocUtils.serializeLocation(arena.getRelSpawnTwo()));
-        config.getArenaSection().set(id + ".pastePoint", LocUtils.serializeLocation(arena.getPastePoint()));
+        config.getArenaSection().set(id + ".spawn.1", LocUtils.serializeLocation(arena.getSpawnOne()));
+        config.getArenaSection().set(id + ".spawn.2", LocUtils.serializeLocation(arena.getSpawnTwo()));
 
         config.save();
     }

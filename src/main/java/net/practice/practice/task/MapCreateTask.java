@@ -1,6 +1,6 @@
 package net.practice.practice.task;
 
-import net.practice.practice.game.arenatest.map.MapLoc;
+import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

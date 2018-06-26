@@ -1,4 +1,4 @@
-package net.practice.practice.game.arenatest.map;
+package net.practice.practice.game.arena.map;
 
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
@@ -6,7 +6,8 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.Practice;
-import net.practice.practice.game.arenatest.Arena;
+import net.practice.practice.game.arena.Arena;
+import net.practice.practice.game.arena.ArenaType;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.CustomLoc;
 import org.bukkit.*;
@@ -27,11 +28,12 @@ public class MapLoc {
     @Getter @Setter private CustomLoc spawnOne, spawnTwo;
     @Getter @Setter private Arena arena;
     @Getter @Setter private MapState state;
-    @Getter @Setter private Set<BlockState> blocksToReplace = new HashSet<>();
+    @Getter @Setter private Set<BlockState> changedBlocks = new HashSet<>();
     @Getter @Setter private boolean generated = false;
     @Getter @Setter private CustomLoc pastePoint;
 
     public MapLoc() {
+        this.arena = Arena.getRandomArena();
         this.state = MapState.READY;
 
         if (Bukkit.getWorld("arenas1") == null) {
@@ -66,8 +68,10 @@ public class MapLoc {
         getMaps().add(this);
     }
 
-    public static MapLoc getRandomMap(boolean readyOnly) {
-        if (readyOnly) {
+    public static MapLoc getRandomMap(boolean readyOnly, boolean isSpleef) {
+        if (isSpleef) {
+            return getReadySpleefRandomMap();
+        } else if (readyOnly) {
             return getReadyRandomMap();
         } else {
             return getAnyRandomMap();
@@ -79,6 +83,21 @@ public class MapLoc {
         List<MapLoc> readyMaps = new ArrayList<>();
         for (MapLoc map : getMaps()) {
             if (map.getState() == MapState.READY) {
+                readyMaps.add(map);
+            }
+        }
+
+        if (readyMaps.isEmpty()) return null;
+
+        int random = ThreadLocalRandom.current().nextInt(0, readyMaps.size());
+        return readyMaps.get(random);
+    }
+
+    public static MapLoc getReadySpleefRandomMap() {
+
+        List<MapLoc> readyMaps = new ArrayList<>();
+        for (MapLoc map : getMaps()) {
+            if (map.getState() == MapState.READY && map.getArena().getType() == ArenaType.SPLEEF) {
                 readyMaps.add(map);
             }
         }
@@ -148,10 +167,6 @@ public class MapLoc {
         }
     }
 
-    public void setArena(Arena arena) {
-
-    }
-
     private Vector getNextPoint() {
 
         if (grid == null) {
@@ -190,13 +205,8 @@ public class MapLoc {
         }
     }
 
-    public void addBlockToReplace(BlockState blockState) {
-        for (BlockState state : getBlocksToReplace()) {
-            if (blockState.getLocation().equals(state.getLocation())) {
-                return;
-            }
-        }
-        getBlocksToReplace().add(blockState);
+    public void addChangedBlock(BlockState blockState) {
+        getChangedBlocks().add(blockState);
     }
 
     @SuppressWarnings("deprecation")

@@ -55,7 +55,7 @@ public class BlockListener implements Listener {
         switch(profile.getState()) {
             case PLAYING: {
                 if(profile.isInGame()) {
-                    if(profile.getCurrentDuel().getLadder().isBuildable()) {
+                    if(profile.getCurrentDuel().getLadder().isSpleef() && event.getBlock().getType().name().contains("SNOW")) {
                         event.setCancelled(profile.getCurrentDuel().getState() != DuelState.PLAYING);
                         break;
                     }
