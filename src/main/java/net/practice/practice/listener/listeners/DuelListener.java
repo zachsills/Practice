@@ -9,6 +9,8 @@ import net.practice.practice.game.player.data.PlayerKit;
 import net.practice.practice.task.EnderPearlTask;
 import net.practice.practice.util.chat.C;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Damageable;
@@ -17,10 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -187,7 +186,16 @@ public class DuelListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    public void enderPearlDamageDecrease(EntityDamageByEntityEvent event) {
+        if (event.getEntityType() == EntityType.PLAYER) {
+            if (event.getDamager().getType() == EntityType.ENDER_PEARL) {
+                event.setDamage(2.0);
+            }
+        }
+    }
+
+    @EventHandler
+    public void arrowHealthDisplay(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             Player target = (Player)event.getEntity();
             if (event.getDamager() instanceof Arrow) {
@@ -219,8 +227,21 @@ public class DuelListener implements Listener {
     @EventHandler
     public void enderPearlGlitchFix(PlayerTeleportEvent event) {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
-            if (event.getTo().getBlock().getType() != Material.AIR) {
-                event.setTo(event.getTo().clone().subtract(0, 0.5, 0));
+            Location to = event.getTo();
+            if (to.clone().add(0.5, 0, 0).getBlock().getType() != Material.AIR || to.clone().add(1.0, 0, 0).getBlock().getType() != Material.AIR) {
+                event.setTo(to.clone().add(-0.5, 0, 0));
+            }
+            if (to.clone().add(-0.5, 0, 0).getBlock().getType() != Material.AIR || to.clone().add(-1.0, 0, 0).getBlock().getType() != Material.AIR) {
+                event.setTo(to.clone().add(0.5, 0, 0));
+            }
+            if (to.clone().add(0, 0, 0.5).getBlock().getType() != Material.AIR || to.clone().add(0, 0, 1.0).getBlock().getType() != Material.AIR) {
+                event.setTo(to.clone().add(0, 0, -0.5));
+            }
+            if (to.clone().add(0, 0, -0.5).getBlock().getType() != Material.AIR || to.clone().add(0, 0, -1.0).getBlock().getType() != Material.AIR) {
+                event.setTo(to.clone().add(0, 0, 0.5));
+            }
+            if (to.clone().add(0, 1, 0).getBlock().getType() != Material.AIR) {
+                event.setTo(to.clone().add(0, -0.5, 0));
             }
         }
     }
