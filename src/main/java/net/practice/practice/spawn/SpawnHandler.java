@@ -28,13 +28,12 @@ public class SpawnHandler {
     public static void spawn(Player player, boolean tp) {
         InvUtils.clear(player);
         if(tp) {
+            player.setFallDistance(0.0f);
             if(Practice.getInstance().getSpawn() != null)
                 player.teleport(Practice.getInstance().getSpawn());
             else
                 player.sendMessage(C.color("&cSpawn has not been set!"));
         }
-
-        player.setFallDistance(0.0f);
 
         player.setGameMode(GameMode.SURVIVAL);
         player.setFlying(false);
