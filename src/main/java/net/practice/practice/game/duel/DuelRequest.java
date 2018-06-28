@@ -33,7 +33,7 @@ public class DuelRequest {
 
         this.ranked = ranked;
 
-        Profile.getByPlayer(requester).getDuelRequests().putIfAbsent(requested.getName(), this);
+        Profile.getByPlayer(requester).getDuelRequests().put(requested.getName(), this);
     }
 
     public DuelRequest(Player requester, Player requested, Ladder ladder) {

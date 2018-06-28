@@ -219,7 +219,7 @@ public class Profile {
                     return;
                 }
 
-                DuelRequest request = new DuelRequest(getPlayer(), opponent, recentDuel.getLadder(), ((SoloDuel) recentDuel).isRanked());
+                DuelRequest request = new DuelRequest(getPlayer(), opponent, recentDuel.getLadder(), false);
                 request.setRematch(true);
 
                 request.sendToRequested();

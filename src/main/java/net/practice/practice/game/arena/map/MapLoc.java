@@ -95,24 +95,32 @@ public class MapLoc {
 
     public static MapLoc getReadySpleefRandomMap() {
 
-        List<MapLoc> readyMaps = new ArrayList<>();
+        List<MapLoc> readySpleefMaps = new ArrayList<>();
         for (MapLoc map : getMaps()) {
             if (map.getState() == MapState.READY && map.getArena().getType() == ArenaType.SPLEEF) {
-                readyMaps.add(map);
+                readySpleefMaps.add(map);
             }
         }
 
-        if (readyMaps.isEmpty()) return null;
+        if (readySpleefMaps.isEmpty()) return null;
 
-        int random = ThreadLocalRandom.current().nextInt(0, readyMaps.size());
-        return readyMaps.get(random);
+        int random = ThreadLocalRandom.current().nextInt(0, readySpleefMaps.size());
+        return readySpleefMaps.get(random);
     }
 
     public static MapLoc getAnyRandomMap() {
-        if (maps.isEmpty()) return null;
 
-        int random = ThreadLocalRandom.current().nextInt(0, maps.size());
-        return maps.get(random);
+        List<MapLoc> mapsThatAreNotSpleef = new ArrayList<>();
+        for (MapLoc map : getMaps()) {
+            if (map.getArena().getType() == ArenaType.NORMAL) {
+                mapsThatAreNotSpleef.add(map);
+            }
+        }
+
+        if (mapsThatAreNotSpleef.isEmpty()) return null;
+
+        int random = ThreadLocalRandom.current().nextInt(0, mapsThatAreNotSpleef.size());
+        return mapsThatAreNotSpleef.get(random);
     }
 
     public static List<MapLoc> getGeneratedMaps() {

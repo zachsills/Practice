@@ -215,7 +215,6 @@ public class InvUtils {
         player.setSaturation(5);
         player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
-        player.setFallDistance(0.0f);
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
 

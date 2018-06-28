@@ -68,7 +68,8 @@ public class RankedSoloQueue extends Queue {
                                 MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable(), getLadder().isSpleef());
                                 if (map != null) {
                                     Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
-                                    duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " [" + eloOne + "]" + " &evs. &6" + profileTwo.getPlayer().getName() + " [" + eloTwo + "]"));
+                                    duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " &7(&e" + eloOne + "&7)"
+                                            + " &evs. &6" + profileTwo.getPlayer().getName() + " &7(&e" + eloTwo + "&7)"));
                                     duel.preStart();
                                 } else {
                                     profileOne.getPlayer().sendMessage("No open arenas available!");

@@ -135,7 +135,7 @@ public abstract class Duel {
     public void end(DuelEndReason reason) {
         endTime = System.currentTimeMillis();
 
-        if(getLadder().isBuildable())
+        if(getLadder().isBuildable() || getLadder().isSpleef())
             getMap().clean();
 
         if(countDownTask != null)

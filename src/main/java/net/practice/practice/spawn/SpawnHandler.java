@@ -34,6 +34,8 @@ public class SpawnHandler {
                 player.sendMessage(C.color("&cSpawn has not been set!"));
         }
 
+        player.setFallDistance(0.0f);
+
         player.setGameMode(GameMode.SURVIVAL);
         player.setFlying(false);
         player.setAllowFlight(false);

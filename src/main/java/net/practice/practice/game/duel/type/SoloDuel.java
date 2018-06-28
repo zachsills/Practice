@@ -85,8 +85,11 @@ public class SoloDuel extends Duel {
             winnerProfile.setRankedWins(winnerProfile.getRankedWins() + 1);
             loserProfile.setRankedLosses(loserProfile.getRankedLosses() + 1);
 
+            int oldWinnerElo = winnerProfile.getElo(getLadder()), oldLoserElo = loserProfile.getElo(getLadder());
+
             int eloChange = handleElo(winnerProfile, loserProfile, getLadder());
-            sendMessage("&6Elo Changes: &e" + winner.getName() + " &7(&a+" + eloChange + "&7) &6- &e" + getLoser().getName() + " &7(&c-" + eloChange + "&7)");
+            sendMessage("&6Elo Changes: &e" + winner.getName() + " &a" + oldWinnerElo + " &7(&a+" + eloChange + "&7) &6- &e"
+                    + getLoser().getName() + " &c" + oldLoserElo + " &7(&c-" + eloChange + "&7)");
         } else {
             winnerProfile.setUnrankedWins(winnerProfile.getUnrankedWins() + 1);
             loserProfile.setUnrankedLosses(loserProfile.getUnrankedLosses() + 1);

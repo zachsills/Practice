@@ -57,7 +57,7 @@ public class DuelCommand {
         RequestInv.openInventory(args.getPlayer(), player);
     }
 
-    @Command(name = "accept", aliases = { "acceptrequest" }, playerOnly = true, description = "Accapt a duel request from a player.")
+    @Command(name = "accept", aliases = { "acceptrequest" }, playerOnly = true, description = "Accept a duel request from a player.")
     public void onAccept(CommandArgs args) {
         if(args.length() < 1) {
             args.getPlayer().sendMessage(ChatColor.RED + "Usage: /" + args.getLabel() + " <player>");

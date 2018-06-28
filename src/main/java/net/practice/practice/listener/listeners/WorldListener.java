@@ -3,7 +3,9 @@ package net.practice.practice.listener.listeners;
 import net.practice.practice.Practice;
 import net.practice.practice.game.arena.map.MapLoc;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -12,10 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -67,9 +66,6 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onBlockFade(BlockFadeEvent event) {
-        if (MapLoc.getArenaWorld() == null) return;
-        if (event.getBlock().getWorld().getUID().equals(MapLoc.getArenaWorld().getUID())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 }

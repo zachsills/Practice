@@ -8,6 +8,7 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.PlayerKit;
 import net.practice.practice.task.EnderPearlTask;
 import net.practice.practice.util.chat.C;
+import net.practice.practice.util.itemstack.I;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -211,6 +213,42 @@ public class DuelListener implements Listener {
                                 .replace("%heartEmoji%", StringEscapeUtils.unescapeJava("\u2764")));
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void spleefEvent(BlockBreakEvent event) {
+        Profile profile = Profile.getByPlayer(event.getPlayer());
+        if (profile != null && profile.isInGame() && profile.getCurrentDuel().getState().equals(DuelState.PLAYING)) {
+            if (profile.getCurrentDuel().getLadder().isSpleef()) {
+                if (event.getBlock().getType().name().contains("SNOW")) {
+                    event.setCancelled(true);
+                    event.getBlock().setType(Material.AIR);
+                    event.getPlayer().getInventory().addItem(new I(Material.SNOW_BALL).amount(1));
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void spleefDamage(EntityDamageByEntityEvent event) {
+        if (event.getDamager().getType() == EntityType.PLAYER && event.getEntity().getType() == EntityType.PLAYER) {
+            Profile profile = Profile.getByPlayer((Player) event.getDamager());
+            if (profile != null && profile.getCurrentDuel() != null && profile.getCurrentDuel().getLadder().isSpleef()) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void spleefHunger(FoodLevelChangeEvent event) {
+        if (event.getEntity().getType() == EntityType.PLAYER) {
+            Profile profile = Profile.getByPlayer((Player) event.getEntity());
+            if (profile != null && profile.getCurrentDuel() != null && profile.getCurrentDuel().getLadder().isSpleef()) {
+                ((Player) event.getEntity()).setFoodLevel(20);
+                ((Player) event.getEntity()).setSaturation(0);
+                event.setCancelled(true);
             }
         }
     }
