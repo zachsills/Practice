@@ -52,37 +52,37 @@ public class RankedSoloQueue extends Queue {
                 if(uuid == otherUUID)
                     continue;
 
-                if(ranges.get(uuid).isInRange(ranges.get(otherUUID).getMiddle())) {
-                    //Arena oldarena = Arena.getRandomArena(getLadder());
-                    if(Bukkit.getPlayer(uuid) != null && Bukkit.getPlayer(otherUUID) != null) {
-                        Profile profileOne = Profile.getByUuid(uuid), profileTwo = Profile.getByUuid(otherUUID);
-                        profileOne.leaveQueue(false);
-                        profileTwo.leaveQueue(false);
+                    if(ranges.get(uuid).isInRange(ranges.get(otherUUID))) {
+                        //Arena oldarena = Arena.getRandomArena(getLadder());
+                        if(Bukkit.getPlayer(uuid) != null && Bukkit.getPlayer(otherUUID) != null) {
+                            Profile profileOne = Profile.getByUuid(uuid), profileTwo = Profile.getByUuid(otherUUID);
+                            profileOne.leaveQueue(false);
+                            profileTwo.leaveQueue(false);
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                int eloOne = profileOne.getElo(getLadder()), eloTwo = profileTwo.getElo(getLadder());
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    int eloOne = profileOne.getElo(getLadder()), eloTwo = profileTwo.getElo(getLadder());
 
-                                //Duel duel = new SoloDuel(oldarena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
-                                MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable(), getLadder().isSpleef());
-                                if (map != null) {
-                                    Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
-                                    duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " &7(&e" + eloOne + "&7)"
-                                            + " &evs. &6" + profileTwo.getPlayer().getName() + " &7(&e" + eloTwo + "&7)"));
-                                    duel.preStart();
-                                } else {
-                                    profileOne.getPlayer().sendMessage("No open arenas available!");
-                                    profileTwo.getPlayer().sendMessage("No open arenas available!");
-                                    SpawnHandler.spawn(profileOne.getPlayer());
-                                    SpawnHandler.spawn(profileTwo.getPlayer());
+                                    //Duel duel = new SoloDuel(oldarena, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
+                                    MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable(), getLadder().isSpleef());
+                                    if (map != null) {
+                                        Duel duel = new SoloDuel(map, getLadder(), profileOne.getPlayer(), profileTwo.getPlayer(), true);
+                                        duel.sendMessage(C.color("&eRanked match found: &6" + profileOne.getPlayer().getName() + " &7(&e" + eloOne + "&7)"
+                                                + " &evs. &6" + profileTwo.getPlayer().getName() + " &7(&e" + eloTwo + "&7)"));
+                                        duel.preStart();
+                                    } else {
+                                        profileOne.sendMessage("No open arenas available!");
+                                        profileTwo.sendMessage("No open arenas available!");
+                                        SpawnHandler.spawn(profileOne.getPlayer());
+                                        SpawnHandler.spawn(profileTwo.getPlayer());
+                                    }
+
                                 }
-
-                            }
-                        }.runTaskLater(Practice.getInstance(), 10L);
-                        return;
+                            }.runTaskLater(Practice.getInstance(), 10L);
+                            return;
+                        }
                     }
-                }
             }
         }
     }

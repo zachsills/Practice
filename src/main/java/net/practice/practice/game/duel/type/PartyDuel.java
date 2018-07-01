@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TeamDuel extends Duel {
+public class PartyDuel extends Duel {
 
     @Getter private Party partyOne, partyTwo;
 
@@ -22,7 +22,7 @@ public class TeamDuel extends Duel {
 
     private int initialSize;
 
-    public TeamDuel(MapLoc map, Ladder ladder, Party partyOne, Party partyTwo) {
+    public PartyDuel(MapLoc map, Ladder ladder, Party partyOne, Party partyTwo) {
         super(map, ladder, DuelType.TEAM_VS_TEAM);
 
         this.partyOne = partyOne;

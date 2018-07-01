@@ -9,6 +9,7 @@ import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.InventorySnapshot;
 import net.practice.practice.game.player.data.PlayerKit;
+import net.practice.practice.util.InvUtils;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class Duel {
 
@@ -63,7 +65,8 @@ public abstract class Duel {
         setState(DuelState.STARTING);
         getMap().setState(MapState.INGAME);
 
-        for(Player dueler : getPlayers()) {
+        List<Player> duelers = new ArrayList<>(getPlayers());
+        for(Player dueler : duelers) {
             for(Player player : Bukkit.getOnlinePlayers()) {
                 if(!getPlayers().contains(player)) {
                     dueler.hidePlayer(player);
@@ -71,6 +74,12 @@ public abstract class Duel {
                 }
             }
         }
+
+        duelers.forEach(InvUtils::clear);
+        duelers.forEach(this::giveKits);
+        duelers.stream().map(Profile::getByPlayer).forEach(profile -> {
+            profile.setCurrentDuel(this);
+        });
 
         countDownTask = new BukkitRunnable() {
             @Override
@@ -149,6 +158,13 @@ public abstract class Duel {
             for(Profile profile : getSpectators())
                 player.showPlayer(profile.getPlayer());
         }
+
+        getPlayers().stream()
+                .filter(Player::isOnline)
+                .map(Profile::getByPlayer)
+                .forEach(profile -> {
+                    profile.setRecentDuel(this);
+                });
     }
 
     public boolean hasSnapshot(Player player) {

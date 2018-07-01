@@ -7,6 +7,7 @@ import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueType;
 import net.practice.practice.game.queue.type.RankedSoloQueue;
 import net.practice.practice.game.queue.type.UnkrankedSoloQueue;
+import net.practice.practice.game.queue.type.UnrankedPartyQueue;
 import net.practice.practice.util.InvUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,8 +39,9 @@ public class Ladder {
         this.name = name;
         this.displayName = ChatColor.GREEN + name;
 
-        this.queues = new Queue[3];
+        this.queues = new Queue[3]; // Change to 4
         queues[0] = new UnkrankedSoloQueue(this);
+        queues[2] = new UnrankedPartyQueue(this);
 
         this.editor = Bukkit.createInventory(null, 54, "Editing: " + name);
 

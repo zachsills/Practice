@@ -28,4 +28,8 @@ public class QueueRange {
     public boolean isInRange(int i) {
         return isInRange(i, true);
     }
+
+    public boolean isInRange(QueueRange range) {
+        return isInRange(range.getMiddle(), true);
+    }
 }

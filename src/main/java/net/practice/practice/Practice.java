@@ -8,6 +8,7 @@ import net.practice.practice.game.arena.ArenaManager;
 import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.arena.map.MapManager;
 import net.practice.practice.game.ladder.LadderManager;
+import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.QueueRunnable;
 import net.practice.practice.listener.ListenerHandler;
@@ -63,9 +64,9 @@ public class Practice extends JavaPlugin {
         getServer().getOnlinePlayers().forEach(SpawnHandler::spawn);
 
         /* Tasks */
-        new QueueRunnable().runTaskTimer(this, 20L, 40L);
+        new QueueRunnable().runTaskTimer(this, 20L, 20L);
         new CleanerTask().runTaskTimerAsynchronously(this, 20L, 15L * 20L);
-        new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 20L * 2);
+        new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 30L);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class Practice extends JavaPlugin {
         getServer().unloadWorld(MapLoc.getArenaWorld(), false);
 
         Profile.getProfiles().clear();
+        PartyManager.getParties().clear();
     }
 
     public Location getSpawn() {

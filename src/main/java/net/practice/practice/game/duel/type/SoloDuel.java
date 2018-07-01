@@ -47,19 +47,8 @@ public class SoloDuel extends Duel {
     public void preStart() {
         super.preStart();
 
-        InvUtils.clear(playerOne);
-        InvUtils.clear(playerTwo);
-
         playerOne.teleport(getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
         playerTwo.teleport(getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
-
-        Profile profileOne = Profile.getByPlayer(playerOne);
-        Profile profileTwo = Profile.getByPlayer(playerTwo);
-        profileOne.setCurrentDuel(this);
-        profileTwo.setCurrentDuel(this);
-
-        giveKits(playerOne);
-        giveKits(playerTwo);
 
         Profile.totalInGame += 2;
     }
@@ -78,8 +67,6 @@ public class SoloDuel extends Duel {
 
         Profile winnerProfile = Profile.getByPlayer(winner);
         Profile loserProfile = Profile.getByPlayer(getLoser());
-        winnerProfile.setRecentDuel(this);
-        loserProfile.setRecentDuel(this);
 
         if(ranked) {
             winnerProfile.setRankedWins(winnerProfile.getRankedWins() + 1);

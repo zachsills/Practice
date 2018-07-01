@@ -5,13 +5,12 @@ import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.ladder.Ladder;
+import net.practice.practice.game.party.Party;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
-import net.practice.practice.inventory.inventories.EditorInv;
-import net.practice.practice.inventory.inventories.RankedInv;
-import net.practice.practice.inventory.inventories.StatsInv;
-import net.practice.practice.inventory.inventories.UnrankedInv;
+import net.practice.practice.inventory.inventories.*;
 import net.practice.practice.spawn.SpawnHandler;
+import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,9 +45,11 @@ public class PlayerListener implements Listener {
         Profile profile = Profile.getByPlayer(event.getPlayer());
         profile.setName(event.getPlayer().getName());
 
-        SpawnHandler.spawn(event.getPlayer());
+        RunnableShorthand.runNextTick(() -> {
+            SpawnHandler.spawn(event.getPlayer());
 
-        ProfileSetting.toggleFor(event.getPlayer(), ProfileSetting.PLAYER_TIME, profile.getSetting(ProfileSetting.PLAYER_TIME));
+            ProfileSetting.toggleFor(event.getPlayer(), ProfileSetting.PLAYER_TIME, profile.getSetting(ProfileSetting.PLAYER_TIME));
+        });
     }
 
     @EventHandler
@@ -70,8 +71,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
         Profile profile = Profile.getByPlayer(event.getPlayer());
-
-        if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
+        if(event.getPlayer().getGameMode() == GameMode.CREATIVE && event.getPlayer().isOp())
             return;
 
         switch(profile.getState()) {
@@ -108,6 +108,22 @@ public class PlayerListener implements Listener {
             default:
                 event.setCancelled(true);
                 event.getPlayer().updateInventory();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerPickup(PlayerPickupItemEvent event) {
+        Profile profile = Profile.getByPlayer(event.getPlayer());
+        if(event.getPlayer().getGameMode() == GameMode.CREATIVE && event.getPlayer().isOp())
+            return;
+
+        switch(profile.getState()) {
+            case PLAYING: {
+                event.setCancelled(false);
+                break;
+            }
+            default:
+                event.setCancelled(true);
         }
     }
 
@@ -197,11 +213,11 @@ public class PlayerListener implements Listener {
                         else if(display.contains("Info"))
                             profile.sendPartyInfo();
                         else if(display.contains("Event"))
-                            return;
+                            PartiesInventory.openInventory(player);
                         else if(display.contains("Other Parties"))
-                            return;
+                            PartiesInventory.openInventory(player);
                         else if(display.contains("Leave"))
-                            profile.leaveParty();
+                            Bukkit.dispatchCommand(player, "party leave");
                     }
                     event.setCancelled(true);
                     break;
@@ -256,18 +272,26 @@ public class PlayerListener implements Listener {
             if(event.getClickedInventory().getTitle().contains("Unranked")) {
                 Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
                 if(ladder != null) {
-                    profile.addToQueue(ladder.getUnrankedQueue());
+                    if(!profile.isInParty()) {
+                        profile.addToQueue(ladder.getUnrankedQueue());
 
-                    player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
-                    player.closeInventory();
+                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
+                        player.closeInventory();
+                    } else {
+
+                    }
                 }
             } else if(event.getClickedInventory().getTitle().contains("Ranked")) {
                 Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
                 if(ladder != null) {
-                    profile.addToQueue(ladder.getRankedQueue());
+                    if(!profile.isInParty()) {
+                        profile.addToQueue(ladder.getRankedQueue());
 
-                    player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
-                    player.closeInventory();
+                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
+                        player.closeInventory();
+                    } else {
+
+                    }
                 }
             } else if(event.getClickedInventory().getTitle().contains("Requesting")) {
                 Player requested = Bukkit.getPlayer(event.getClickedInventory().getTitle().split(" ")[1]);
@@ -297,6 +321,22 @@ public class PlayerListener implements Listener {
                     return;
 
                 profile.beginEditing(ladder);
+            } else if(event.getClickedInventory().getTitle().contains("Other Parties")) {
+                Player owner = Bukkit.getPlayer(C.strip(item.getItemMeta().getDisplayName().split("'")[0]));
+                Profile ownerProfile = Profile.getByPlayer(owner);
+                if(!ownerProfile.isInParty()) {
+                    PartiesInventory.updateInventory();
+                    return;
+                }
+
+                Party party = ownerProfile.getParty();
+                if(party.isInGame()) {
+                    profile.sendMessage("&cThis party is currently occupied.");
+                    return;
+                }
+
+                party.getRequests().put(profile.getParty(), System.currentTimeMillis());
+                profile.sendMessage("&aYou have sent a party duel request to " + owner.getName() + "'s party.");
             }
         }
     }
@@ -316,6 +356,9 @@ public class PlayerListener implements Listener {
 
         if(profile.isQueueing())
             profile.removeFromQueue();
+
+        if(profile.isInParty())
+            Bukkit.dispatchCommand(profile.getPlayer(), "party leave");
 
         profile.save();
     }

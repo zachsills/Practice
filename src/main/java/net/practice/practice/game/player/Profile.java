@@ -95,6 +95,10 @@ public class Profile {
         return Bukkit.getPlayer(uuid);
     }
 
+    public void sendMessage(String message) {
+        getPlayer().sendMessage(C.color(message));
+    }
+
     public int getElo(Ladder ladder) {
         if(!eloMap.containsKey(ladder))
             return RankingUtils.STARTING_ELO;
@@ -302,28 +306,34 @@ public class Profile {
     public void joinParty(Party party) {
         setParty(party);
 
-        PartyHandler.spawn(getPlayer(), true);
+        PartyHandler.spawn(getPlayer(), party.getLeader().equals(getUuid()));
     }
 
     public void leaveParty() {
+        party.getPlayers().remove(getPlayer());
+
         setParty(null);
 
         SpawnHandler.spawn(getPlayer(), false);
     }
 
     public void sendPartyInfo() {
-        Player player = getPlayer();
-        player.sendMessage(C.color("&f&m---------------------------------"));
-        player.sendMessage(C.color("&6" + Bukkit.getPlayer(party.getLeader()).getName() + "&e's Party (" + party.getSize() + "): "));
+        sendPartyInfo(getParty());
+    }
+
+    public void sendPartyInfo(Party party) {
+        sendMessage(C.color("&f&m---------------------------------"));
+        sendMessage(C.color("&6" + Bukkit.getPlayer(party.getLeader()).getName() + "&e's Party (" + party.getSize() + "): "));
         if(party.getSize() == 1) {
-            player.sendMessage(C.color("&e  * No Members *"));
+            sendMessage(C.color("&e  * No Members *"));
         } else {
-            StringBuilder builder = new StringBuilder("&e");
-            for(int i = 0; i < party.getPlayers().size(); i++)
-                builder.append(party.getPlayers().get(i).getName()).append(i - 1 >= party.getPlayers().size() ? "" : "&7,&e ");
-            player.sendMessage(C.color(builder.toString()));
+            StringBuilder builder = new StringBuilder("&e  ");
+            List<Player> players = party.getPlayers();
+            for(int i = 0; i < players.size(); i++)
+                builder.append(players.get(i).getName()).append(i + 1 >= players.size() ? "" : "&7,&e ");
+            sendMessage(C.color(builder.toString()));
         }
-        player.sendMessage(C.color("&f&m---------------------------------"));
+        sendMessage(C.color("&f&m---------------------------------"));
     }
 
     public void openSettings() {

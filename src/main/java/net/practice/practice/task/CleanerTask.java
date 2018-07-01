@@ -1,11 +1,14 @@
 package net.practice.practice.task;
 
 import net.practice.practice.game.duel.DuelRequest;
+import net.practice.practice.game.party.Party;
+import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.player.Profile;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class CleanerTask extends BukkitRunnable {
 
@@ -13,7 +16,7 @@ public class CleanerTask extends BukkitRunnable {
     public void run() {
         for(Profile profile : Profile.getProfiles().values()) {
             if(profile.getRecentDuel() != null) {
-                if(profile.getRecentDuel().getEndTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 1000 * 90)
+                if(profile.getRecentDuel().getEndTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= TimeUnit.SECONDS.toMillis(90))
                     profile.setRecentDuel(null);
             }
 
@@ -26,9 +29,24 @@ public class CleanerTask extends BukkitRunnable {
                 }
 
                 if(profile.getRecentDuel() != null) {
-                    if (request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= 1000 * 90)
+                    if (request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= TimeUnit.SECONDS.toMillis(90))
                         requests.remove();
                 }
+            }
+        }
+
+        for(Party party : PartyManager.getParties().values()) {
+            Iterator<Map.Entry<Party, Long>> requests = party.getRequests().entrySet().iterator();
+            while(requests.hasNext()) {
+                Map.Entry<Party, Long> entry = requests.next();
+                Party next = entry.getKey();
+                if(next.getPlayers().size() == 0) {
+                    requests.remove();
+                    return;
+                }
+
+                if(Math.abs(System.currentTimeMillis() - entry.getValue()) >= TimeUnit.SECONDS.toMillis(90))
+                    requests.remove();
             }
         }
     }
