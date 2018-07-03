@@ -24,6 +24,7 @@ import net.practice.practice.util.chat.C;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
@@ -203,7 +204,7 @@ public class Profile {
 
     public void cleanupRecent() {
         if(state == ProfileState.LOBBY) {
-            if(getPlayer() != null && getPlayer().getInventory().getItem(2) != null)
+            if(getPlayer() != null && getPlayer().getInventory().getItem(2) != null && getPlayer().getInventory().getItem(2).getType() == Material.INK_SACK)
                 getPlayer().getInventory().setItem(2, null);
         }
     }
