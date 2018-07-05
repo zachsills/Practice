@@ -68,10 +68,10 @@
     </build>
 
     <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
+        <!--<repository>-->
+            <!--<id>spigot-repo</id>-->
+            <!--<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>-->
+        <!--</repository>-->
         <repository>
             <id>sk89q</id>
             <url>http://maven.sk89q.com/repo/</url>
@@ -89,25 +89,17 @@
     </repositories>
 
     <dependencies>
-        <!--Spigot API-->
+        <!--NubSpigot-->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <groupId>land.nub.spigot</groupId>
+            <artifactId>NubSpigot-API</artifactId>
+            <version>1.0.0-DEV</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!--Bukkit API-->
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <groupId>land.nub.spigot</groupId>
+            <artifactId>NubSpigot-Server</artifactId>
+            <version>1.0.0-DEV</version>
             <scope>provided</scope>
         </dependency>
 
