@@ -73,7 +73,7 @@ public class SpawnHandler {
             if(duel.getType() == DuelType.ONE_VS_ONE && Math.abs(System.currentTimeMillis() - duel.getEndTime()) < 1000 * 20) {
                 SoloDuel soloDuel = (SoloDuel) duel;
                 Player rematcher = soloDuel.getPlayerOne() == player ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne();
-                if(rematcher != null)
+                if(rematcher != null && rematcher.isOnline())
                     items[2] = new I(Material.INK_SACK).durability(10).name(C.color("&bRematch playerName")
                             .replace("playerName", rematcher.getName())).lore(C.color("&7Easily send a rematch request to your last opponent."));
             }

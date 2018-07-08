@@ -26,7 +26,9 @@ public class DuelCommand {
             return;
         }
 
+
         Profile profile = Profile.getByPlayer(args.getPlayer());
+
         if(profile.getState() != ProfileState.LOBBY) {
             args.getPlayer().sendMessage(ChatColor.RED + "You cannot perform this action in your current state.");
             return;
@@ -38,23 +40,43 @@ public class DuelCommand {
             return;
         }
 
-        Profile targetProfile = Profile.getByPlayer(player);
-        if(!(boolean) targetProfile.getSetting(ProfileSetting.DUEL_REQUESTS)) {
-            args.getPlayer().sendMessage(C.color("&cThat player is currently not accepting any duels."));
-            return;
-        }
+        if(!profile.isInParty()) {
+            Profile targetProfile = Profile.getByPlayer(player);
+            if(!(boolean) targetProfile.getSetting(ProfileSetting.DUEL_REQUESTS)) {
+                args.getPlayer().sendMessage(C.color("&cThat player is currently not accepting any duels."));
+                return;
+            }
 
-        if(targetProfile.isInGame()) {
-            args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
-            return;
-        }
+            if(targetProfile.isInGame()) {
+                args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
+                return;
+            }
 
-        if(targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
-            args.getPlayer().sendMessage(C.color("&cYou have already sent this player a request."));
-            return;
-        }
+            if(targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
+                args.getPlayer().sendMessage(C.color("&cYou have already sent this player a request."));
+                return;
+            }
 
-        RequestInv.openInventory(args.getPlayer(), player);
+            RequestInv.openInventory(args.getPlayer(), args.getPlayer());
+        } else {
+            Profile targetProfile = Profile.getByPlayer(player);
+            if(!targetProfile.isInParty()) {
+                args.getPlayer().sendMessage(C.color("&cThat party is currently not in a party."));
+                return;
+            }
+
+            if(targetProfile.getParty().isInGame()) {
+                args.getPlayer().sendMessage(C.color("&cThat party is currently occupied."));
+                return;
+            }
+
+            if(targetProfile.getParty().getRequests().containsKey(profile.getParty())) {
+                args.getPlayer().sendMessage(C.color("&cYou have already sent this party a duel request."));
+                return;
+            }
+
+            RequestInv.openInventory(args.getPlayer(), player);
+        }
     }
 
     @Command(name = "accept", aliases = { "acceptrequest" }, playerOnly = true, description = "Accept a duel request from a player.")

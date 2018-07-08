@@ -20,6 +20,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -33,11 +34,19 @@ public class DuoDuel extends Duel {
     @Getter @Setter private UUID winner;
     @Getter @Setter private boolean ranked;
 
+    @Getter private List<Player> alive, dead;
+
     public DuoDuel(MapLoc map, Ladder ladder, List<Player> duoOne, List<Player> duoTwo) {
         super(map, ladder, DuelType.TWO_VS_TWO);
 
         this.duoOne = duoOne;
         this.duoTwo = duoTwo;
+
+        this.alive = new ArrayList<>();
+        this.dead = new ArrayList<>();
+
+        alive.addAll(duoOne);
+        alive.addAll(duoTwo);
     }
 
     @Override
@@ -125,13 +134,21 @@ public class DuoDuel extends Duel {
     @Override
     public void kill(Player player) {
         saveInventory(player.getUniqueId());
+        dead.add(player);
+        alive.remove(player);
 
-
+        if(hasWinner())
+            end(DuelEndReason.DIED);
     }
 
     @Override
     public void quit(Player player) {
+        saveInventory(player.getUniqueId());
+        dead.add(player);
+        alive.remove(player);
 
+        if(hasWinner())
+            end(DuelEndReason.QUIT);
     }
 
     @Override
@@ -162,5 +179,32 @@ public class DuoDuel extends Duel {
         duoTwo.stream()
                 .filter(player -> !hasSnapshot(player))
                 .forEach(this::saveInventory);
+    }
+
+    private boolean hasWinner() {
+        List<Player> winner = findWinner();
+        if(winner != null) {
+            Player alive = winner.stream().filter(getAlive()::contains).findFirst().orElse(winner.get(0));
+
+            setWinner(Profile.getByPlayer(alive).getParty().getId());
+        }
+
+        return winner != null;
+    }
+
+    private List<Player> findWinner() {
+        int deadCountOne = (int) duoOne.stream().filter(dead::contains).count();
+        int deadCountTwo = (int) duoTwo.stream().filter(dead::contains).count();
+
+        if(deadCountOne >= 2)
+            return duoTwo;
+        if(deadCountTwo >= 2)
+            return duoOne;
+
+        return null;
+    }
+
+    public List<Player> getDuo(Player player) {
+        return duoOne.contains(player) ? duoOne : duoTwo;
     }
 }

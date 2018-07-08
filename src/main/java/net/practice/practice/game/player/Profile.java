@@ -144,6 +144,8 @@ public class Profile {
 
     public void setCurrentDuel(Duel duel) {
         currentDuel = duel;
+        duelRequests.clear();
+
         if(currentDuel == null) {
             setState(ProfileState.LOBBY);
             return;

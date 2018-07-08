@@ -86,12 +86,18 @@ public class Ladder {
         return queues[1];
     }
 
+    public Queue getUnrankedPartyQueue() {
+        return queues[2];
+    }
+
     public int getTotalQueuing(QueueType type) {
         switch(type) {
             case UNRANKED:
                 return getUnrankedQueue().getSize();
             case RANKED:
                 return getRankedQueue().getSize();
+            case UNRANKED_TEAM:
+                return getUnrankedPartyQueue().getSize();
         }
 
         return 0;

@@ -3,7 +3,10 @@ package net.practice.practice.board.provider;
 import net.practice.practice.board.BoardProvider;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelState;
+import net.practice.practice.game.duel.type.DuoDuel;
 import net.practice.practice.game.duel.type.SoloDuel;
+import net.practice.practice.game.party.Party;
+import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.util.PlayerUtils;
 import net.practice.practice.util.TimeUtils;
@@ -35,6 +38,7 @@ public class PlayingProvider implements BoardProvider {
                     lines.add("&6Ping: &7" + PlayerUtils.getPing(player) + " &f| &7" + PlayerUtils.getPing(opponent));
                 } else if(duel.getState() == DuelState.STARTING) {
                     lines.add("&6Opponent: &7" + opponent.getName());
+                    lines.add(" ");
                     lines.add("&6Starting: &7" + duel.getCountDown());
                 } else if(duel.getState() == DuelState.ENDED) {
                     lines.add("&6Winner: &7" + soloDuel.getWinner().getName());
@@ -42,7 +46,35 @@ public class PlayingProvider implements BoardProvider {
                 break;
             }
             case TWO_VS_TWO: {
+                DuoDuel duoDuel = (DuoDuel) duel;
+                if(duel.getState() == DuelState.PLAYING) {
+                    List<Player> duo = duoDuel.getDuo(player);
+                    Player teammate = duo.get(0).getName().equals(player.getName()) ? duo.get(1) : duo.get(0);
+                    lines.add((duoDuel.getAlive().contains(teammate) ? "&a" : "&c") + teammate.getName());
+                    if(duoDuel.getAlive().contains(teammate))
+                        lines.add(PlayerUtils.getHealthColor(PlayerUtils.getHealth(teammate)).toString() + PlayerUtils.getHealth(teammate) + "\u2665 &7| &e" + PlayerUtils.getRemainingPots(teammate) + " pots");
+                    else
+                        lines.add("&c0.0\u2665 &7| &e0 pots");
+                    lines.add(" ");
 
+                    List<Player> otherDuo = duoDuel.getDuoOne() == duo ? duoDuel.getDuoTwo() : duoDuel.getDuoOne();
+                    lines.add("&cOpponents: ");
+                    for(Player opponent : otherDuo)
+                        lines.add((duoDuel.getAlive().contains(opponent) ? "&f" : "&7&m") + opponent.getName());
+
+                    lines.add(" ");
+                    lines.add("&6Duration: &7" + TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime()));
+                } else if(duel.getState() == DuelState.STARTING) {
+                    List<Player> otherDuo = duoDuel.getDuoOne() == duoDuel.getDuo(player) ? duoDuel.getDuoTwo() : duoDuel.getDuoOne();
+                    lines.add("&cOpponents: ");
+                    for(Player opponent : otherDuo)
+                        lines.add((duoDuel.getAlive().contains(opponent) ? "&f" : "&7&m") + opponent.getName());
+
+                    lines.add(" ");
+                    lines.add("&6Starting: &7" + duel.getCountDown());
+                } else if(duel.getState() == DuelState.ENDED) {
+                    lines.add("&6Winner: &7" + PartyManager.getByUuid(duoDuel.getWinner()).getLeaderName() + "'s Party");
+                }
                 break;
             }
             case TEAM_VS_TEAM: {

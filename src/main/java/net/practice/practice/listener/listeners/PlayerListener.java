@@ -8,10 +8,12 @@ import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
+import net.practice.practice.game.queue.Queue;
 import net.practice.practice.inventory.inventories.*;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
+import net.practice.practice.util.chat.JsonMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -182,7 +184,7 @@ public class PlayerListener implements Listener {
         ItemStack item = event.getItem();
 
         if (item == null || item.getItemMeta() == null
-                || !(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+                || !event.getAction().name().contains("RIGHT")
                 || player.getGameMode().equals(GameMode.CREATIVE)) return;
 
         if(item.getItemMeta().hasDisplayName()) {
@@ -213,7 +215,7 @@ public class PlayerListener implements Listener {
                         else if(display.contains("Info"))
                             profile.sendPartyInfo();
                         else if(display.contains("Event"))
-                            PartiesInventory.openInventory(player);
+                            player.sendMessage(C.color("&cParty events are temporarily disabled."));
                         else if(display.contains("Other Parties"))
                             PartiesInventory.openInventory(player);
                         else if(display.contains("Leave"))
@@ -263,7 +265,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if(!profile.isInGame() && event.getClickedInventory().getName() != null && !player.getGameMode().equals(GameMode.CREATIVE)) {
+        if(!profile.isInGame() && event.getClickedInventory().getName() != null && player.getGameMode() != GameMode.CREATIVE) {
             event.setCancelled(true);
 
             if(item == null || item.getItemMeta() == null || !item.getItemMeta().hasDisplayName())
@@ -274,24 +276,36 @@ public class PlayerListener implements Listener {
                 if(ladder != null) {
                     if(!profile.isInParty()) {
                         profile.addToQueue(ladder.getUnrankedQueue());
-
-                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
-                        player.closeInventory();
                     } else {
+                        Party party = profile.getParty();
+                        if(party.getSize() != 2) {
+                            player.sendMessage(C.color("&cYou must have 2 players to perform this action."));
+                            return;
+                        }
 
+                        Queue queue = ladder.getUnrankedPartyQueue();
+                        queue.add(party.getId());
+
+                        party.setCurrentQueue(queue);
                     }
+                    player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
+                    player.closeInventory();
                 }
             } else if(event.getClickedInventory().getTitle().contains("Ranked")) {
                 Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
                 if(ladder != null) {
                     if(!profile.isInParty()) {
                         profile.addToQueue(ladder.getRankedQueue());
-
-                        player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
-                        player.closeInventory();
                     } else {
+                        Party party = profile.getParty();
+                        if(party.getSize() != 2) {
+                            player.sendMessage(C.color("&cYou must have 2 players to perform this action."));
+                            return;
+                        }
 
                     }
+                    player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
+                    player.closeInventory();
                 }
             } else if(event.getClickedInventory().getTitle().contains("Requesting")) {
                 Player requested = Bukkit.getPlayer(event.getClickedInventory().getTitle().split(" ")[1]);
@@ -300,20 +314,48 @@ public class PlayerListener implements Listener {
                     return;
                 }
 
+                Profile target = Profile.getByPlayer(requested);
                 Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
                 if(ladder != null) {
                     player.closeInventory();
 
-                    if(profile.getDuelRequests().containsKey(requested.getName())) {
-                        player.sendMessage(C.color("&cYou have already sent this player a request."));
-                        return;
+                    if(!target.isInParty()) {
+                        if(profile.getDuelRequests().containsKey(requested.getName())) {
+                            player.sendMessage(C.color("&cYou have already sent this player a request."));
+                            return;
+                        }
+
+                        if(profile.isInGame()) {
+                            player.sendMessage(C.color("&cThat player is currently occupied."));
+                            return;
+                        }
+
+                        DuelRequest request = new DuelRequest(player, requested, ladder);
+
+                        request.sendToRequested();
+
+                        player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "."));
+                    } else {
+                        if(target.getParty().getRequests().containsKey(profile.getParty())) {
+                            player.sendMessage(C.color("&cYou have already sent this player a request."));
+                            return;
+                        }
+
+                        if(target.getParty().isInGame()) {
+                            player.sendMessage(C.color("&cThat party is currently occupied."));
+                            return;
+                        }
+
+                        requested.sendMessage(C.color("  &7Ladder: &6" + ladder.getDisplayName()));
+                        new JsonMessage()
+                                .append(ChatColor.GREEN + "  ACCEPT").setClickAsExecuteCmd("/accept " + player.getName()).setHoverAsTooltip(ChatColor.GREEN + "Accept " + player.getName()).save()
+                                .append(C.color(" &7or ")).save()
+                                .append(ChatColor.RED + "DENY").setClickAsExecuteCmd("/deny " + player.getName()).setHoverAsTooltip(ChatColor.RED + "Deny " + player.getName()).save()
+                                .send(requested);
+                        requested.sendMessage(" ");
+
+                        player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "'s party."));
                     }
-
-                    DuelRequest request = new DuelRequest(player, requested, ladder);
-
-                    request.sendToRequested();
-
-                    player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "."));
                 }
             } else if(event.getClickedInventory().getTitle().contains("Select a Ladder...")) {
                 Ladder ladder = Ladder.getLadder(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
@@ -335,7 +377,12 @@ public class PlayerListener implements Listener {
                     return;
                 }
 
-                party.getRequests().put(profile.getParty(), System.currentTimeMillis());
+                if(party == profile.getParty()) {
+                    profile.sendMessage("&cYou cannot duel your own Party.");
+                    return;
+                }
+
+                Bukkit.dispatchCommand(player, "duel " + owner);
                 profile.sendMessage("&aYou have sent a party duel request to " + owner.getName() + "'s party.");
             }
         }
@@ -359,6 +406,9 @@ public class PlayerListener implements Listener {
 
         if(profile.isInParty())
             Bukkit.dispatchCommand(profile.getPlayer(), "party leave");
+
+        if(profile.isSpectating())
+            profile.getSpectating().getSpectators().remove(profile);
 
         profile.save();
     }

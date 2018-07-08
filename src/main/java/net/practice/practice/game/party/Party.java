@@ -3,6 +3,7 @@ package net.practice.practice.game.party;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.queue.Queue;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,6 +20,7 @@ public class Party {
 
     @Getter @Setter private Duel currentDuel;
     @Getter @Setter private PartyState state;
+    @Getter @Setter private Queue currentQueue;
 
     public Party(UUID leader) {
         this.id = UUID.randomUUID();

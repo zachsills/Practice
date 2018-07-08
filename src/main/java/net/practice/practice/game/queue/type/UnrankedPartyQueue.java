@@ -3,14 +3,11 @@ package net.practice.practice.game.queue.type;
 import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.type.DuoDuel;
-import net.practice.practice.game.duel.type.PartyDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
 import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueType;
-
-import java.util.UUID;
 
 public class UnrankedPartyQueue extends Queue {
 
@@ -28,29 +25,16 @@ public class UnrankedPartyQueue extends Queue {
         if(mapLoc == null)
             return;
 
-        Duel duel;
-        if(partyOne.getSize() == 2 && partyTwo.getSize() == 2)
-            duel = new DuoDuel(mapLoc, getLadder(), partyOne.getAllPlayers(), partyTwo.getAllPlayers());
-        else
-            duel = new PartyDuel(mapLoc, getLadder(), partyOne, partyTwo);
+//        if(partyOne.getSize() == 2 && partyTwo.getSize() == 2)
+//            duel = new DuoDuel(mapLoc, getLadder(), partyOne.getAllPlayers(), partyTwo.getAllPlayers());
+//        else
+//            duel = new PartyDuel(mapLoc, getLadder(), partyOne, partyTwo);
 
+        Duel duel = new DuoDuel(mapLoc, getLadder(), partyOne.getAllPlayers(), partyTwo.getAllPlayers());
         duel.sendMessage("&eUnranked party match found: &6" + partyOne.getLeaderName() + " &evs. &6" + partyTwo.getLeaderName());
-
         duel.preStart();
 
         getQueued().remove(0);
         getQueued().remove(1);
-    }
-
-    @Override
-    public void add(UUID uuid) {
-        super.add(uuid);
-    }
-
-    @Override
-    public void remove(UUID uuid) {
-        super.remove(uuid);
-
-
     }
 }
