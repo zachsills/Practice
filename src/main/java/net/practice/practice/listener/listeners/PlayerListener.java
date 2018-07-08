@@ -10,6 +10,7 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.inventory.inventories.*;
+import net.practice.practice.spawn.PartyHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
@@ -218,6 +219,8 @@ public class PlayerListener implements Listener {
                             player.sendMessage(C.color("&cParty events are temporarily disabled."));
                         else if(display.contains("Other Parties"))
                             PartiesInventory.openInventory(player);
+                        else if(display.contains("Leave Queue"))
+                            profile.getParty().leaveQueue();
                         else if(display.contains("Leave"))
                             Bukkit.dispatchCommand(player, "party leave");
                     }
@@ -287,6 +290,7 @@ public class PlayerListener implements Listener {
                         queue.add(party.getId());
 
                         party.setCurrentQueue(queue);
+                        PartyHandler.spawn(player, true, true);
                     }
                     player.sendMessage(C.color("&f\u00BB &eJoined the queue for Unranked " + ladder.getDisplayName() + "."));
                     player.closeInventory();

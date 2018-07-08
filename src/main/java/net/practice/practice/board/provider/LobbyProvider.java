@@ -48,6 +48,8 @@ public class LobbyProvider implements BoardProvider {
             lines.add(" ");
             lines.add("&6Party: &f" + Bukkit.getPlayer(party.getLeader()).getName());
             lines.add("  &6Members: &f" + party.getSize());
+            if(party.getCurrentQueue() != null)
+                lines.add("  &6Queue: &f" + C.strip(party.getCurrentQueue().getLadder().getDisplayName()));
         }
 
         lines.add(" ");

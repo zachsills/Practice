@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.queue.Queue;
+import net.practice.practice.spawn.PartyHandler;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -65,6 +66,14 @@ public class Party {
 
     public int getSize() {
         return players.size() + 1;
+    }
+
+    public void leaveQueue() {
+        Player leader = Bukkit.getPlayer(getLeader());
+        PartyHandler.spawn(leader, true);
+
+        currentQueue.remove(id);
+        setCurrentQueue(null);
     }
 
     public static Party createParty(Player player) {

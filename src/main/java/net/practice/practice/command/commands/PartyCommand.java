@@ -156,6 +156,9 @@ public class PartyCommand {
         }
 
         Party party = profile.getParty();
+        if(party.getCurrentQueue() != null)
+            party.leaveQueue();
+
         if(party.getLeader().equals(profile.getUuid())) {
             if(party.getPlayers().size() > 0) {
                 UUID newLeader = party.getPlayers().get(0).getUniqueId();
