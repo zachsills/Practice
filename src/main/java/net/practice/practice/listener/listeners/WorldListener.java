@@ -2,6 +2,8 @@ package net.practice.practice.listener.listeners;
 
 import net.practice.practice.Practice;
 import net.practice.practice.game.arena.map.MapLoc;
+import net.practice.practice.game.player.Profile;
+import net.practice.practice.game.player.data.ProfileState;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,6 +19,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
 
 public class WorldListener implements Listener {
 
@@ -35,15 +39,33 @@ public class WorldListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageEvent event) {
-        if(event.getEntity().getType() != EntityType.PLAYER)
-            return;
-        if(event.getCause() != EntityDamageEvent.DamageCause.VOID)
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if(event.getFrom().getBlockY() == event.getTo().getBlockY())
             return;
 
-        event.getEntity().teleport(Practice.getInstance().getSpawn());
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByPlayer(player);
+        if(profile.getState() != ProfileState.LOBBY)
+            return;
+        if(event.getTo().getBlockY() > 47)
+            return;
+
+        player.setVelocity(player.getVelocity().setY(13.5F));
     }
+
+//    @EventHandler(priority = EventPriority.LOWEST)
+//    public void onEntityDamage(EntityDamageEvent event) {
+//        if(event.getEntity().getType() != EntityType.PLAYER)
+//            return;
+//        if(event.getCause() != EntityDamageEvent.DamageCause.VOID)
+//            return;
+//
+//        event.getEntity().teleport(Practice.getInstance().getSpawn());
+//        Player player = (Player) event.getEntity();
+//
+//        player.setVelocity(player.getVelocity().setY(10.5F));
+//    }
 
     @EventHandler
     public void onBlockSpread(BlockSpreadEvent event) {
