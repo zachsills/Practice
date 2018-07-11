@@ -4,8 +4,8 @@ import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -18,7 +18,6 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
 
 public class WorldListener implements Listener {
 
@@ -44,26 +43,13 @@ public class WorldListener implements Listener {
 
         Player player = event.getPlayer();
         Profile profile = Profile.getByPlayer(player);
-        if(profile.getState() != ProfileState.LOBBY || profile.getState() != ProfileState.QUEUING)
+        if(profile.getState() != ProfileState.LOBBY && profile.getState() != ProfileState.QUEUING)
             return;
         if(event.getTo().getBlockY() >= 93)
             return;
 
         player.setVelocity(player.getVelocity().setY(1.8F));
     }
-
-//    @EventHandler(priority = EventPriority.LOWEST)
-//    public void onEntityDamage(EntityDamageEvent event) {
-//        if(event.getEntity().getType() != EntityType.PLAYER)
-//            return;
-//        if(event.getCause() != EntityDamageEvent.DamageCause.VOID)
-//            return;
-//
-//        event.getEntity().teleport(Practice.getInstance().getSpawn());
-//        Player player = (Player) event.getEntity();
-//
-//        player.setVelocity(player.getVelocity().setY(10.5F));
-//    }
 
     @EventHandler
     public void onBlockSpread(BlockSpreadEvent event) {
@@ -87,16 +73,5 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onBlockFade(BlockFadeEvent event) {
         event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onLoad(ChunkLoadEvent event) {
-        if(!event.isNewChunk())
-            return;
-        if(!event.getWorld().getName().equals("spawn"))
-            return;
-
-        Chunk chunk = event.getChunk();
-        chunk.unload(false, false);
     }
 }

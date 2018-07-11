@@ -19,6 +19,9 @@ import net.practice.practice.task.UpdateInventoryTask;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Practice extends JavaPlugin {
@@ -45,6 +48,9 @@ public class Practice extends JavaPlugin {
         saveDefaultConfig();
 
         backend = new MongoBackend(this);
+
+        /* Map world loading (This must be done before arenas are loaded because otherwise, the arenas will load in with world as null) */
+        MapLoc.loadWorld();
 
         /* Initialize managers */
         boardManager = new BoardManager(new ProviderResolver());
@@ -82,10 +88,10 @@ public class Practice extends JavaPlugin {
         backend.saveProfiles();
         backend.close();
 
-        getServer().unloadWorld(MapLoc.getArenaWorld(), false);
-
         Profile.getProfiles().clear();
         PartyManager.getParties().clear();
+
+        getServer().unloadWorld(MapLoc.getArenaWorld(), false);
     }
 
     public Location getSpawn() {

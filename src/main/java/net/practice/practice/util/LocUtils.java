@@ -7,7 +7,7 @@ public class LocUtils {
 
     public static String serializeLocation(Location location) {
         // This is so that we can see which part is null.
-        String world = location.getWorld().getName();
+        String world = location.getWorld() != null ? location.getWorld().getName() : "null";
         double x = location.getX();
         double y = location.getY();
         double z = location.getZ();
@@ -46,7 +46,7 @@ public class LocUtils {
             final String attribute = arr[i];
             final String[] split = attribute.split(";");
             if(split[0].equalsIgnoreCase("@w"))
-                location.setWorld(Bukkit.getWorld(split[1]));
+                location.setWorld(Bukkit.getServer().getWorld(split[1]));
 
             if(split[0].equalsIgnoreCase("@x"))
                 location.setX(Double.parseDouble(split[1]));
