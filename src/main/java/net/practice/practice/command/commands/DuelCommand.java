@@ -57,7 +57,7 @@ public class DuelCommand {
                 return;
             }
 
-            RequestInv.openInventory(args.getPlayer(), args.getPlayer());
+            RequestInv.openInventory(args.getPlayer(), player);
         } else {
             Profile targetProfile = Profile.getByPlayer(player);
             if(!targetProfile.isInParty()) {
