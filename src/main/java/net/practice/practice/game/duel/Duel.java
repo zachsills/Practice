@@ -193,6 +193,7 @@ public abstract class Duel {
     public void sendMessage(String message) {
         spectators.stream()
                 .map(Profile::getPlayer)
+                .filter(Player::isOnline)
                 .forEach(player -> player.sendMessage(C.color(message)));
     }
 
@@ -204,11 +205,15 @@ public abstract class Duel {
         return Collections.max(comboes.get(player));
     }
 
+    public void kill(Player player) {
+        sendMessage("&6" + player.getName() + "&e has died.");
+    }
+
+    public void quit(Player player) {
+        sendMessage("&6" + player.getName() + "&e has quit.");
+    }
+
     public abstract Collection<Player> getPlayers();
-
-    public abstract void kill(Player player);
-
-    public abstract void quit(Player player);
 
     public abstract boolean hasPlayer(Player player);
 

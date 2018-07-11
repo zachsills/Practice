@@ -1,26 +1,24 @@
 package net.practice.practice.listener.listeners;
 
-import net.practice.practice.Practice;
 import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.Chunk;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.event.world.ChunkLoadEvent;
 
 public class WorldListener implements Listener {
 
@@ -46,7 +44,7 @@ public class WorldListener implements Listener {
 
         Player player = event.getPlayer();
         Profile profile = Profile.getByPlayer(player);
-        if(profile.getState() != ProfileState.LOBBY)
+        if(profile.getState() != ProfileState.LOBBY || profile.getState() != ProfileState.QUEUING)
             return;
         if(event.getTo().getBlockY() >= 93)
             return;
@@ -89,5 +87,16 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onBlockFade(BlockFadeEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onLoad(ChunkLoadEvent event) {
+        if(!event.isNewChunk())
+            return;
+        if(!event.getWorld().getName().equals("spawn"))
+            return;
+
+        Chunk chunk = event.getChunk();
+        chunk.unload(false, false);
     }
 }

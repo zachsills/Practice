@@ -39,12 +39,13 @@ public class DuelListener implements Listener {
             return;
 
         Duel duel = profile.getCurrentDuel();
-        if(duel.getState() != DuelState.PLAYING)
+        if(duel.getState() != DuelState.STARTING || duel.getState() != DuelState.PLAYING)
             return;
 
         //Location deathLoc = event.getEntity().getLocation();
         event.getDrops().clear();
         event.setDroppedExp(0);
+        event.setDeathMessage(null);
 
         duel.saveInventory(profile.getUuid());
         duel.kill(event.getEntity());

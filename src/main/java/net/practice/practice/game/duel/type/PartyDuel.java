@@ -68,12 +68,12 @@ public class PartyDuel extends Duel {
 
     @Override
     public void kill(Player player) {
-
+        super.kill(player);
     }
 
     @Override
     public void quit(Player player) {
-
+        super.quit(player);
     }
 
     @Override

@@ -20,10 +20,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -119,6 +116,7 @@ public class DuoDuel extends Duel {
             @Override
             public void run() {
                 getPlayers().stream()
+                        .filter(Objects::nonNull)
                         .filter(Player::isOnline)
                         .forEach(SpawnHandler::spawn);
 
@@ -133,6 +131,8 @@ public class DuoDuel extends Duel {
 
     @Override
     public void kill(Player player) {
+        super.kill(player);
+
         saveInventory(player.getUniqueId());
         dead.add(player);
         alive.remove(player);
@@ -143,6 +143,8 @@ public class DuoDuel extends Duel {
 
     @Override
     public void quit(Player player) {
+        super.quit(player);
+
         saveInventory(player.getUniqueId());
         dead.add(player);
         alive.remove(player);
@@ -154,6 +156,7 @@ public class DuoDuel extends Duel {
     @Override
     public Collection<Player> getPlayers() {
         return Stream.concat(duoOne.stream(), duoTwo.stream())
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

@@ -144,6 +144,8 @@ public class SoloDuel extends Duel {
 
     @Override
     public void kill(Player player) {
+        super.kill(player);
+
         setWinner(playerOne != player ? playerOne : playerTwo);
         saveInventory(winner.getUniqueId());
 
@@ -152,6 +154,8 @@ public class SoloDuel extends Duel {
 
     @Override
     public void quit(Player player) {
+        super.quit(player);
+
         setWinner(playerOne != player ? playerOne : playerTwo);
         end(DuelEndReason.QUIT);
     }
