@@ -48,10 +48,10 @@ public class WorldListener implements Listener {
         Profile profile = Profile.getByPlayer(player);
         if(profile.getState() != ProfileState.LOBBY)
             return;
-        if(event.getTo().getBlockY() > 47)
+        if(event.getTo().getBlockY() >= 93)
             return;
 
-        player.setVelocity(player.getVelocity().setY(13.5F));
+        player.setVelocity(player.getVelocity().setY(1.8F));
     }
 
 //    @EventHandler(priority = EventPriority.LOWEST)
