@@ -16,14 +16,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Ladder {
 
-    @Getter private final static Map<String, Ladder> ladders = new HashMap<>();
+    @Getter private final static Map<String, Ladder> ladders = new LinkedHashMap<>();
 
     @Getter private final String name;
 

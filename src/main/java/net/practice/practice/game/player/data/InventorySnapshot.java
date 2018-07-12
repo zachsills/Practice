@@ -54,7 +54,7 @@ public class InventorySnapshot {
         }
     }
 
-    public void loadInventory() {
+    public void loadInventory() { // Detect soups when it's a soup match
         inventory = Bukkit.createInventory(null, 54, name + "'s Inventory");
 
         for(int i = 0; i < contents.length; i++)

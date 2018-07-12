@@ -17,6 +17,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,6 +26,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.text.DecimalFormat;
@@ -39,7 +41,7 @@ public class DuelListener implements Listener {
             return;
 
         Duel duel = profile.getCurrentDuel();
-        if(duel.getState() != DuelState.STARTING || duel.getState() != DuelState.PLAYING)
+        if(duel.getState() != DuelState.STARTING && duel.getState() != DuelState.PLAYING)
             return;
 
         //Location deathLoc = event.getEntity().getLocation();
@@ -246,7 +248,7 @@ public class DuelListener implements Listener {
     public void spleefHunger(FoodLevelChangeEvent event) {
         if (event.getEntity().getType() == EntityType.PLAYER) {
             Profile profile = Profile.getByPlayer((Player) event.getEntity());
-            if (profile != null && profile.getCurrentDuel() != null && profile.getCurrentDuel().getLadder().isSpleef()) {
+            if (profile != null && profile.getCurrentDuel() != null && (profile.getCurrentDuel().getLadder().isSpleef() || profile.getCurrentDuel().getLadder().getName().contains("Soup"))) {
                 ((Player) event.getEntity()).setFoodLevel(20);
                 ((Player) event.getEntity()).setSaturation(0);
                 event.setCancelled(true);
@@ -307,5 +309,53 @@ public class DuelListener implements Listener {
         duel.saveInventory(profile.getUuid());
 
         duel.quit(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onConsume(PlayerItemConsumeEvent event) {
+        if(event.getItem().getType() != Material.GOLDEN_APPLE)
+            return;
+        if(!event.getItem().hasItemMeta() || !event.getItem().getItemMeta().hasDisplayName())
+            return;
+
+        event.setCancelled(true);
+
+        Player player = event.getPlayer();
+        if(player.getItemInHand().getAmount() > 1)
+            player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+        else
+            player.setItemInHand(new ItemStack(Material.AIR));
+        player.updateInventory();
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 120, 1), true);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 1), true);
+    }
+
+    @EventHandler
+    public void onInteractSoup(PlayerInteractEvent event) {
+        if(!event.getAction().name().contains("RIGHT"))
+            return;
+
+        Player player = event.getPlayer();
+        if(player.getItemInHand() != null && player.getItemInHand().getType() != Material.MUSHROOM_SOUP)
+            return;
+
+        Profile profile = Profile.getByPlayer(player);
+        if(!profile.isInGame())
+            return;
+        if(player.getHealth() >= player.getMaxHealth())
+            return;
+
+        event.setCancelled(true);
+        event.setUseItemInHand(Event.Result.DENY);
+
+        player.setItemInHand(new ItemStack(Material.BOWL));
+        player.updateInventory();
+
+        double healAmount = 7.0;
+        if(player.getHealth() + healAmount >= player.getMaxHealth())
+            player.setHealth(player.getMaxHealth());
+        else
+            player.setHealth(player.getHealth() + healAmount);
     }
 }

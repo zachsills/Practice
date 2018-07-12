@@ -82,7 +82,7 @@ public class PlayerListener implements Listener {
                 if(event.getItemDrop().getItemStack().getType().name().contains("SWORD") || event.getItemDrop().getItemStack().getType().name().contains("AXE")
                         || event.getItemDrop().getItemStack().getType().name().contains("SHOVEL")) {
                     event.setCancelled(true);
-                } else if(event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE) {
+                } else if(event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE || event.getItemDrop().getItemStack().getType() == Material.BOWL) {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
