@@ -3,7 +3,6 @@ package net.practice.practice.game.arena;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.util.LocUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;

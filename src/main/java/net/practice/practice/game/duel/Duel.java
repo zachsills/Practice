@@ -15,6 +15,8 @@ import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -111,6 +113,11 @@ public abstract class Duel {
 
     public void giveKits(Player player) {
         Profile profile = Profile.getByPlayer(player);
+
+        if (ladder.getName().contains("Gapple")) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 9999, 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 9999, 0));
+        }
 
         if(!profile.hasCustomKits(ladder)) {
             if(ladder.getDefaultInv() != null)
