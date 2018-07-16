@@ -10,6 +10,7 @@ public class ListenerHandler {
 
     public static void registerListeners() {
         Stream.of(
+                new MapCleaningListener(),
                 new BlockListener(),
                 new DuelListener(),
                 new EditorListener(),

@@ -9,11 +9,14 @@ import net.practice.practice.Practice;
 import net.practice.practice.game.arena.Arena;
 import net.practice.practice.game.arena.ArenaType;
 import net.practice.practice.spawn.SpawnHandler;
+import net.practice.practice.task.MapCleanRunnable;
 import net.practice.practice.util.CustomLoc;
 import org.bukkit.*;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -214,94 +217,72 @@ public class MapLoc {
     }
 
     public void addChangedBlock(BlockState blockState) {
+        for (BlockState state : getChangedBlocks()) {
+            if (state.getLocation().equals(blockState.getLocation())) {
+                return;
+            }
+        }
         getChangedBlocks().add(blockState);
     }
 
+//    @SuppressWarnings("deprecation")
+//    public void clean() {
+//        File schem = new File("plugins/WorldEdit/schematics/" + arena.getSchematicName() + ".schematic");
+//        if (schem.exists()) {
+//            try {
+//                /*List<Block> blocksToChange = new ArrayList<>();
+//
+//                Clipboard c = ClipboardFormat.SCHEMATIC.load(schem).getClipboard();
+//                if (c != null) {
+//                    for (int x = c.getMinimumPoint().getBlockX(); x < c.getMaximumPoint().getBlockX(); x++) {
+//                        for (int y = c.getMinimumPoint().getBlockY(); y < c.getMaximumPoint().getBlockY(); y++) {
+//                            for (int z = c.getMinimumPoint().getBlockZ(); z < c.getMaximumPoint().getBlockZ(); z++) {
+//                                Block realBlock = getArenaWorld().getBlockAt(x, y, z);
+//                                BaseBlock clipBlock = c.getBlock(new Vector(x, y, z));
+//                                if (realBlock.getTypeId() != clipBlock.getType()) {
+//                                    realBlock.setTypeId(clipBlock.getType());
+//                                    realBlock.setData((byte) clipBlock.getData());
+//                                    blocksToChange.add(realBlock);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                Iterator<Block> replaceBlocks = blocksToChange.iterator();
+//                new BukkitRunnable() {
+//                    @Override
+//                    public void run() {
+//                        if (replaceBlocks.hasNext()) {
+//                            Block oldBlock = replaceBlocks.next();
+//                            Block replace = getArenaWorld().getBlockAt(oldBlock.getLocation());
+//                            replace.setType(oldBlock.getType());
+//                            replace.setData(oldBlock.getData());
+//                            Bukkit.broadcastMessage(oldBlock.getType().name());
+//                        } else {
+//                            Bukkit.broadcastMessage("done");
+//                            setState(MapState.READY);
+//                            getBlocksToReplace().clear();
+//                            this.cancel();
+//                        }
+//                    }
+//                }.runTaskTimer(Practice.getInstance(), 1L, 1L);*/
+//
+//                setState(MapState.CLEANING);
+//                ClipboardFormat.SCHEMATIC.load(schem).paste(new BukkitWorld(getArenaWorld()), new Vector(pastePoint.getX(), pastePoint.getY(), pastePoint.getZ()),
+//                        false, true, null).setFastMode(true);
+//                setState(MapState.READY);
+//                //Bukkit.broadcastMessage("ye ye");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
     @SuppressWarnings("deprecation")
-    public void clean() {
-        File schem = new File("plugins/WorldEdit/schematics/" + arena.getSchematicName() + ".schematic");
-        if (schem.exists()) {
-            try {
-                /*List<Block> blocksToChange = new ArrayList<>();
-
-                Clipboard c = ClipboardFormat.SCHEMATIC.load(schem).getClipboard();
-                if (c != null) {
-                    for (int x = c.getMinimumPoint().getBlockX(); x < c.getMaximumPoint().getBlockX(); x++) {
-                        for (int y = c.getMinimumPoint().getBlockY(); y < c.getMaximumPoint().getBlockY(); y++) {
-                            for (int z = c.getMinimumPoint().getBlockZ(); z < c.getMaximumPoint().getBlockZ(); z++) {
-                                Block realBlock = getArenaWorld().getBlockAt(x, y, z);
-                                BaseBlock clipBlock = c.getBlock(new Vector(x, y, z));
-                                if (realBlock.getTypeId() != clipBlock.getType()) {
-                                    realBlock.setTypeId(clipBlock.getType());
-                                    realBlock.setData((byte) clipBlock.getData());
-                                    blocksToChange.add(realBlock);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Iterator<Block> replaceBlocks = blocksToChange.iterator();
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (replaceBlocks.hasNext()) {
-                            Block oldBlock = replaceBlocks.next();
-                            Block replace = getArenaWorld().getBlockAt(oldBlock.getLocation());
-                            replace.setType(oldBlock.getType());
-                            replace.setData(oldBlock.getData());
-                            Bukkit.broadcastMessage(oldBlock.getType().name());
-                        } else {
-                            Bukkit.broadcastMessage("done");
-                            setState(MapState.READY);
-                            getBlocksToReplace().clear();
-                            this.cancel();
-                        }
-                    }
-                }.runTaskTimer(Practice.getInstance(), 1L, 1L);*/
-
-                setState(MapState.CLEANING);
-                ClipboardFormat.SCHEMATIC.load(schem).paste(new BukkitWorld(getArenaWorld()), new Vector(pastePoint.getX(), pastePoint.getY(), pastePoint.getZ()),
-                        false, true, null).setFastMode(true);
-                setState(MapState.READY);
-                //Bukkit.broadcastMessage("ye ye");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /*@SuppressWarnings("deprecation")
     public void clean() {
         setState(MapState.CLEANING);
 
-        Bukkit.broadcastMessage(getBlocksToReplace().size() + "");
-
-        //EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(getArenaWorld()), 238479835);
-
-
-        Iterator<BlockState> replaceBlocks = getBlocksToReplace().iterator();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (replaceBlocks.hasNext()) {
-                    BlockState oldBlock = replaceBlocks.next();
-                    Block replace = getArenaWorld().getBlockAt(oldBlock.getLocation());
-                    replace.setType(oldBlock.getType());
-                    replace.setData(oldBlock.getRawData());
-                    Bukkit.broadcastMessage(oldBlock.getType().name());
-                    *//*Vector oldBlockPos = new Vector(oldBlock.getX(), oldBlock.getY(), oldBlock.getZ());
-                    if (replace.getType().name().contains("WATER") || replace.getType().name().contains("LAVA")) {
-                        session.drainArea(oldBlockPos, 9);
-                        Bukkit.broadcastMessage("drained");
-                    }*//*
-                } else {
-                    Bukkit.broadcastMessage("done");
-                    setState(MapState.READY);
-                    getBlocksToReplace().clear();
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(Practice.getInstance(), 1L, 1L);
-    }*/
+        new MapCleanRunnable(this).runTaskTimer(Practice.getInstance(), 1L, 1L);
+    }
 }

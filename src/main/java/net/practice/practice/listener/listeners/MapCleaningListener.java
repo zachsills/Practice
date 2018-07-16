@@ -4,6 +4,7 @@ import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.player.Profile;
+import net.practice.practice.task.MapCleanRunnable;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -15,7 +16,6 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MapCleaningListener implements Listener {
 
@@ -49,7 +49,7 @@ public class MapCleaningListener implements Listener {
         }
     }
 
-    /*@EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         if (event.isCancelled()) return;
 
@@ -60,12 +60,11 @@ public class MapCleaningListener implements Listener {
             if (duel.getState() == DuelState.PLAYING && duel.getMap() != null) {
                 MapLoc mapLoc = duel.getMap();
                 mapLoc.addChangedBlock(event.getBlockClicked().getRelative(event.getBlockFace()).getState());
-                //mapLoc.getBlocksToReplace().add(event.getBlockClicked().getRelative(event.getBlockFace()));
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBucketFill(PlayerBucketFillEvent event) {
         if (event.isCancelled()) return;
 
@@ -76,38 +75,35 @@ public class MapCleaningListener implements Listener {
             if (duel.getState() == DuelState.PLAYING && duel.getMap() != null) {
                 MapLoc mapLoc = duel.getMap();
                 mapLoc.addChangedBlock(event.getBlockClicked().getState());
-                //mapLoc.getBlocksToReplace().add(event.getBlockClicked());
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockFromTo(BlockFromToEvent event) {
         if (event.isCancelled()) return;
 
         Block from = event.getBlock();
         Block to = event.getToBlock();
-        for (Profile profile : Profile.getProfiles().values()) {
-            if (profile.getCurrentDuel() != null && profile.getCurrentDuel().getState() == DuelState.PLAYING && profile.getCurrentDuel().getMap() != null) {
-                MapLoc mapLoc = profile.getCurrentDuel().getMap();
-                for (BlockState blockState : mapLoc.getChangedBlocks()) {
-                    if (blockState.getLocation().equals(from.getState().getLocation())) { // If the blocksToReplace contains the from block which is liquid (so the player placed it)
-                        //mapLoc.getBlocksToReplace().add(to.getState()); // Then add that to block to the blocks to replace for that player
-                        //Bukkit.broadcastMessage(to.getType().name() + " " + to.getLocation());
-                        BlockState xd = to.getState();
-                        xd.setType(Material.AIR);
-                        mapLoc.getChangedBlocks().add(xd);
-                        break;
+        if (to.getType() != Material.WATER && to.getType() != Material.STATIONARY_WATER && to.getType() != Material.LAVA && to.getType() != Material.STATIONARY_LAVA) {
+            for (Profile profile : Profile.getProfiles().values()) {
+                if (profile.getCurrentDuel() != null && profile.getCurrentDuel().getState() == DuelState.PLAYING && profile.getCurrentDuel().getMap() != null) {
+                    MapLoc mapLoc = profile.getCurrentDuel().getMap();
+                    for (BlockState blockState : mapLoc.getChangedBlocks()) {
+                        if (blockState.getLocation().equals(from.getState().getLocation())) { // If the blocksToReplace contains the from block which is liquid (so the player placed it)
+                            mapLoc.getChangedBlocks().add(to.getState()); // Then add that to block to the changed blocks for that mapLoc
+                            break;
+                        }
+                    }
+                }
+                for (MapCleanRunnable runnables : MapCleanRunnable.getRunning()) {
+                    for (BlockState blockState : runnables.getMapLoc().getChangedBlocks()) {
+                        if (blockState.getLocation().equals(from.getState().getLocation())) {
+                            event.setCancelled(true); // This is to prevent liquid from flowing while cleaning, which messes up the cleaning process.
+                        }
                     }
                 }
             }
         }
-
-        *//*new BukkitRunnable() { // Runnable is cus otherwise when cobble/obsidian generates it will just say AIR
-            @Override
-            public void run() {
-
-            }
-        }.runTaskLater(Practice.getInstance(), 2L);*//*
-    }*/
+    }
 }
