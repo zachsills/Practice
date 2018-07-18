@@ -19,7 +19,7 @@ public class MapCreateTask extends BukkitRunnable {
     @Override
     public void run() {
         if (MapLoc.getGeneratedMaps().size() < maps) {
-            new MapLoc();
+            new MapLoc().generate();
 
             if (MapLoc.getGeneratedMaps().size() % 5 == 0) {
                 for (Player player : Bukkit.getOnlinePlayers()) {

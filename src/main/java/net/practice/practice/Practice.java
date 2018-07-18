@@ -71,7 +71,7 @@ public class Practice extends JavaPlugin {
 
         /* Tasks */
         new QueueRunnable().runTaskTimer(this, 20L, 20L);
-        new CleanerTask().runTaskTimerAsynchronously(this, 20L, 15L * 20L);
+        new CleanerTask().runTaskTimerAsynchronously(this, 20L, 5L * 20L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 30L);
     }
 

@@ -224,9 +224,17 @@ public class DuelListener implements Listener {
     public void spleefEvent(BlockBreakEvent event) {
         Profile profile = Profile.getByPlayer(event.getPlayer());
         if (profile != null && profile.isInGame() && profile.getCurrentDuel().getState().equals(DuelState.PLAYING)) {
-            if (profile.getCurrentDuel().getLadder().isSpleef()) {
+            if (profile.getCurrentDuel() != null && profile.getCurrentDuel().getLadder().isSpleef()) {
                 if (event.getBlock().getType().name().contains("SNOW")) {
                     event.setCancelled(true);
+
+                    // This is required because it cancels the event.
+                    Duel duel = profile.getCurrentDuel();
+                    if (duel.getState() == DuelState.PLAYING && duel.getMap() != null) {
+                        MapLoc mapLoc = duel.getMap();
+                        mapLoc.addChangedBlock(event.getBlock().getState());
+                    }
+
                     event.getBlock().setType(Material.AIR);
                     event.getPlayer().getInventory().addItem(new I(Material.SNOW_BALL).amount(1));
                 }

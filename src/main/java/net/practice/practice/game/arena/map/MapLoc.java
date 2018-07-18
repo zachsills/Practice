@@ -13,10 +13,8 @@ import net.practice.practice.task.MapCleanRunnable;
 import net.practice.practice.util.CustomLoc;
 import org.bukkit.*;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +42,9 @@ public class MapLoc {
         } else if (arenaWorld == null) {
             setArenaWorld(Bukkit.getWorld("arenas1"));
         }
+    }
 
+    public void generate() {
         Vector point = getNextPoint();
         pasteAndSet(point);
 
@@ -54,14 +54,11 @@ public class MapLoc {
     }
 
     public MapLoc(Location spawnOne, Location spawnTwo, Arena arena, Location pastePoint) {
-
         if (Bukkit.getWorld("arenas1") == null) {
             loadWorld();
         } else if (arenaWorld == null) {
             setArenaWorld(Bukkit.getWorld("arenas1"));
         }
-
-        //getNextPoint(); // Increment the points in case we decide to generate more maps while saved maps are loaded.
 
         this.spawnOne = CustomLoc.fromBukkit(spawnOne, getArenaWorld());
         this.spawnTwo = CustomLoc.fromBukkit(spawnTwo, getArenaWorld());
@@ -223,6 +220,16 @@ public class MapLoc {
             }
         }
         getChangedBlocks().add(blockState);
+        Bukkit.broadcastMessage(blockState.getType() + "");
+    }
+
+    public boolean containsBlock(BlockState otherState) {
+        for (BlockState state : getChangedBlocks()) {
+            if (state.getLocation().equals(otherState.getLocation())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 //    @SuppressWarnings("deprecation")

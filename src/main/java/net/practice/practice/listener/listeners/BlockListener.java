@@ -60,6 +60,10 @@ public class BlockListener implements Listener {
                         event.setCancelled(profile.getCurrentDuel().getState() != DuelState.PLAYING);
                         break;
                     }
+                    if(profile.getCurrentDuel().getLadder().isBuildable() && profile.getCurrentDuel().getMap().containsBlock(event.getBlock().getState())) {
+                        event.setCancelled(profile.getCurrentDuel().getState() != DuelState.PLAYING);
+                        break;
+                    }
                 }
             }
             default:

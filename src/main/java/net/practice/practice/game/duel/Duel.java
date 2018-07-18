@@ -68,12 +68,18 @@ public abstract class Duel {
         getMap().setState(MapState.INGAME);
 
         List<Player> duelers = new ArrayList<>(getPlayers());
-        for(Player dueler : duelers) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
-                if(!getPlayers().contains(player)) {
-                    dueler.hidePlayer(player);
-                    player.hidePlayer(dueler);
-                }
+        for (Player nonDueler : Bukkit.getOnlinePlayers()) {
+            if (duelers.contains(nonDueler)) continue;
+            for (Player dueler : duelers) {
+                dueler.hidePlayer(nonDueler);
+                nonDueler.hidePlayer(dueler);
+            }
+        }
+        for (Player dueler : duelers) {
+            for (Player otherDueler : duelers) {
+                if (dueler.getUniqueId().equals(otherDueler.getUniqueId())) continue;
+                dueler.showPlayer(otherDueler);
+                otherDueler.showPlayer(dueler);
             }
         }
 
