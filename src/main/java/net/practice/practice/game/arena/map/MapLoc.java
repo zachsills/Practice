@@ -220,7 +220,6 @@ public class MapLoc {
             }
         }
         getChangedBlocks().add(blockState);
-        Bukkit.broadcastMessage(blockState.getType() + "");
     }
 
     public boolean containsBlock(BlockState otherState) {
