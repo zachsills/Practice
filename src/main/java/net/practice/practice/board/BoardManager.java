@@ -60,11 +60,9 @@ public class BoardManager implements Listener {
         scoreboards.values().forEach(Board::send);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOW)
     public void onJoin(final PlayerJoinEvent e) {
-        RunnableShorthand.runNextTick(() -> {
-            this.setup(e.getPlayer());
-        });
+        this.setup(e.getPlayer());
     }
 
     @EventHandler

@@ -1,5 +1,7 @@
 package net.practice.practice;
 
+import com.bizarrealex.azazel.Azazel;
+import com.bizarrealex.azazel.tab.example.ExampleTabAdapter;
 import lombok.Getter;
 import net.practice.practice.board.BoardManager;
 import net.practice.practice.board.provider.ProviderResolver;
@@ -73,6 +75,8 @@ public class Practice extends JavaPlugin {
         new QueueRunnable().runTaskTimer(this, 20L, 20L);
         new CleanerTask().runTaskTimerAsynchronously(this, 20L, 5L * 20L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 30L);
+
+        new Azazel(this, new ExampleTabAdapter());
     }
 
     @Override
