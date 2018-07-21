@@ -16,6 +16,7 @@ import net.practice.practice.game.queue.QueueRunnable;
 import net.practice.practice.listener.ListenerHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.storage.MongoBackend;
+import net.practice.practice.tab.PracticeTabAdapter;
 import net.practice.practice.task.CleanerTask;
 import net.practice.practice.task.UpdateInventoryTask;
 import net.practice.practice.util.LocUtils;
@@ -34,7 +35,6 @@ public class Practice extends JavaPlugin {
 
     @Getter private BoardManager boardManager;
     @Getter private ArenaManager arenaManager;
-    @Getter private net.practice.practice.game.arena.ArenaManager testArenaManager;
     @Getter private LadderManager ladderManager;
     @Getter private MapManager mapManager;
 
@@ -59,7 +59,6 @@ public class Practice extends JavaPlugin {
         boardManager.setupAll();
         //getServer().getPluginManager().registerEvents(boardManager, this);
         arenaManager = new ArenaManager();
-        testArenaManager = new net.practice.practice.game.arena.ArenaManager();
         ladderManager = new LadderManager();
         mapManager = new MapManager();
 
@@ -76,7 +75,7 @@ public class Practice extends JavaPlugin {
         new CleanerTask().runTaskTimerAsynchronously(this, 20L, 5L * 20L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 30L);
 
-        new Azazel(this, new ExampleTabAdapter());
+        new Azazel(this, new PracticeTabAdapter());
     }
 
     @Override

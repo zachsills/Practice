@@ -43,7 +43,7 @@ public class ArenaCommand {
 
         Arena arena = Arena.getArena(args.getArgs(0));
         if (arena != null) {
-            Practice.getInstance().getTestArenaManager().removeArena(arena);
+            Practice.getInstance().getArenaManager().removeArena(arena);
             args.getPlayer().sendMessage(C.color("&eRemoved arena " + arena.getDisplayName() + "&e."));
         } else {
             args.getPlayer().sendMessage(C.color("&cThat arena doesn't exist! Create it with /arena create"));

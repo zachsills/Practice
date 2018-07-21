@@ -2,7 +2,6 @@ package net.practice.practice.board;
 
 import lombok.Getter;
 import net.practice.practice.Practice;
-import net.practice.practice.util.RunnableShorthand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,7 +26,7 @@ public class BoardManager implements Listener {
 
     public BoardManager(BoardProvider provider) {
         this.scoreboards = new HashMap<>();
-        this.updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateAll, 2, 2);
+        this.updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateAll, 2L, 2L);
 
         this.provider = provider;
 
@@ -62,7 +61,7 @@ public class BoardManager implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onJoin(final PlayerJoinEvent e) {
-        this.setup(e.getPlayer());
+        setup(e.getPlayer());
     }
 
     @EventHandler
