@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
+import java.util.Iterator;
 
 public class PracticeTabAdapter implements TabAdapter {
 
@@ -42,7 +43,7 @@ public class PracticeTabAdapter implements TabAdapter {
         String highlightC = "&6", infoC = "&f";
 
         Profile profile = Profile.getByPlayer(player);
-        if (profile.getState() == ProfileState.LOBBY) {
+        if (profile.getState() == ProfileState.LOBBY || profile.getState() == ProfileState.EDITING) {
 
             int online = Bukkit.getOnlinePlayers().size();
             long inGame = Profile.getTotalInGame();
@@ -134,7 +135,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.right(3, "&c" + opponent.getName());
                     } else {
                         double accuracy;
-                        if (duel.getThrownPots().getOrDefault(player, 0) == 0) {
+                        if (duel.getThrownPots().getOrDefault(player, 0) == 0 || duel.getMissedPots().getOrDefault(player, 0) == 0) {
                             accuracy = 100;
                         } else {
                             accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player))
@@ -149,7 +150,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.middle(5, highlightC + "Duration:");
                         template.middle(6, infoC + duration);
                         template.middle(8, highlightC + "Thrown | Missed:");
-                        template.middle(9, infoC + duel.getThrownPots().get(player) + " | " + duel.getMissedPots().get(player));
+                        template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
                         template.middle(11, highlightC + "Pot Accuracy:");
                         template.middle(12, infoC + decimalFormat.format(accuracy) + "%");
 
@@ -158,6 +159,23 @@ public class PracticeTabAdapter implements TabAdapter {
                     }
                 }
             }
+        } else if (profile.getState() == ProfileState.SPECTATING) {
+            Duel duel = profile.getSpectating();
+            String ladder = duel.getLadder().getDisplayName();
+            String duration = TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime());
+            template.right(2, highlightC + "Players:");
+            Iterator<Player> players = duel.getPlayers().iterator();
+            for (int i = 3; i < 19; i++) {
+                if (players.hasNext()) {
+                    template.right(i, players.next().getName());
+                } else {
+                    break;
+                }
+            }
+            template.middle(2, highlightC + "Ladder:");
+            template.middle(3, infoC + ladder);
+            template.middle(5, highlightC + "Duration:");
+            template.middle(6, infoC + duration);
         }
 
         // Footer
