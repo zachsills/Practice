@@ -80,7 +80,7 @@ public class DuelListener implements Listener {
 
         boolean missed = event.getIntensity(player) < .5;
         if(missed) {
-            int missedPots = profile.getCurrentDuel().getMissedPots().containsKey(player) ? profile.getCurrentDuel().getMissedPots().get(player) : 0;
+            int missedPots = profile.getCurrentDuel().getMissedPots().getOrDefault(player, 0);
             profile.getCurrentDuel().getMissedPots().put(player, missedPots + 1);
         }
     }
@@ -135,7 +135,7 @@ public class DuelListener implements Listener {
             return;
 
         if(item.getDurability() == 16421) {
-            int thrownPots = profile.getCurrentDuel().getThrownPots().containsKey(player) ? profile.getCurrentDuel().getThrownPots().get(player) : 0;
+            int thrownPots = profile.getCurrentDuel().getThrownPots().getOrDefault(player, 0);
             profile.getCurrentDuel().getThrownPots().put(player, thrownPots + 1);
         }
     }
