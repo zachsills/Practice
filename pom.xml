@@ -103,6 +103,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--NubCore-->
+        <dependency>
+            <groupId>land.nub.core</groupId>
+            <artifactId>Core</artifactId>
+            <version>1.0.0-DEV</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!--Mongo-->
         <dependency>
             <groupId>org.mongodb</groupId>

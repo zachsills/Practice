@@ -57,10 +57,11 @@ public class PracticeTabAdapter implements TabAdapter {
             template.left(8, highlightC + "In Queue:");
             template.left(9, infoC + inQueue);
 
+            land.nub.core.player.Profile coreProfile = land.nub.core.player.Profile.getByPlayer(player);
             template.middle(2, highlightC + "Player:");
             template.middle(3, infoC + player.getName());
             template.middle(5, highlightC + "Rank:");
-            template.middle(6, infoC + "ur rank xd");
+            template.middle(6, infoC + coreProfile.getRank().getPrefix() + coreProfile.getRank().getName());
             template.middle(8, highlightC + "Ping:");
             template.middle(9, infoC + ping + "ms");
 
@@ -85,10 +86,11 @@ public class PracticeTabAdapter implements TabAdapter {
             template.left(8, highlightC + "In Queue:");
             template.left(9, infoC + inQueue);
 
+            land.nub.core.player.Profile coreProfile = land.nub.core.player.Profile.getByPlayer(player);
             template.middle(2, highlightC + "Player:");
             template.middle(3, infoC + player.getName());
             template.middle(5, highlightC + "Rank:");
-            template.middle(6, infoC + "ur rank xd");
+            template.middle(6, infoC + coreProfile.getRank().getPrefix() + coreProfile.getRank().getName());
             template.middle(8, highlightC + "Ping:");
             template.middle(9, infoC + ping + "ms");
 
