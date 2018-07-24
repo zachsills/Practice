@@ -41,18 +41,17 @@ public class DuelListener implements Listener {
             return;
 
         Duel duel = profile.getCurrentDuel();
-        if(duel.getState() != DuelState.STARTING && duel.getState() != DuelState.PLAYING)
-            return;
-
-        //Location deathLoc = event.getEntity().getLocation();
         event.getDrops().clear();
         event.setDroppedExp(0);
         event.setDeathMessage(null);
 
         duel.saveInventory(profile.getUuid());
-        duel.kill(event.getEntity());
-
         profile.handleDeath();
+
+        if(duel.getState() != DuelState.STARTING && duel.getState() != DuelState.PLAYING)
+            return;
+
+        duel.kill(event.getEntity());
 
         /*new BukkitRunnable() {
             @Override
@@ -73,6 +72,8 @@ public class DuelListener implements Listener {
         Player player = (Player) event.getEntity().getShooter();
         Profile profile = Profile.getByPlayer(player);
         if(!profile.isInGame())
+            return;
+        if(profile.getCurrentDuel().getState() != DuelState.PLAYING)
             return;
 
         if(event.getEntity().getEffects().stream().noneMatch(potionEffect -> potionEffect.getType().equals(PotionEffectType.HEAL)))

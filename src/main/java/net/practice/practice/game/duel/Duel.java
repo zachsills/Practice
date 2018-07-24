@@ -226,6 +226,8 @@ public abstract class Duel {
         sendMessage("&6" + player.getName() + "&e has quit.");
     }
 
+    public abstract boolean canHit(Player playerOne, Player playerTwo);
+
     public abstract Collection<Player> getPlayers();
 
     public abstract boolean hasPlayer(Player player);

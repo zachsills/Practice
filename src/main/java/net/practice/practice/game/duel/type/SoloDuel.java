@@ -161,6 +161,11 @@ public class SoloDuel extends Duel {
     }
 
     @Override
+    public boolean canHit(Player playerOne, Player playerTwo) {
+        return true;
+    }
+
+    @Override
     public boolean hasPlayer(Player player) {
         return player.getUniqueId().toString().equals(getPlayerOne().getUniqueId().toString()) || player.getUniqueId().toString().equals(getPlayerTwo().getUniqueId().toString());
     }

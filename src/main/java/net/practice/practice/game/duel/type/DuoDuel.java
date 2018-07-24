@@ -154,6 +154,13 @@ public class DuoDuel extends Duel {
     }
 
     @Override
+    public boolean canHit(Player playerOne, Player playerTwo) {
+        List<Player> duo = getDuo(playerOne);
+
+        return !duo.contains(playerTwo);
+    }
+
+    @Override
     public Collection<Player> getPlayers() {
         return Stream.concat(duoOne.stream(), duoTwo.stream())
                 .filter(Objects::nonNull)

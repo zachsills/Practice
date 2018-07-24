@@ -24,7 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -155,6 +154,11 @@ public class PlayerListener implements Listener {
                     if(!duel.hasPlayer(other))
                         event.setCancelled(true);
                     else {
+                        if(!duel.canHit(player, other)) {
+                            event.setCancelled(true);
+                            return;
+                        }
+
                         Profile otherProfile = Profile.getByPlayer(other);
                         otherProfile.setLongestCombo(otherProfile.getLongestCombo() + 1);
 

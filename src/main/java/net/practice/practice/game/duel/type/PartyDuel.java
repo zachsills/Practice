@@ -59,6 +59,13 @@ public class PartyDuel extends Duel {
     }
 
     @Override
+    public boolean canHit(Player playerOne, Player playerTwo) {
+        Party party = getParty(playerOne);
+
+        return !party.contains(playerTwo);
+    }
+
+    @Override
     public void sendMessage(String message) {
         super.sendMessage(message);
 
@@ -90,5 +97,9 @@ public class PartyDuel extends Duel {
         partyTwo.getPlayers().stream()
                 .filter(player -> !hasSnapshot(player))
                 .forEach(this::saveInventory);
+    }
+
+    public Party getParty(Player player) {
+        return partyOne.contains(player) ? partyOne : partyTwo;
     }
 }
