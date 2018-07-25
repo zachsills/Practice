@@ -3,6 +3,7 @@ package net.practice.practice.game.party;
 import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.duel.Duel;
+import net.practice.practice.game.duel.PartyDuelRequest;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.spawn.PartyHandler;
 import net.practice.practice.util.chat.C;
@@ -17,7 +18,7 @@ public class Party {
 
     @Getter private List<Player> players, invites;
 
-    @Getter private Map<Party, Long> requests;
+    @Getter private Map<Party, PartyDuelRequest> requests;
 
     @Getter @Setter private Duel currentDuel;
     @Getter @Setter private PartyState state;
@@ -38,6 +39,7 @@ public class Party {
     }
 
     public void sendMessage(String message) {
+        Bukkit.getPlayer(leader).sendMessage(C.color(message));
         players.forEach(player -> player.sendMessage(C.color(message)));
     }
 

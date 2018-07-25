@@ -1,6 +1,8 @@
 package net.practice.practice.task;
 
 import net.practice.practice.game.duel.DuelRequest;
+import net.practice.practice.game.duel.PartyDuelRequest;
+import net.practice.practice.game.duel.type.PartyDuel;
 import net.practice.practice.game.party.Party;
 import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.player.Profile;
@@ -28,22 +30,22 @@ public class CleanerTask extends BukkitRunnable {
                     continue;
                 }
 
-                if(request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - request.getRequestedTime()) >= (1000 * 60))
+                if(request.getRequestedTime() != 0L && Math.abs(System.currentTimeMillis() - request.getRequestedTime()) >= (1000 * 10))
                     requests.remove();
             }
         }
 
         for(Party party : PartyManager.getParties().values()) {
-            Iterator<Map.Entry<Party, Long>> requests = party.getRequests().entrySet().iterator();
+            Iterator<Map.Entry<Party, PartyDuelRequest>> requests = party.getRequests().entrySet().iterator();
             while(requests.hasNext()) {
-                Map.Entry<Party, Long> entry = requests.next();
+                Map.Entry<Party, PartyDuelRequest> entry = requests.next();
                 Party next = entry.getKey();
                 if(next.getPlayers().size() == 0) {
                     requests.remove();
                     return;
                 }
 
-                if(Math.abs(System.currentTimeMillis() - entry.getValue()) >= TimeUnit.SECONDS.toMillis(90))
+                if(Math.abs(System.currentTimeMillis() - entry.getValue().getRequestedTime()) >= (1000 * 90))
                     requests.remove();
             }
         }

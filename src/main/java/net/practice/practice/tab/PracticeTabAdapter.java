@@ -10,11 +10,16 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.util.PlayerUtils;
 import net.practice.practice.util.TimeUtils;
+import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PracticeTabAdapter implements TabAdapter {
 
@@ -73,7 +78,6 @@ public class PracticeTabAdapter implements TabAdapter {
             template.right(9, infoC + "donate.nub.land");
 
         } else if (profile.getState() == ProfileState.QUEUING) {
-
             int online = Bukkit.getOnlinePlayers().size();
             long inGame = Profile.getTotalInGame();
             long inQueue = Profile.getTotalQueueing();
@@ -104,6 +108,49 @@ public class PracticeTabAdapter implements TabAdapter {
             String ladder = profile.getCurrentQueue().getLadder().getDisplayName();
             int inLadderQueue = profile.getCurrentQueue().getSize();
             int position = profile.getCurrentQueue().getQueued().indexOf(player.getUniqueId()) + 1;
+
+            // Left
+            template.left(11, highlightC + "Ladder:");
+            template.left(12, infoC + ladder);
+
+            // Middle
+            template.middle(11, highlightC + "In Queue:");
+            template.middle(12, infoC + inLadderQueue);
+
+            // Right
+            template.right(11, highlightC + "Position:");
+            template.right(12, infoC + position);
+        } else if (profile.isInParty() && profile.getParty().getCurrentQueue() != null) {
+            int online = Bukkit.getOnlinePlayers().size();
+            long inGame = Profile.getTotalInGame();
+            long inQueue = Profile.getTotalQueueing();
+            int ping = PlayerUtils.getPing(player);
+
+            template.left(2, highlightC + "Online:");
+            template.left(3, infoC + online);
+            template.left(5, highlightC + "In Game:");
+            template.left(6, infoC + inGame);
+            template.left(8, highlightC + "In Queue:");
+            template.left(9, infoC + inQueue);
+
+            land.nub.core.player.Profile coreProfile = land.nub.core.player.Profile.getByPlayer(player);
+            template.middle(2, highlightC + "Player:");
+            template.middle(3, infoC + player.getName());
+            template.middle(5, highlightC + "Rank:");
+            template.middle(6, infoC + coreProfile.getRank().getPrefix() + coreProfile.getRank().getName());
+            template.middle(8, highlightC + "Ping:");
+            template.middle(9, infoC + ping + "ms");
+
+            template.right(2, highlightC + "IP:");
+            template.right(3, infoC + "nub.land");
+            template.right(5, highlightC + "Website:");
+            template.right(6, infoC + "www.nub.land");
+            template.right(8, highlightC + "Donate:");
+            template.right(9, infoC + "donate.nub.land");
+
+            String ladder = profile.getParty().getCurrentQueue().getLadder().getDisplayName();
+            int inLadderQueue = profile.getParty().getCurrentQueue().getSize();
+            int position = profile.getParty().getCurrentQueue().getQueued().indexOf(player.getUniqueId()) + 1;
 
             // Left
             template.left(11, highlightC + "Ladder:");
@@ -151,13 +198,55 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.middle(3, infoC + ladder);
                         template.middle(5, highlightC + "Duration:");
                         template.middle(6, infoC + duration);
-                        template.middle(8, highlightC + "Thrown | Missed:");
-                        template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
-                        template.middle(11, highlightC + "Pot Accuracy:");
-                        template.middle(12, infoC + decimalFormat.format(accuracy) + "%");
+                        if (player.getInventory().contains(Material.POTION)) {
+                            template.middle(8, highlightC + "Thrown | Missed:");
+                            template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
+                            template.middle(11, highlightC + "Pot Accuracy:");
+                            template.middle(12, infoC + decimalFormat.format(accuracy) + "%");
+                        }
 
                         template.right(2, highlightC + "Opponent:");
                         template.right(3, "&c" + opponent.getName());
+                    }
+                } else {
+                    if (duel.getState() == DuelState.STARTING) {
+                        template.left(2, highlightC + "You:");
+                        template.left(3, "&a" + player.getName());
+
+                        template.middle(2, highlightC + "Starting:");
+                        template.middle(3, infoC + duel.getCountDown());
+                    } else {
+                        double accuracy;
+                        if (duel.getThrownPots().getOrDefault(player, 0) == 0 || duel.getMissedPots().getOrDefault(player, 0) == 0) {
+                            accuracy = 100;
+                        } else {
+                            accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player))
+                                    / (double) duel.getThrownPots().get(player)) * 100.0;
+                        }
+
+                        template.left(2, highlightC + "You:");
+                        template.left(3, "&a" + player.getName());
+
+                        template.middle(2, highlightC + "Ladder:");
+                        template.middle(3, infoC + ladder);
+                        template.middle(5, highlightC + "Duration:");
+                        template.middle(6, infoC + duration);
+                        if (player.getInventory().contains(Material.POTION)) {
+                            template.middle(8, highlightC + "Thrown | Missed:");
+                            template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
+                            template.middle(11, highlightC + "Pot Accuracy:");
+                            template.middle(12, infoC + decimalFormat.format(accuracy) + "%");
+                        }
+
+                        template.right(2, highlightC + "Players:");
+                        Iterator<Player> players = duel.getPlayers().iterator();
+                        for (int i = 3; i < 19; i++) {
+                            if (players.hasNext()) {
+                                template.right(i, C.color("&c" + players.next().getName()));
+                            } else {
+                                break;
+                            }
+                        }
                     }
                 }
             }

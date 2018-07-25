@@ -69,10 +69,10 @@ public class DuoDuel extends Duel {
     public void end(DuelEndReason reason) {
         super.end(reason);
 
-        Party actualWinner = PartyManager.getByUuid(winner);
+        Party actualWinners = PartyManager.getByUuid(winner);
 
         sendMessage("&f&m---------------------------------");
-        sendMessage("&6Winning Party: &e" + actualWinner.getLeaderName());
+        sendMessage("&6Winning Party: &e" + actualWinners.getLeaderName());
 
 //        if(ranked) {
 //            winnerProfile.setRankedWins(winnerProfile.getRankedWins() + 1);
@@ -91,7 +91,7 @@ public class DuoDuel extends Duel {
         JsonMessage message = new JsonMessage().append(ChatColor.GOLD + "Inventories " + ChatColor.GRAY + "(Click to view) ").save();
 
         for(InventorySnapshot snapshot : getSnapshots()) {
-            if(actualWinner.contains(Bukkit.getPlayer(snapshot.getName()))) {
+            if(actualWinners.contains(Bukkit.getPlayer(snapshot.getName()))) {
                 message.append(ChatColor.GREEN + snapshot.getName()).setClickAsExecuteCmd("/_ " + snapshot.getName()).setHoverAsTooltip(ChatColor.GREEN + snapshot.getName() + "'s Inventory").save();
                 if(duoOne.get(0).getName().equals(snapshot.getName()))
                     message.append(" &7or ").save();
@@ -104,11 +104,8 @@ public class DuoDuel extends Duel {
             }
         }
 
-        message.send(Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer)).collect(Collectors.toList()).toArray(new Player[] {}));
-
-        String spectatorMessage = getSpectatorMessage();
-        if(spectatorMessage != null)
-            sendMessage(spectatorMessage);
+        message.send(getPlayers().toArray(new Player[getPlayers().size()]));
+        //message.send(Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer)).collect(Collectors.toList()).toArray(new Player[] {}));
 
         sendMessage("&f&m---------------------------------");
 
@@ -136,6 +133,9 @@ public class DuoDuel extends Duel {
         saveInventory(player.getUniqueId());
         dead.add(player);
         alive.remove(player);
+
+        Profile profile = Profile.getByPlayer(player);
+        profile.setSpectating(this, false);
 
         if(hasWinner())
             end(DuelEndReason.DIED);
@@ -169,7 +169,7 @@ public class DuoDuel extends Duel {
 
     @Override
     public void sendMessage(String message) {
-        super.sendMessage(message);
+        //super.sendMessage(message);
 
         duoOne.forEach(player -> player.sendMessage(C.color(message)));
         duoTwo.forEach(player -> player.sendMessage(C.color(message)));

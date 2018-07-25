@@ -174,6 +174,10 @@ public class Profile {
     }
 
     public void setSpectating(Duel spectating) {
+        setSpectating(spectating, true);
+    }
+
+    public void setSpectating(Duel spectating, boolean sendMsg) {
         if(spectating == null) {
             if(this.spectating != null)
                 this.spectating.getSpectators().remove(this);
@@ -187,8 +191,11 @@ public class Profile {
 
         InvUtils.clear(getPlayer());
 
-        setState(ProfileState.SPECTATING);
+        getPlayer().setGameMode(GameMode.CREATIVE);
+        getPlayer().setAllowFlight(true);
+        getPlayer().setFlying(true);
 
+        setState(ProfileState.SPECTATING);
         spectating.getSpectators().add(this);
 
         for (Player player : spectating.getPlayers()) {
@@ -201,7 +208,8 @@ public class Profile {
         inventory.setItem(1, ItemStorage.SPECTATOR_INFO);
         inventory.setItem(8, ItemStorage.SPECTATOR_LEAVE);
 
-        spectating.sendMessage("&b" + getName() + " &eis now spectating.");
+        if (sendMsg)
+            spectating.sendMessage("&b" + getName() + " &eis now spectating.");
     }
 
     public void cleanupRecent() {

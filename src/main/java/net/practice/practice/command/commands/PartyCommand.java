@@ -28,8 +28,8 @@ public class PartyCommand {
             return;
         }
 
-        Player player = Bukkit.getPlayer(args.getArgs(0));
-        if(player == null) {
+        Player target = Bukkit.getPlayer(args.getArgs(0));
+        if(target == null) {
             args.getPlayer().sendMessage(C.color("&cThe player '" + args.getArgs(0) + "' is not online."));
             return;
         }
@@ -40,30 +40,30 @@ public class PartyCommand {
             return;
         }
 
-        Party party = profile.getParty();
+        Party profileParty = profile.getParty();
 //        if(party.getSize() > LIMITE) {
 //
 //            return;
 //        }
-        if(!party.getLeader().equals(profile.getUuid())) {
+        if(!profileParty.getLeader().equals(profile.getUuid())) {
             profile.sendMessage("&cYou must be the party leader to invite players.");
             return;
         }
 
-        if(party.getInvites().contains(player)) {
+        if(profileParty.getInvites().contains(target)) {
             profile.sendMessage("&cYou have already invited this player to your party.");
             return;
         }
 
-        party.getInvites().add(player);
-        profile.sendMessage("&aYou have invited " + player.getName() + " to the party.");
+        profileParty.getInvites().add(target);
+        profile.sendMessage("&aYou have invited " + target.getName() + " to the party.");
 
         new JsonMessage()
-                .append(C.color("&eYou have been invited to " + party.getLeaderName() + "'s party. ")).save()
-                .append(C.color("&a[Accept]")).setHoverAsTooltip(C.color("&7Click to join the party.")).setClickAsExecuteCmd("/party join " + party.getLeaderName()).save()
+                .append(C.color("&eYou have been invited to " + profileParty.getLeaderName() + "'s party. ")).save()
+                .append(C.color("&a[Accept]")).setHoverAsTooltip(C.color("&7Click to join the party.")).setClickAsExecuteCmd("/party join " + profileParty.getLeaderName()).save()
                 .append(" ").save()
-                .append(C.color("&b[Info]")).setHoverAsTooltip(C.color("&7View info about this party.")).setClickAsExecuteCmd("/party info " + party.getLeaderName()).save()
-                .send(player);
+                .append(C.color("&b[Info]")).setHoverAsTooltip(C.color("&7View info about this party.")).setClickAsExecuteCmd("/party info " + profileParty.getLeaderName()).save()
+                .send(target);
     }
 
     @Command(name = "party.uninvite", aliases = { "p.uninvite" }, playerOnly = true, description = "Party commands.")
@@ -112,39 +112,35 @@ public class PartyCommand {
             return;
         }
 
-        Player player = Bukkit.getPlayer(args.getArgs(0));
-        if(player == null) {
+        Player target = Bukkit.getPlayer(args.getArgs(0));
+        if(target == null) {
             args.getPlayer().sendMessage(C.color("&cThe player '" + args.getArgs(0) + "' is not online."));
             return;
         }
 
-        Profile other = Profile.getByPlayer(args.getPlayer());
-        if(other.isInParty()) {
-            other.sendMessage("&cYou must leave your current party first.");
+        Profile personJoining = Profile.getByPlayer(args.getPlayer());
+        Profile requester = Profile.getByPlayer(target);
+
+        if(!requester.isInParty()) {
+            personJoining.sendMessage("&cThis player is not in a party.");
             return;
         }
 
-        Profile profile = Profile.getByPlayer(player);
-        if(!profile.isInParty()) {
-            profile.sendMessage("&cThis player is not in a party.");
+        if(!requester.getParty().getInvites().contains(args.getPlayer())) {
+            personJoining.sendMessage("&cYou must be invited to this party first.");
             return;
         }
 
-        Party party = profile.getParty();
-//        if(party.getSize() > LIMITE) {
-//
-//            return;
-//        }
-        if(!party.getInvites().contains(args.getPlayer())) {
-            profile.sendMessage("&cYou must be invited to this party first.");
-            return;
+        if (personJoining.isInParty()) {
+            onPartyLeave(args);
         }
 
-        party.sendMessage("&b" + args.getPlayer().getName() + " &ehas joined your party.");
-        party.getInvites().remove(other.getPlayer());
-        party.getPlayers().add(other.getPlayer());
+        Party requesterParty = requester.getParty();
+        personJoining.joinParty(requesterParty);
 
-        other.joinParty(party);
+        requesterParty.getInvites().remove(personJoining.getPlayer());
+        requesterParty.getPlayers().add(personJoining.getPlayer());
+        requesterParty.sendMessage("&b" + personJoining.getPlayer().getName() + " &ehas joined the party.");
     }
 
     @Command(name = "party.leave", aliases = { "p.leave" }, playerOnly = true, description = "Party commands.")

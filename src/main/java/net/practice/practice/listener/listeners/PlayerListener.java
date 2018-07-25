@@ -4,8 +4,10 @@ import net.practice.practice.Practice;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelRequest;
 import net.practice.practice.game.duel.DuelState;
+import net.practice.practice.game.duel.PartyDuelRequest;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
+import net.practice.practice.game.party.PartyState;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.queue.Queue;
@@ -333,18 +335,17 @@ public class PlayerListener implements Listener {
                             return;
                         }
 
-                        if(profile.isInGame()) {
+                        if(target.isInGame()) {
                             player.sendMessage(C.color("&cThat player is currently occupied."));
                             return;
                         }
 
                         DuelRequest request = new DuelRequest(player, requested, ladder);
-
                         request.sendToRequested();
 
                         player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "."));
                     } else {
-                        if(target.getParty().getRequests().containsKey(profile.getParty())) {
+                        if(profile.getParty().getRequests().containsKey(profile.getParty())) {
                             player.sendMessage(C.color("&cYou have already sent this player a request."));
                             return;
                         }
@@ -354,13 +355,7 @@ public class PlayerListener implements Listener {
                             return;
                         }
 
-                        requested.sendMessage(C.color("  &7Ladder: &6" + ladder.getDisplayName()));
-                        new JsonMessage()
-                                .append(ChatColor.GREEN + "  ACCEPT").setClickAsExecuteCmd("/accept " + player.getName()).setHoverAsTooltip(ChatColor.GREEN + "Accept " + player.getName()).save()
-                                .append(C.color(" &7or ")).save()
-                                .append(ChatColor.RED + "DENY").setClickAsExecuteCmd("/deny " + player.getName()).setHoverAsTooltip(ChatColor.RED + "Deny " + player.getName()).save()
-                                .send(requested);
-                        requested.sendMessage(" ");
+                        new PartyDuelRequest(profile.getParty(), target.getParty(), ladder).sendToRequested();
 
                         player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "'s party."));
                     }
@@ -390,8 +385,7 @@ public class PlayerListener implements Listener {
                     return;
                 }
 
-                Bukkit.dispatchCommand(player, "duel " + owner);
-                profile.sendMessage("&aYou have sent a party duel request to " + owner.getName() + "'s party.");
+                Bukkit.dispatchCommand(player, "duel " + owner.getName());
             }
         }
     }

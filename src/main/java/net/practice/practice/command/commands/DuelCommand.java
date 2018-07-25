@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 public class DuelCommand {
 
-    @Command(name = "duel", aliases = { "request" }, playerOnly = true, description = "Send a duel request to a player.")
+    @Command(name = "duel", playerOnly = true, description = "Send a duel request to a player.")
     public void onDuel(CommandArgs args) {
         if(args.length() < 1) {
             args.getPlayer().sendMessage(ChatColor.RED + "Usage: /" + args.getLabel() + " <player>");
@@ -75,6 +75,11 @@ public class DuelCommand {
                 return;
             }
 
+            if (profile.getParty().getAllPlayers().size() < 2 || targetProfile.getParty().getAllPlayers().size() < 2) {
+                args.getPlayer().sendMessage(C.color("&cYou need at least 2 players to duel another party!"));
+                return;
+            }
+
             RequestInv.openInventory(args.getPlayer(), player);
         }
     }
@@ -98,20 +103,39 @@ public class DuelCommand {
             return;
         }
 
-        Profile targetProfile = Profile.getByPlayer(player);
-        if(targetProfile.isInGame()) {
-            args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
-            return;
+        if (!profile.isInParty()) {
+            Profile targetProfile = Profile.getByPlayer(player);
+            if(targetProfile.isInGame()) {
+                args.getPlayer().sendMessage(C.color("&cThat player is currently in a duel."));
+                return;
+            }
+
+            if(!targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
+                args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
+                return;
+            }
+
+            DuelRequest request = targetProfile.getDuelRequests().get(args.getPlayer().getName());
+            request.accept();
+        } else {
+            Profile targetProfile = Profile.getByPlayer(player);
+            if (!targetProfile.isInParty()) {
+                args.getPlayer().sendMessage(C.color("&cThat party is currently not in a party."));
+                return;
+            }
+
+            if (targetProfile.getParty().isInGame()) {
+                args.getPlayer().sendMessage(C.color("&cThat party is currently occupied."));
+                return;
+            }
+
+            if (!targetProfile.getParty().getRequests().containsKey(profile.getParty())) {
+                args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
+                return;
+            }
+
+            targetProfile.getParty().getRequests().get(profile.getParty()).accept();
         }
-
-        if(!targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
-            args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
-            return;
-        }
-
-        DuelRequest request = targetProfile.getDuelRequests().get(args.getPlayer().getName());
-
-        request.accept();
     }
 
     @Command(name = "deny", aliases = { "denyrequest" }, playerOnly = true, description = "Deny a duel request from a player.")
@@ -133,16 +157,33 @@ public class DuelCommand {
             return;
         }
 
-        Profile targetProfile = Profile.getByPlayer(player);
-        if(!targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
-            args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
-            return;
+        if (!profile.isInParty()) {
+            Profile targetProfile = Profile.getByPlayer(player);
+            if(!targetProfile.getDuelRequests().containsKey(args.getPlayer().getName())) {
+                args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
+                return;
+            }
+
+            DuelRequest request = targetProfile.getDuelRequests().get(args.getPlayer().getName());
+
+            request.deny();
+
+            args.getPlayer().sendMessage(C.color("&aYou have denied " + player.getName() + "'s request."));
+        } else {
+            Profile targetProfile = Profile.getByPlayer(player);
+            if (!targetProfile.isInParty()) {
+                args.getPlayer().sendMessage(C.color("&cThat party is currently not in a party."));
+                return;
+            }
+
+            if(!targetProfile.getParty().getRequests().containsKey(profile.getParty())) {
+                args.getPlayer().sendMessage(C.color("&cYou have not received a duel request from that player."));
+                return;
+            }
+
+            targetProfile.getParty().getRequests().get(profile.getParty()).deny();
+
+            args.getPlayer().sendMessage(C.color("&aYou have denied " + player.getName() + "'s party's request."));
         }
-
-        DuelRequest request = targetProfile.getDuelRequests().get(args.getPlayer().getName());
-
-        request.deny();
-
-        args.getPlayer().sendMessage(C.color("&aYou have denied " + player.getName() + "'s request."));
     }
 }
