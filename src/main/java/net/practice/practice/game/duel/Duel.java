@@ -219,10 +219,12 @@ public abstract class Duel {
     }
 
     public void kill(Player player) {
+        saveInventory(player.getUniqueId());
         sendMessage("&6" + player.getName() + "&e has died.");
     }
 
     public void quit(Player player) {
+        saveInventory(player.getUniqueId());
         sendMessage("&6" + player.getName() + "&e has quit.");
     }
 

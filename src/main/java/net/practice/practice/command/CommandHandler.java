@@ -11,7 +11,6 @@ public class CommandHandler {
         Stream.of(
                 new LadderCommand(),
                 new PracticeCommand(),
-                //new OldArenaCommand(),
                 new ArenaCommand(),
                 new SpawnCommand(),
                 new StatsCommand(),
@@ -28,7 +27,6 @@ public class CommandHandler {
         Stream.of(
                 new LadderCommand(),
                 new PracticeCommand(),
-                //new OldArenaCommand(),
                 new ArenaCommand(),
                 new SpawnCommand(),
                 new StatsCommand(),

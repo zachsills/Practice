@@ -13,6 +13,7 @@ import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.InventorySnapshot;
 import net.practice.practice.spawn.SpawnHandler;
+import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
 import net.practice.practice.util.chat.JsonMessage;
 import org.bukkit.Bukkit;
@@ -90,22 +91,29 @@ public class DuoDuel extends Duel {
 
         JsonMessage message = new JsonMessage().append(ChatColor.GOLD + "Inventories " + ChatColor.GRAY + "(Click to view) ").save();
 
-        for(InventorySnapshot snapshot : getSnapshots()) {
-            if(actualWinners.contains(Bukkit.getPlayer(snapshot.getName()))) {
-                message.append(ChatColor.GREEN + snapshot.getName()).setClickAsExecuteCmd("/_ " + snapshot.getName()).setHoverAsTooltip(ChatColor.GREEN + snapshot.getName() + "'s Inventory").save();
-                if(duoOne.get(0).getName().equals(snapshot.getName()))
-                    message.append(" &7or ").save();
-                if(duoOne.get(1).getName().equals(snapshot.getName()))
-                    message.append("\n").save();
-            } else {
-                message.append(ChatColor.RED + snapshot.getName()).setClickAsExecuteCmd("/_ " + snapshot.getName()).setHoverAsTooltip(ChatColor.RED + snapshot.getName() + "'s Inventory").save();
-                if(duoTwo.get(0).getName().equals(snapshot.getName()))
-                    message.append(" &7or ").save();
-            }
+        List<Player> winningDuo = actualWinners.contains(duoOne.get(0)) ? duoOne : duoTwo;
+        for(Player player : winningDuo) {
+            InventorySnapshot snapshot = getSnapshot(player);
+            message.append(ChatColor.GREEN + snapshot.getName()).setClickAsExecuteCmd("/_ " + snapshot.getName()).setHoverAsTooltip(ChatColor.GREEN + snapshot.getName() + "'s Inventory").save();
+            if(winningDuo.indexOf(player) == 0)
+                message.append(ChatColor.GRAY + " or ").save();
+        }
+        message.append("\n").save();
+
+        List<Player> losingDuo = actualWinners.contains(duoOne.get(0)) ? duoTwo : duoOne;
+        for(Player player : losingDuo) {
+            InventorySnapshot snapshot = getSnapshot(player);
+            message.append(ChatColor.RED + snapshot.getName()).setClickAsExecuteCmd("/_ " + snapshot.getName()).setHoverAsTooltip(ChatColor.RED + snapshot.getName() + "'s Inventory").save();
+            if(losingDuo.indexOf(player) == 0)
+                message.append(ChatColor.GRAY + " or ").save();
         }
 
-        message.send(getPlayers().toArray(new Player[getPlayers().size()]));
-        //message.send(Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer)).collect(Collectors.toList()).toArray(new Player[] {}));
+//        message.send(getPlayers().toArray(new Player[getPlayers().size()]));
+        message.send(Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer)).collect(Collectors.toList()).toArray(new Player[] {}));
+
+        String spectatorMessage = getSpectatorMessage();
+        if(spectatorMessage != null)
+            sendMessage(spectatorMessage);
 
         sendMessage("&f&m---------------------------------");
 
@@ -130,12 +138,13 @@ public class DuoDuel extends Duel {
     public void kill(Player player) {
         super.kill(player);
 
-        saveInventory(player.getUniqueId());
         dead.add(player);
         alive.remove(player);
 
-        Profile profile = Profile.getByPlayer(player);
-        profile.setSpectating(this, false);
+        RunnableShorthand.runNextTick(() -> {
+            Profile profile = Profile.getByPlayer(player);
+            profile.setSpectating(this, false);
+        });
 
         if(hasWinner())
             end(DuelEndReason.DIED);
@@ -145,7 +154,6 @@ public class DuoDuel extends Duel {
     public void quit(Player player) {
         super.quit(player);
 
-        saveInventory(player.getUniqueId());
         dead.add(player);
         alive.remove(player);
 
@@ -169,7 +177,7 @@ public class DuoDuel extends Duel {
 
     @Override
     public void sendMessage(String message) {
-        //super.sendMessage(message);
+        super.sendMessage(message);
 
         duoOne.forEach(player -> player.sendMessage(C.color(message)));
         duoTwo.forEach(player -> player.sendMessage(C.color(message)));

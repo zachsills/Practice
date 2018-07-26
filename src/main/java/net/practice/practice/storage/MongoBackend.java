@@ -13,7 +13,10 @@ import org.bson.Document;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -63,6 +66,20 @@ public class MongoBackend implements IBackend {
     @Override
     public void saveProfiles() {
         Profile.getProfiles().values().forEach(this::saveProfileSync);
+    }
+
+    public List<Profile> getAllProfiles() {
+        List<Profile> all = new ArrayList<>(Profile.getProfiles().values());
+
+        for(Document document : profiles.find()) {
+            UUID uuid = UUID.fromString(document.getString("uuid"));
+            if(Profile.getProfiles().containsKey(uuid.toString()))
+                continue;
+
+            all.add(new Profile(uuid, false));
+        }
+
+        return all;
     }
 
     @SuppressWarnings("deprecation")

@@ -45,13 +45,11 @@ public class DuelListener implements Listener {
         event.setDroppedExp(0);
         event.setDeathMessage(null);
 
-        duel.saveInventory(profile.getUuid());
-        profile.handleDeath();
-
         if(duel.getState() != DuelState.STARTING && duel.getState() != DuelState.PLAYING)
             return;
 
         duel.kill(event.getEntity());
+        profile.handleDeath();
 
         /*new BukkitRunnable() {
             @Override

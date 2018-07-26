@@ -10,6 +10,7 @@ import net.practice.practice.game.party.Party;
 import net.practice.practice.game.party.PartyState;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
+import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.inventory.inventories.*;
 import net.practice.practice.spawn.PartyHandler;
@@ -23,6 +24,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -142,27 +144,34 @@ public class PlayerListener implements Listener {
         switch(profile.getState()) {
             case PLAYING: {
                 if(event instanceof EntityDamageByEntityEvent) {
-                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
-                    if(e.getDamager().getType() != EntityType.PLAYER)
-                        return;
-
                     Duel duel = profile.getCurrentDuel();
                     if(duel.getState() != DuelState.PLAYING) {
                         event.setCancelled(true);
                         return;
                     }
 
-                    Player other = (Player) e.getDamager();
-                    if(!duel.hasPlayer(other))
+                    Player damager;
+                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+                    if(e.getDamager().getType() != EntityType.PLAYER) {
+                        if(e.getDamager() instanceof Projectile) {
+                            Projectile projectile = (Projectile) e.getDamager();
+                            damager = (Player) projectile.getShooter();
+                        } else
+                            return;
+                    } else {
+                        damager = (Player) e.getDamager();
+                    }
+
+                    if(!duel.hasPlayer(damager))
                         event.setCancelled(true);
                     else {
-                        if(!duel.canHit(player, other)) {
+                        Profile damagerProfile = Profile.getByPlayer(damager);
+                        if(damagerProfile.getState() != ProfileState.PLAYING || !duel.canHit(player, damager)) {
                             event.setCancelled(true);
                             return;
                         }
 
-                        Profile otherProfile = Profile.getByPlayer(other);
-                        otherProfile.setLongestCombo(otherProfile.getLongestCombo() + 1);
+                        damagerProfile.setLongestCombo(damagerProfile.getLongestCombo() + 1);
 
                         if(profile.getLongestCombo() != 0) {
                             if(!duel.getComboes().containsKey(player))
@@ -407,7 +416,7 @@ public class PlayerListener implements Listener {
             profile.removeFromQueue();
 
         if(profile.isInParty())
-            Bukkit.dispatchCommand(profile.getPlayer(), "party leave");
+            profile.handleLeaveParty();
 
         if(profile.isSpectating())
             profile.getSpectating().getSpectators().remove(profile);

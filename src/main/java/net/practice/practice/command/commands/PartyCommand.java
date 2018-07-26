@@ -151,34 +151,7 @@ public class PartyCommand {
             return;
         }
 
-        Party party = profile.getParty();
-        if(party.getCurrentQueue() != null)
-            party.leaveQueue();
-
-        if(party.getLeader().equals(profile.getUuid())) {
-            if(party.getPlayers().size() > 0) {
-                UUID newLeader = party.getPlayers().get(0).getUniqueId();
-                party.getPlayers().remove(0);
-
-                Bukkit.getPlayer(newLeader).sendMessage(C.color("&aYou have been made the leader of the party."));
-                party.sendMessage("&b" + Bukkit.getPlayer(newLeader).getName() + " &ehas been made the leader of your party.");
-
-                party.setLeader(newLeader);
-                PartyHandler.spawn(Bukkit.getPlayer(newLeader), true);
-            } else {
-                PartyManager.removeParty(party);
-            }
-            profile.leaveParty();
-            party.sendMessage("&b" + args.getPlayer().getName() + " &ehas left the party.");
-            args.getPlayer().sendMessage(C.color("&aYou have left your party."));
-            return;
-        }
-
-        party.getPlayers().remove(profile.getPlayer());
-        profile.leaveParty();
-
-        party.sendMessage("&b" + args.getPlayer().getName() + " &ehas left the party.");
-        args.getPlayer().sendMessage(C.color("&aYou have left your party."));
+        profile.handleLeaveParty();
     }
 
     @Command(name = "party.disband", aliases = { "p.disband" }, playerOnly = true, description = "Party commands.")

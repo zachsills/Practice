@@ -45,6 +45,8 @@ public class SpectateCommand {
         }
 
         profile.setSpectating(targetProfile.getCurrentDuel());
+        targetProfile.getCurrentDuel().getSpectators().add(profile);
+
         profile.getPlayer().teleport(player.getLocation());
 
         RunnableShorthand.runNextTick(() -> {

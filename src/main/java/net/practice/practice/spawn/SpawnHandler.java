@@ -57,7 +57,10 @@ public class SpawnHandler {
         profile.setState(ProfileState.LOBBY);
         profile.setCurrentDuel(null);
 
-        Bukkit.getOnlinePlayers().forEach(other -> other.showPlayer(player));
+        Bukkit.getOnlinePlayers().forEach(other -> {
+            other.showPlayer(player);
+            player.showPlayer(other);
+        });
     }
 
     public static ItemStack[] getSpawnInventory(Player player) {

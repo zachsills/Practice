@@ -19,6 +19,8 @@ public class InventorySnapshot {
 
     @Getter private ItemStack[] contents, armor;
 
+    @Getter private Player player;
+
     @Getter private int hunger;
     @Getter private double health;
 
@@ -31,6 +33,7 @@ public class InventorySnapshot {
         if(player == null || !player.isOnline())
             return;
 
+        this.player = player;
         this.name = player.getName();
 
         this.contents = player.getInventory().getContents().clone();

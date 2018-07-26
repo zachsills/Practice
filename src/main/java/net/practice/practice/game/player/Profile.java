@@ -10,6 +10,7 @@ import net.practice.practice.game.duel.DuelType;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
+import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.player.data.PlayerKit;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
@@ -196,7 +197,7 @@ public class Profile {
         getPlayer().setFlying(true);
 
         setState(ProfileState.SPECTATING);
-        spectating.getSpectators().add(this);
+//        spectating.getSpectators().add(this);
 
         for (Player player : spectating.getPlayers()) {
             player.hidePlayer(getPlayer());
@@ -326,6 +327,36 @@ public class Profile {
         setParty(null);
 
         SpawnHandler.spawn(getPlayer(), false);
+    }
+
+    public void handleLeaveParty() {
+        if(party.getCurrentQueue() != null)
+            party.leaveQueue();
+
+        if(party.getLeader().equals(uuid)) {
+            if(party.getPlayers().size() > 0) {
+                UUID newLeader = party.getPlayers().get(0).getUniqueId();
+                party.getPlayers().remove(0);
+
+                Bukkit.getPlayer(newLeader).sendMessage(C.color("&aYou have been made the leader of the party."));
+                party.sendMessage("&b" + Bukkit.getPlayer(newLeader).getName() + " &ehas been made the leader of your party.");
+
+                party.setLeader(newLeader);
+                PartyHandler.spawn(Bukkit.getPlayer(newLeader), true);
+            } else {
+                PartyManager.removeParty(party);
+            }
+            leaveParty();
+            party.sendMessage("&b" + getName() + " &ehas left the party.");
+            sendMessage("&aYou have left your party.");
+            return;
+        }
+
+        party.getPlayers().remove(getPlayer());
+        party.sendMessage("&b" + getName() + " &ehas left the party.");
+
+        leaveParty();
+        sendMessage("&aYou have left your party.");
     }
 
     public void sendPartyInfo() {
