@@ -14,15 +14,19 @@ import org.bukkit.inventory.ItemFlag;
 public class EditorInv {
 
     public static void openInventory(Player player) {
-        Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("&eSelect a Ladder..."));
-         for(Ladder ladder : Ladder.getLadders().values()) {
-             if(!ladder.isEditable())
-                 continue;
+        Inventory inventory = Practice.getInstance().getServer().createInventory(null, 27, C.color("&eSelect a Ladder..."));
+        int index = 10;
+        for(Ladder ladder : Ladder.getLadders().values()) {
+            if(!ladder.isEditable())
+                continue;
+            if((index + 1) % 9 == 0)
+                index += 2;
 
-             inventory.addItem(new I(ladder.getDisplayIcon()).clearLore().flag(ItemFlag.HIDE_POTION_EFFECTS));
-         }
+            inventory.setItem(index, new I(ladder.getDisplayIcon()).clearLore().flag(ItemFlag.HIDE_POTION_EFFECTS));
+            index++;
+        }
 
-         player.openInventory(inventory);
+        player.openInventory(inventory);
     }
 
     public static void openSavingInventory(Player player) {

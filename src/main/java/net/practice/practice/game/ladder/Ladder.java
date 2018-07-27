@@ -112,19 +112,4 @@ public class Ladder {
     public boolean isSpleef() {
         return name.contains("Spleef");
     }
-
-    public boolean isEqual(Ladder other) {
-        if (!getName().equals(other.getName()))
-            return false;
-        if (isBuildable() != other.isBuildable())
-            return false;
-        if (isEditable() != other.isEditable())
-            return false;
-        if (isCombo() != other.isCombo())
-            return false;
-        if (isRanked() != other.isRanked())
-            return false;
-
-        return true;
-    }
 }

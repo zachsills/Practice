@@ -18,6 +18,7 @@ import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.storage.MongoBackend;
 import net.practice.practice.tab.PracticeTabAdapter;
 import net.practice.practice.task.CleanerTask;
+import net.practice.practice.task.LeaderboardTask;
 import net.practice.practice.task.UpdateInventoryTask;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
@@ -73,6 +74,7 @@ public class Practice extends JavaPlugin {
         /* Tasks */
         new QueueRunnable().runTaskTimer(this, 20L, 20L);
         new CleanerTask().runTaskTimerAsynchronously(this, 20L, 5L * 20L);
+        new LeaderboardTask().runTaskTimerAsynchronously(this, 100L, 180L * 20L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 30L);
 
         new Azazel(this, new PracticeTabAdapter());

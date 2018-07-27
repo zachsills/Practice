@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.duel.type.DuoDuel;
+import net.practice.practice.game.duel.type.PartyDuel;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
@@ -79,9 +80,12 @@ public class PartyDuelRequest {
         requestedLeader.sendMessage(C.color("&aYou have accepted a duel request from " + requesterLeader.getName() + "."));
 
         MapLoc map = MapLoc.getRandomMap(getLadder().isBuildable(), getLadder().isSpleef());
-        if (map != null)
-            new DuoDuel(map, getLadder(), requester.getAllPlayers(), requested.getAllPlayers()).preStart();
-        else {
+        if (map != null) {
+            if(requester.getSize() == 2 && requested.getSize() == 2)
+                new DuoDuel(map, getLadder(), requester.getAllPlayers(), requested.getAllPlayers()).preStart();
+            else
+                new PartyDuel(map, getLadder(), requester, requested);
+        } else {
             for (Player player : requester.getAllPlayers()) {
                 player.sendMessage("No open arenas available!");
                 SpawnHandler.spawn(player);

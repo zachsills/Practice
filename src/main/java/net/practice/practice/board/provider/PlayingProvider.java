@@ -4,6 +4,7 @@ import net.practice.practice.board.BoardProvider;
 import net.practice.practice.game.duel.Duel;
 import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.duel.type.DuoDuel;
+import net.practice.practice.game.duel.type.PartyDuel;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.party.Party;
 import net.practice.practice.game.party.PartyManager;
@@ -78,7 +79,28 @@ public class PlayingProvider implements BoardProvider {
                 break;
             }
             case TEAM_VS_TEAM: {
+                PartyDuel partyDuel = (PartyDuel) duel;
+                if(duel.getState() == DuelState.PLAYING) {
+                    Party party = partyDuel.getPartyOne().contains(player) ? partyDuel.getPartyOne() : partyDuel.getPartyTwo();
+                    lines.add("&aTeam: &f" + partyDuel.getAlive(party) + "/" + party.getSize());
 
+                    Party otherParty = partyDuel.getPartyOne() == party ? partyDuel.getPartyTwo() : partyDuel.getPartyOne();
+                    lines.add("&cOpponents: &f" + partyDuel.getAlive(otherParty) + "/" + otherParty.getSize());
+
+                    lines.add(" ");
+                    lines.add("&6Duration: &7" + TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime()));
+                } else if(duel.getState() == DuelState.STARTING) {
+                    Party party = partyDuel.getPartyOne().contains(player) ? partyDuel.getPartyOne() : partyDuel.getPartyTwo();
+                    lines.add("&aTeam: &f" + partyDuel.getAlive(party) + "/" + party.getSize());
+
+                    Party otherParty = partyDuel.getPartyOne() == party ? partyDuel.getPartyTwo() : partyDuel.getPartyOne();
+                    lines.add("&cOpponents: &f" + partyDuel.getAlive(otherParty) + "/" + otherParty.getSize());
+
+                    lines.add(" ");
+                    lines.add("&6Starting: &7" + duel.getCountDown());
+                } else if(duel.getState() == DuelState.ENDED) {
+                    lines.add("&6Winner: &7" + partyDuel.getWinner().getLeaderName() + "'s Party");
+                }
                 break;
             }
             case FREE_FOR_ALL:

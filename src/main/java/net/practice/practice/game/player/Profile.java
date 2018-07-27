@@ -346,8 +346,9 @@ public class Profile {
             } else {
                 PartyManager.removeParty(party);
             }
-            leaveParty();
             party.sendMessage("&b" + getName() + " &ehas left the party.");
+            leaveParty();
+
             sendMessage("&aYou have left your party.");
             return;
         }
@@ -379,7 +380,7 @@ public class Profile {
     }
 
     public void openSettings() {
-        Inventory inventory = Bukkit.createInventory(getPlayer(), 9, C.color("&6Toggle Settings"));
+        Inventory inventory = Bukkit.createInventory(getPlayer(), 9, C.color("&6Settings"));
 
         int i = 1;
         for(ProfileSetting setting : ProfileSetting.values()) {

@@ -76,7 +76,7 @@ public class MongoBackend implements IBackend {
             if(Profile.getProfiles().containsKey(uuid.toString()))
                 continue;
 
-            all.add(new Profile(uuid, false));
+            all.add(Profile.getByUuid(uuid));
         }
 
         return all;

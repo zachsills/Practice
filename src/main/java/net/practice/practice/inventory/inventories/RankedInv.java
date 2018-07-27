@@ -14,16 +14,18 @@ import org.bukkit.inventory.ItemFlag;
 
 public class RankedInv {
 
-    @Getter private static Inventory inventory = Practice.getInstance().getServer().createInventory(null, 18, C.color("&6Ranked"));
+    @Getter private static Inventory inventory = Practice.getInstance().getServer().createInventory(null, 27, C.color("&6Ranked"));
 
     public static void updateInventory() {
         if(Ladder.getLadders().values().size() == 0) {
             inventory.setItem(13, new I(Material.RED_ROSE).name(C.color("No ladders set!")));
         } else {
-            int index = 0;
+            int index = 10;
             for(Ladder ladder : Ladder.getLadders().values()) {
                 if(!ladder.isRanked())
                     continue;
+                if((index + 1) % 9 == 0)
+                    index += 2;
 
                 int queuing = ladder.getTotalQueuing(QueueType.RANKED);
                 int inGame = Queue.getNumberInGame(ladder, true);

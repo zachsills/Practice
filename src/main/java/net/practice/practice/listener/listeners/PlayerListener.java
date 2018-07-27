@@ -7,7 +7,6 @@ import net.practice.practice.game.duel.DuelState;
 import net.practice.practice.game.duel.PartyDuelRequest;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
-import net.practice.practice.game.party.PartyState;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
@@ -17,7 +16,6 @@ import net.practice.practice.spawn.PartyHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
-import net.practice.practice.util.chat.JsonMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -271,6 +269,9 @@ public class PlayerListener implements Listener {
 
         if(event.getClickedInventory().getTitle() != null && event.getClickedInventory().getTitle().contains("Settings")) {
             event.setCancelled(true);
+            if(item == null || item.getItemMeta() == null || !item.getItemMeta().hasDisplayName())
+                return;
+
             ProfileSetting setting = ProfileSetting.getByMaterial(item.getType());
             profile.toggleSetting(setting);
 

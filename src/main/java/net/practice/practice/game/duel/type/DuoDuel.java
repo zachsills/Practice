@@ -89,7 +89,8 @@ public class DuoDuel extends Duel {
 //            loserProfile.setUnrankedLosses(loserProfile.getUnrankedLosses() + 1);
 //        }
 
-        JsonMessage message = new JsonMessage().append(ChatColor.GOLD + "Inventories " + ChatColor.GRAY + "(Click to view) ").save();
+        sendMessage(ChatColor.GOLD + "Inventories " + ChatColor.GRAY + "(Click to view) ");
+        JsonMessage message = new JsonMessage();
 
         List<Player> winningDuo = actualWinners.contains(duoOne.get(0)) ? duoOne : duoTwo;
         for(Player player : winningDuo) {
@@ -108,7 +109,6 @@ public class DuoDuel extends Duel {
                 message.append(ChatColor.GRAY + " or ").save();
         }
 
-//        message.send(getPlayers().toArray(new Player[getPlayers().size()]));
         message.send(Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer)).collect(Collectors.toList()).toArray(new Player[] {}));
 
         String spectatorMessage = getSpectatorMessage();
