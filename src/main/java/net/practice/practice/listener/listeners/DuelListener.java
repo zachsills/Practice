@@ -365,4 +365,21 @@ public class DuelListener implements Listener {
         else
             player.setHealth(player.getHealth() + healAmount);
     }
+
+    @EventHandler
+    public void onRegainHealth(EntityRegainHealthEvent event) {
+        if(!(event.getEntity() instanceof Player))
+            return;
+        if(event.getRegainReason() != EntityRegainHealthEvent.RegainReason.SATIATED)
+            return;
+
+        Player player = (Player) event.getEntity();
+        Profile profile = Profile.getByPlayer(player);
+        if(!profile.isInGame())
+            return;
+
+        Duel duel = profile.getCurrentDuel();
+        if(duel.getLadder().getName().contains("BuildUHC") || duel.getLadder().getName().contains("Soup"))
+            event.setCancelled(true);
+    }
 }

@@ -35,6 +35,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PlayerListener implements Listener {
@@ -397,6 +398,30 @@ public class PlayerListener implements Listener {
 
                 Bukkit.dispatchCommand(player, "duel " + owner.getName());
             }
+        }
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent event) {
+        if(event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN)
+            return;
+
+        land.nub.core.player.Profile coreProfile = land.nub.core.player.Profile.getByPlayer(event.getPlayer());
+        if(coreProfile.getModMode() == null)
+            return;
+
+        Player teleported = coreProfile.getLastTeleported();
+        if(teleported == null)
+            return;
+
+        Profile profile = Profile.getByPlayer(teleported);
+        if(!profile.isInGame())
+            return;
+
+        Collection<Player> players = profile.getCurrentDuel().getPlayers();
+        for(Player player : players) {
+            if(player != null && player.isOnline())
+                event.getPlayer().showPlayer(player);
         }
     }
 

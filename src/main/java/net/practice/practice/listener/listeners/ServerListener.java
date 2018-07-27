@@ -29,11 +29,10 @@ public class ServerListener {
         final List<WrappedGameProfile> messages = new ArrayList<>();
         messages.add(new WrappedGameProfile("1", C.color("&4&lNUB&c&lLAND&7 [1.7 -> 1.8]")));
         messages.add(new WrappedGameProfile("2", C.color(" ")));
-        messages.add(new WrappedGameProfile("3", C.color("&b&lTWITTER &f@NubLand")));
+        messages.add(new WrappedGameProfile("3", C.color("&b&lTWITTER &f@Nub_Land")));
         messages.add(new WrappedGameProfile("4", C.color("&e&lFORUMS &fwww.nub.land")));
-        messages.add(new WrappedGameProfile("5", C.color("&a&lVOTE &fwww.nub.land/vote")));
-        messages.add(new WrappedGameProfile("6", " "));
-        messages.add(new WrappedGameProfile("7", C.color("&6&lSTORE &fstore.nub.land")));
+        messages.add(new WrappedGameProfile("5", " "));
+        messages.add(new WrappedGameProfile("6", C.color("&6&lSTORE &fdonate.nub.land")));
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Practice.getInstance(), ListenerPriority.NORMAL, Arrays.asList(PacketType.Status.Server.SERVER_INFO), ListenerOptions.ASYNC) {
             @Override

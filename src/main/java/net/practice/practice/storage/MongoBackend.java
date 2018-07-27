@@ -50,6 +50,9 @@ public class MongoBackend implements IBackend {
 
     @Override
     public void saveProfileSync(Profile profile) {
+        if(profile.getName() == null)
+            return;
+
         profiles.findOneAndReplace(eq("uuid", profile.getUuid().toString()), profile.toDocument());
     }
 

@@ -13,13 +13,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StatsInv {
 
-    @Getter @Setter private static Map<Ladder, List<Profile>> top = new HashMap<>();
+    @Getter @Setter private static Map<Ladder, Map<String, Integer>> top = new HashMap<>();
 
     public static void openInventory(Player player) {
         openInventory(player, Profile.getByPlayer(player));
@@ -59,10 +61,11 @@ public class StatsInv {
                     if(i >= top.get(ladder).size())
                         break;
 
-                    Profile profile = top.get(ladder).get(i);
-                    int position = i + 1, elo = profile.getElo(ladder);
+                    Map<String, Integer> kv = top.get(ladder);
+                    String playerName = new ArrayList<>(kv.keySet()).get(i);
+                    int position = i + 1, elo = kv.get(playerName);
 
-                    item.lore("&6#" + position + ". &e" + profile.getName() + " &7- &f" + elo);
+                    item.lore("&6#" + position + ". &e" + playerName + " &7- &f" + elo);
                 }
             }
             item.lore(C.color("&f&m------------"));
