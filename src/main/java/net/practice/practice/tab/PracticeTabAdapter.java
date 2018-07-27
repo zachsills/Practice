@@ -50,7 +50,7 @@ public class PracticeTabAdapter implements TabAdapter {
         Profile profile = Profile.getByPlayer(player);
         if (profile.getState() == ProfileState.LOBBY || profile.getState() == ProfileState.EDITING) {
 
-            int online = Bukkit.getOnlinePlayers().size();
+            int online = land.nub.core.player.Profile.getOnlineSize();
             long inGame = Profile.getTotalInGame();
             long inQueue = Profile.getTotalQueueing();
             int ping = PlayerUtils.getPing(player);
@@ -78,7 +78,7 @@ public class PracticeTabAdapter implements TabAdapter {
             template.right(9, infoC + "donate.nub.land");
 
         } else if (profile.getState() == ProfileState.QUEUING) {
-            int online = Bukkit.getOnlinePlayers().size();
+            int online = land.nub.core.player.Profile.getOnlineSize();
             long inGame = Profile.getTotalInGame();
             long inQueue = Profile.getTotalQueueing();
             int ping = PlayerUtils.getPing(player);
