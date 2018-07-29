@@ -1,0 +1,8 @@
+autobroadcast:
+  enabled: true
+  seconds: 90
+  messages:
+    - '&6Nub Land &7is &egreat &7because &6Nub Land is &egood!'
+    - '&4&kThryl is a faggot!!1! xdxdxdxddd'
+  non-donor-messages:
+    - '&7Nice rank ya got there, &6kid! &7Bet you wish you had that &bLEET &7rank &bHUH? &7I''ll just leave this here... &6donate.nub.land'

@@ -3,6 +3,7 @@ package net.practice.practice;
 import com.bizarrealex.azazel.Azazel;
 import com.bizarrealex.azazel.tab.example.ExampleTabAdapter;
 import lombok.Getter;
+import net.practice.practice.autobroadcast.AutoBroadcastFile;
 import net.practice.practice.board.BoardManager;
 import net.practice.practice.board.provider.ProviderResolver;
 import net.practice.practice.command.CommandHandler;
@@ -17,15 +18,13 @@ import net.practice.practice.listener.ListenerHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.storage.MongoBackend;
 import net.practice.practice.tab.PracticeTabAdapter;
+import net.practice.practice.task.AutoBroadcastTask;
 import net.practice.practice.task.CleanerTask;
 import net.practice.practice.task.LeaderboardTask;
 import net.practice.practice.task.UpdateInventoryTask;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Practice extends JavaPlugin {
@@ -33,6 +32,8 @@ public class Practice extends JavaPlugin {
     @Getter private static Practice instance;
 
     @Getter private MongoBackend backend;
+
+    @Getter private AutoBroadcastFile autoBroadcastFile;
 
     @Getter private BoardManager boardManager;
     @Getter private ArenaManager arenaManager;
@@ -49,6 +50,7 @@ public class Practice extends JavaPlugin {
 
         /* Initialize storage */
         saveDefaultConfig();
+        autoBroadcastFile = new AutoBroadcastFile();
 
         backend = new MongoBackend(this);
 
@@ -76,6 +78,10 @@ public class Practice extends JavaPlugin {
         new CleanerTask().runTaskTimerAsynchronously(this, 20L, 5L * 20L);
         new LeaderboardTask().runTaskTimerAsynchronously(this, 100L, 180L * 20L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 30L);
+        if (getAutoBroadcastFile().isEnabled()) {
+            int seconds = getAutoBroadcastFile().getSeconds();
+            new AutoBroadcastTask().runTaskTimerAsynchronously(this, 20L * seconds, 20L * seconds);
+        }
 
         new Azazel(this, new PracticeTabAdapter());
     }
