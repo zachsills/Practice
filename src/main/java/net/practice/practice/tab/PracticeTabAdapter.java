@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 public class PracticeTabAdapter implements TabAdapter {
 
+    private final String LINE1_7 = " &f&m---------------", LINE1_8 = " &f&m---------------";
     private static DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
     @Override
@@ -30,30 +31,30 @@ public class PracticeTabAdapter implements TabAdapter {
         TabTemplate template = new TabTemplate();
 
         // Header
-        if (protocolVersion >= 47) { // 1.8+
+        if (protocolVersion >= 47) { // 1.8
             template.middle(0, " &6&lNub Land &7&l| &f&lUS");
-            template.left(0, "&f&m---------------");
-            template.right(0, "&f&m---------------");
-            template.farRight(0, "&f&m---------------");
+            template.left(0, LINE1_8);
+            template.right(0, LINE1_8);
+            template.farRight(0, LINE1_8);
         } else { // 1.7
             template.middle(0, "  &6&lNub Land &7&l| &f&lUS");
-            template.left(0, "&f&m--------------");
-            template.right(0, "&f&m--------------");
+            template.left(0, LINE1_7);
+            template.right(0, LINE1_7);
         }
 
         // Far right
         template.farRight(8, "&7Well hello there,");
-        template.farRight(9, "&71.8+ user!");
+        template.farRight(9, "&71.8 user!");
 
         String highlightC = "&6", infoC = "&f";
 
+        int online = land.nub.core.player.Profile.getOnlineSize();
+        long inGame = Profile.getTotalInGame();
+        long inQueue = Profile.getTotalQueueing();
+        int ping = PlayerUtils.getPing(player);
+
         Profile profile = Profile.getByPlayer(player);
         if (profile.getState() == ProfileState.LOBBY || profile.getState() == ProfileState.EDITING) {
-
-            int online = land.nub.core.player.Profile.getOnlineSize();
-            long inGame = Profile.getTotalInGame();
-            long inQueue = Profile.getTotalQueueing();
-            int ping = PlayerUtils.getPing(player);
 
             template.left(2, highlightC + "Online:");
             template.left(3, infoC + online);
@@ -78,10 +79,6 @@ public class PracticeTabAdapter implements TabAdapter {
             template.right(9, infoC + "donate.nub.land");
 
         } else if (profile.getState() == ProfileState.QUEUING) {
-            int online = land.nub.core.player.Profile.getOnlineSize();
-            long inGame = Profile.getTotalInGame();
-            long inQueue = Profile.getTotalQueueing();
-            int ping = PlayerUtils.getPing(player);
 
             template.left(2, highlightC + "Online:");
             template.left(3, infoC + online);
@@ -121,10 +118,6 @@ public class PracticeTabAdapter implements TabAdapter {
             template.right(11, highlightC + "Position:");
             template.right(12, infoC + position);
         } else if (profile.isInParty() && profile.getParty().getCurrentQueue() != null) {
-            int online = Bukkit.getOnlinePlayers().size();
-            long inGame = Profile.getTotalInGame();
-            long inQueue = Profile.getTotalQueueing();
-            int ping = PlayerUtils.getPing(player);
 
             template.left(2, highlightC + "Online:");
             template.left(3, infoC + online);
@@ -270,15 +263,15 @@ public class PracticeTabAdapter implements TabAdapter {
         }
 
         // Footer
-        if (protocolVersion >= 47) { // 1.8+
-            template.left(19, "&f&m---------------");
-            template.middle(19, "&f&m---------------");
-            template.right(19, "&f&m---------------");
-            template.farRight(19, "&f&m---------------");
+        if (protocolVersion >= 47) { // 1.8
+            template.left(19, LINE1_8);
+            template.middle(19, LINE1_8);
+            template.right(19, LINE1_8);
+            template.farRight(19, LINE1_8);
         } else { // 1.7
-            template.left(19, "&f&m--------------");
-            template.middle(19, "&f&m--------------");
-            template.right(19, "&f&m--------------");
+            template.left(19, LINE1_7);
+            template.middle(19, LINE1_7);
+            template.right(19, LINE1_7);
         }
 
         return template;
