@@ -4,7 +4,6 @@ import net.practice.practice.game.arena.map.MapLoc;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.player.data.ProfileState;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockState;

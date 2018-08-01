@@ -1,6 +1,8 @@
 package net.practice.practice.listener;
 
 import net.practice.practice.Practice;
+import net.practice.practice.cosmetic.CosmeticListener;
+import net.practice.practice.cosmetic.deatheffect.DeathEffectListener;
 import net.practice.practice.listener.listeners.*;
 import org.bukkit.Bukkit;
 
@@ -17,7 +19,9 @@ public class ListenerHandler {
                 new PlayerListener(),
                 new SpectatorListener(),
                 new WeatherListener(),
-                new WorldListener()
+                new WorldListener(),
+                new CosmeticListener(),
+                new DeathEffectListener()
         ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, Practice.getInstance()));
 
         new ServerListener();

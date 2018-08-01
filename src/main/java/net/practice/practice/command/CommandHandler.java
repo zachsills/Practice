@@ -19,7 +19,8 @@ public class CommandHandler {
                 new SettingsCommand(),
                 new SpectateCommand(),
                 new PartyCommand(),
-                new MapCommand()
+                new MapCommand(),
+                new CosmeticCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().registerCommands(command));
     }
 
@@ -35,7 +36,8 @@ public class CommandHandler {
                 new SettingsCommand(),
                 new SpectateCommand(),
                 new PartyCommand(),
-                new MapCommand()
+                new MapCommand(),
+                new CosmeticCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().unregisterCommands(command));
     }
 }
