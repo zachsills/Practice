@@ -12,6 +12,7 @@ import net.practice.practice.game.player.data.ProfileSetting;
 import net.practice.practice.game.player.data.ProfileState;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.inventory.inventories.*;
+import net.practice.practice.inventory.inventories.cosmetics.CosmeticInv;
 import net.practice.practice.spawn.PartyHandler;
 import net.practice.practice.spawn.SpawnHandler;
 import net.practice.practice.util.RunnableShorthand;
@@ -218,8 +219,8 @@ public class PlayerListener implements Listener {
                             StatsInv.openInventory(player);
                         else if(display.contains("Rematch"))
                             profile.sendRematch();
-                        else if(display.contains("Settings"))
-                            profile.openSettings();
+                        else if(display.contains("Cosmetics"))
+                            CosmeticInv.openInventory(player);
                         else if(display.contains("Party"))
                             profile.createParty();
                     } else {

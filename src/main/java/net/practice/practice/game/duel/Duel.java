@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class Duel {
 
@@ -226,6 +227,12 @@ public abstract class Duel {
     public void quit(Player player) {
         saveInventory(player.getUniqueId());
         sendMessage("&6" + player.getName() + "&e has quit.");
+    }
+
+    public List<Player> getAllPlayers() {
+        return Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public abstract boolean canHit(Player playerOne, Player playerTwo);

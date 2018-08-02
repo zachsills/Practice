@@ -86,7 +86,7 @@ public class SpawnHandler {
 
         items[5] = ItemStorage.PARTY_LOBBY_CREATE;
 
-        items[7] = ItemStorage.LOBBY_WATCH;
+        items[7] = ItemStorage.LOBBY_COSMETICS;
         items[8] = ItemStorage.LOBBY_EDITOR;
 
         return items;

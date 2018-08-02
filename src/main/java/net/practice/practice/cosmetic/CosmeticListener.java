@@ -27,6 +27,7 @@ public class CosmeticListener implements Listener {
 
         if (title.contains("Cosmetics")) {
             if (display.contains("Death Effects")) {
+                event.setCancelled(true);
                 DeathEffectInv.openInventory(player);
             }
         }

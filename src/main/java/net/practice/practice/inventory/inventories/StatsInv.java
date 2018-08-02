@@ -35,7 +35,7 @@ public class StatsInv {
         int eloCount = Ladder.getAllLadders().size();
         int globalElo = eloCount > 0 ? (eloSum / eloCount) : 1000;
 
-        inventory.setItem(13, new I(SpawnHandler.getSkull(targetP.getUuid().toString())).name(C.color("&6&lGlobal Stats"))
+        inventory.setItem(13, new I(SpawnHandler.getSkull(targetP.getUuid().toString())).name(C.color("&e&l" + targetP.getName()))
                 .lore(C.color("&f&m--------------"))
                 .lore(C.color("&6Ranked:"))
                 .lore(C.color("  &eWins &7- &f" + targetP.getRankedWins()))
@@ -52,9 +52,11 @@ public class StatsInv {
         for(Ladder ladder : Ladder.getLadders().values()) {
             String name = C.color("&e&l" + C.strip(ladder.getDisplayIcon().getItemMeta().getDisplayName()));
 
+            String whosElo = (player.getUniqueId().equals(targetP.getUuid())) ? "Your" : (targetP.getName() + "'s");
+
             I item = new I(ladder.getDisplayIcon()).name(name).clearLore().amount(1).flag(ItemFlag.HIDE_POTION_EFFECTS)
                     .lore(C.color("&f&m------------"))
-                    .lore(C.color("&6Your ELO &7- &f" + targetP.getElo(ladder)));
+                    .lore(C.color("&6" + whosElo + " ELO &7- &f" + targetP.getElo(ladder)));
             if(top.containsKey(ladder)) {
                 item.lore(" ").lore(C.color("&6Leaderboard "));
                 for(int i = 0; i < 10; i++) {

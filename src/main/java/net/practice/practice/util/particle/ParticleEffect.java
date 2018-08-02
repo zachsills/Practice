@@ -37,6 +37,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Particle effects utility library
@@ -254,6 +255,17 @@ public class ParticleEffect {
         try {
             Object packet = createPacket(location);
             for (Player player : Bukkit.getOnlinePlayers()) {
+                sendPacket(player, packet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendToPlayers(Location location, List<Player> players) {
+        try {
+            Object packet = createPacket(location);
+            for (Player player : players) {
                 sendPacket(player, packet);
             }
         } catch (Exception e) {
