@@ -85,6 +85,10 @@ public class MapCleaningListener implements Listener {
 
         Block from = event.getBlock();
         Block to = event.getToBlock();
+        if (to.getType() == Material.WEB) {
+            event.setCancelled(true);
+            return;
+        }
         if (to.getType() != Material.WATER && to.getType() != Material.STATIONARY_WATER && to.getType() != Material.LAVA && to.getType() != Material.STATIONARY_LAVA) {
             for (Profile profile : Profile.getProfiles().values()) {
                 if (profile.getCurrentDuel() != null && profile.getCurrentDuel().getState() == DuelState.PLAYING && profile.getCurrentDuel().getMap() != null) {
