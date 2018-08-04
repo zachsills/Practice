@@ -27,7 +27,7 @@ public class ServerListener {
 
     private void loadPingListener() {
         final List<WrappedGameProfile> messages = new ArrayList<>();
-        messages.add(new WrappedGameProfile("1", C.color("&4&lNUB&c&lLAND&7 [1.7 -> 1.8]")));
+        messages.add(new WrappedGameProfile("1", C.color("&6&lNub Land &7[1.7 | 1.8]")));
         messages.add(new WrappedGameProfile("2", C.color(" ")));
         messages.add(new WrappedGameProfile("3", C.color("&b&lTWITTER &f@Nub_Land")));
         messages.add(new WrappedGameProfile("4", C.color("&e&lFORUMS &fwww.nub.land")));

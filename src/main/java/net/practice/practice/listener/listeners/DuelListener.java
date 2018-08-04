@@ -172,6 +172,12 @@ public class DuelListener implements Listener {
     }
 
     @EventHandler
+    public void onShootBow(EntityShootBowEvent event) {
+        // Bow bouncing fix.
+        event.getProjectile().setVelocity(event.getProjectile().getVelocity());
+    }
+
+    @EventHandler
     public void onLaunch(ProjectileLaunchEvent event) {
         if(event.getEntity().getType() != EntityType.ENDER_PEARL)
             return;
