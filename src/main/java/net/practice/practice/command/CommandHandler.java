@@ -20,6 +20,7 @@ public class CommandHandler {
                 new SpectateCommand(),
                 new PartyCommand(),
                 new MapCommand(),
+                new FlyCommand(),
                 new CosmeticCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().registerCommands(command));
     }
@@ -37,6 +38,7 @@ public class CommandHandler {
                 new SpectateCommand(),
                 new PartyCommand(),
                 new MapCommand(),
+                new FlyCommand(),
                 new CosmeticCommand()
         ).forEach(command -> Practice.getInstance().getCommandFramework().unregisterCommands(command));
     }

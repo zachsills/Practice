@@ -15,6 +15,7 @@ import net.practice.practice.inventory.inventories.*;
 import net.practice.practice.inventory.inventories.cosmetics.CosmeticInv;
 import net.practice.practice.spawn.PartyHandler;
 import net.practice.practice.spawn.SpawnHandler;
+import net.practice.practice.task.NameUpdateTask;
 import net.practice.practice.util.RunnableShorthand;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
@@ -54,8 +55,13 @@ public class PlayerListener implements Listener {
         RunnableShorthand.runNextTick(() -> {
             SpawnHandler.spawn(event.getPlayer());
 
+            if(event.getPlayer().hasPermission("command.fly"))
+                event.getPlayer().setAllowFlight(true);
+
             ProfileSetting.toggleFor(event.getPlayer(), ProfileSetting.PLAYER_TIME, profile.getSetting(ProfileSetting.PLAYER_TIME));
         });
+
+        new NameUpdateTask(event.getPlayer(), "&c&lThryl", Bukkit.getOnlinePlayers()).runTaskLaterAsynchronously(Practice.getInstance(), 1L);
     }
 
     @EventHandler
@@ -325,6 +331,11 @@ public class PlayerListener implements Listener {
                             return;
                         }
 
+                        Queue queue = ladder.getRankedPartyQueue();
+                        queue.add(party.getId());
+
+                        party.setCurrentQueue(queue);
+                        PartyHandler.spawn(player, true, true);
                     }
                     player.sendMessage(C.color("&f\u00BB &eJoined the queue for Ranked " + ladder.getDisplayName() + "."));
                     player.closeInventory();
@@ -357,7 +368,7 @@ public class PlayerListener implements Listener {
 
                         player.sendMessage(C.color("&aYou have sent a duel request to " + requested.getName() + "."));
                     } else {
-                        if(profile.getParty().getRequests().containsKey(profile.getParty())) {
+                        if(profile.getParty().getRequests().containsKey(target.getParty())) {
                             player.sendMessage(C.color("&cYou have already sent this player a request."));
                             return;
                         }

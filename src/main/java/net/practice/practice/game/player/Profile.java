@@ -131,6 +131,10 @@ public class Profile {
         return currentQueue != null && state == ProfileState.QUEUING;
     }
 
+    public boolean isInLobby() {
+        return state == ProfileState.LOBBY || state == ProfileState.EDITING || state == ProfileState.QUEUING;
+    }
+
     public boolean isInGame() {
         return currentDuel != null && state == ProfileState.PLAYING;
     }

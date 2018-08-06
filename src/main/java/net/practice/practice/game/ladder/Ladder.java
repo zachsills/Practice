@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.practice.practice.game.player.data.PlayerInv;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueType;
+import net.practice.practice.game.queue.type.RankedPartyQueue;
 import net.practice.practice.game.queue.type.RankedSoloQueue;
 import net.practice.practice.game.queue.type.UnkrankedSoloQueue;
 import net.practice.practice.game.queue.type.UnrankedPartyQueue;
@@ -36,7 +37,7 @@ public class Ladder {
         this.name = name;
         this.displayName = ChatColor.GREEN + name;
 
-        this.queues = new Queue[3]; // Change to 4
+        this.queues = new Queue[4]; // Change to 4
         queues[0] = new UnkrankedSoloQueue(this);
         queues[2] = new UnrankedPartyQueue(this);
 
@@ -87,6 +88,10 @@ public class Ladder {
         return queues[2];
     }
 
+    public Queue getRankedPartyQueue() {
+        return queues[3];
+    }
+
     public int getTotalQueuing(QueueType type) {
         switch(type) {
             case UNRANKED:
@@ -95,6 +100,8 @@ public class Ladder {
                 return getRankedQueue().getSize();
             case UNRANKED_TEAM:
                 return getUnrankedPartyQueue().getSize();
+            case RANKED_TEAM:
+                return getRankedPartyQueue().getSize();
         }
 
         return 0;
@@ -103,10 +110,13 @@ public class Ladder {
     public void setRanked(boolean value) {
         ranked = value;
 
-        if(ranked)
+        if(ranked) {
             queues[1] = new RankedSoloQueue(this);
-        else
+            queues[3] = new RankedPartyQueue(this);
+        } else {
             queues[1] = null;
+            queues[3] = null;
+        }
     }
 
     public boolean isSpleef() {

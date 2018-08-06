@@ -143,7 +143,7 @@ public class PracticeTabAdapter implements TabAdapter {
 
             String ladder = profile.getParty().getCurrentQueue().getLadder().getDisplayName();
             int inLadderQueue = profile.getParty().getCurrentQueue().getSize();
-            int position = profile.getParty().getCurrentQueue().getQueued().indexOf(player.getUniqueId()) + 1;
+            int position = profile.getParty().getCurrentQueue().getQueued().indexOf(profile.getParty().getId()) + 1;
 
             // Left
             template.left(11, highlightC + "Ladder:");

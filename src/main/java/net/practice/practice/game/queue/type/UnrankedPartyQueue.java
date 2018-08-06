@@ -6,6 +6,7 @@ import net.practice.practice.game.duel.type.DuoDuel;
 import net.practice.practice.game.ladder.Ladder;
 import net.practice.practice.game.party.Party;
 import net.practice.practice.game.party.PartyManager;
+import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueType;
 
@@ -36,5 +37,7 @@ public class UnrankedPartyQueue extends Queue {
 
         getQueued().remove(0);
         getQueued().remove(1);
+
+        Profile.totalQueueing -= 2;
     }
 }

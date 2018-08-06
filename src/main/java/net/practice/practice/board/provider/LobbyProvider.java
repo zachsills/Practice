@@ -4,6 +4,7 @@ import net.practice.practice.board.BoardProvider;
 import net.practice.practice.game.party.Party;
 import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.Queue;
+import net.practice.practice.game.queue.type.RankedPartyQueue;
 import net.practice.practice.game.queue.type.RankedSoloQueue;
 import net.practice.practice.util.PlayerUtils;
 import net.practice.practice.util.chat.C;
@@ -48,8 +49,14 @@ public class LobbyProvider implements BoardProvider {
             lines.add(" ");
             lines.add("&6Party: &f" + Bukkit.getPlayer(party.getLeader()).getName());
             lines.add("  &6Members: &f" + party.getSize());
-            if(party.getCurrentQueue() != null)
+            if(party.getCurrentQueue() != null) {
                 lines.add("  &6Queue: &f" + C.strip(party.getCurrentQueue().getLadder().getDisplayName()));
+                if(party.getCurrentQueue() instanceof RankedPartyQueue) {
+                    RankedPartyQueue rankedQueue = (RankedPartyQueue) party.getCurrentQueue();
+
+                    lines.add("  &7Range: &c" + rankedQueue.getRanges().get(party.getId()).getMin() + " &7-> &c" + rankedQueue.getRanges().get(party.getId()).getMax());
+                }
+            }
         }
 
         lines.add(" ");

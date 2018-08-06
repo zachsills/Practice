@@ -6,14 +6,16 @@ import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.AbstractWrapper;
+import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
-import net.minecraft.server.v1_8_R3.PacketPlayInTabComplete;
-import net.minecraft.server.v1_8_R3.PacketPlayOutTabComplete;
+import com.mojang.authlib.GameProfile;
 import net.practice.practice.Practice;
 import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -64,5 +66,46 @@ public class ServerListener {
                 event.getPacket().getStringArrays().write(0, stringList.toArray(new String[stringList.size()]));
             }
         });
+
+        /*ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Practice.getInstance(), PacketType.Play.Server.PLAYER_INFO) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                List<PlayerInfoData> dataList = event.getPacket().getPlayerInfoDataLists().read(0);
+                Iterator<PlayerInfoData> it = dataList.iterator();
+                while(it.hasNext()) {
+                    PlayerInfoData data = it.next();
+                    if(C.strip(data.getProfile().getName()).replaceAll(" ", "").isEmpty())
+                        continue;
+
+                    try {
+                        Field field = PlayerInfoData.class.getDeclaredField("profile");
+                        field.setAccessible(true);
+
+                        Field field1 = AbstractWrapper.class.getDeclaredField("handle");
+                        field1.setAccessible(true);
+
+                        Field field2 = GameProfile.class.getDeclaredField("name");
+                        field2.setAccessible(true);
+
+                        Field field3 = GameProfile.class.getDeclaredField("properties");
+                        field3.setAccessible(true);
+
+                        WrappedGameProfile profile = data.getProfile();
+                        GameProfile oldGp = (GameProfile) profile.getHandle();
+
+                        GameProfile newGp = new GameProfile(oldGp.getId(), oldGp.getName());
+
+                        field3.set(newGp, oldGp.getProperties());
+                        field2.set(newGp, "Thryl");
+                        field1.set(profile, newGp);
+                        field.set(data, profile);
+                    } catch(Exception ex) {
+
+                    }
+                }
+
+                event.getPacket().getPlayerInfoDataLists().write(0, dataList);
+            }
+        });*/
     }
 }

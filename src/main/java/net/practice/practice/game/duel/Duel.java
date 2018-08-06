@@ -14,6 +14,7 @@ import net.practice.practice.util.chat.C;
 import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -86,6 +87,10 @@ public abstract class Duel {
 
         duelers.forEach(InvUtils::clear);
         duelers.forEach(this::giveKits);
+        duelers.forEach(player -> {
+            player.setAllowFlight(false);
+            player.setFlying(false);
+        });
         duelers.stream().map(Profile::getByPlayer).forEach(profile -> {
             profile.setCurrentDuel(this);
         });
@@ -95,9 +100,15 @@ public abstract class Duel {
             public void run() {
                 if(countDown > 0) {
                     sendMessage(C.color("&7Duel starting in &e" + countDown + " &e" + (countDown == 1 ? "second" : "seconds") + "&7."));
+                    duelers.forEach(player -> {
+                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
+                    });
                     countDown--;
                 } else {
                     start();
+                    duelers.forEach(player -> {
+                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 2f, 2f);
+                    });
                     this.cancel();
                 }
             }

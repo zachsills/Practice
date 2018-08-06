@@ -49,7 +49,7 @@ public class RankedSoloQueue extends Queue {
     public void setup() {
         for(UUID uuid : getQueued()) {
             for(UUID otherUUID : getQueued()) {
-                if(uuid == otherUUID)
+                if(uuid.equals(otherUUID))
                     continue;
 
                     if(ranges.get(uuid).isInRange(ranges.get(otherUUID))) {

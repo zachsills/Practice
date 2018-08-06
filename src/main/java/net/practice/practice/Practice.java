@@ -1,7 +1,6 @@
 package net.practice.practice;
 
 import com.bizarrealex.azazel.Azazel;
-import com.bizarrealex.azazel.tab.example.ExampleTabAdapter;
 import lombok.Getter;
 import net.practice.practice.autobroadcast.AutoBroadcastFile;
 import net.practice.practice.board.BoardManager;
@@ -16,12 +15,10 @@ import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.QueueRunnable;
 import net.practice.practice.listener.ListenerHandler;
 import net.practice.practice.spawn.SpawnHandler;
-import net.practice.practice.storage.MongoBackend;
+import net.practice.practice.storage.backend.MongoBackend;
+import net.practice.practice.storage.file.BuycraftFile;
 import net.practice.practice.tab.PracticeTabAdapter;
-import net.practice.practice.task.AutoBroadcastTask;
-import net.practice.practice.task.CleanerTask;
-import net.practice.practice.task.LeaderboardTask;
-import net.practice.practice.task.UpdateInventoryTask;
+import net.practice.practice.task.*;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
 import org.bukkit.*;
@@ -34,6 +31,7 @@ public class Practice extends JavaPlugin {
     @Getter private MongoBackend backend;
 
     @Getter private AutoBroadcastFile autoBroadcastFile;
+    @Getter private BuycraftFile buycraftFile;
 
     @Getter private BoardManager boardManager;
     @Getter private ArenaManager arenaManager;
@@ -78,7 +76,7 @@ public class Practice extends JavaPlugin {
         new CleanerTask().runTaskTimerAsynchronously(this, 20L, 5L * 20L);
         new LeaderboardTask().runTaskTimerAsynchronously(this, 100L, 180L * 20L);
         new UpdateInventoryTask().runTaskTimerAsynchronously(this, 20L, 30L);
-        if (getAutoBroadcastFile().isEnabled()) {
+        if(getAutoBroadcastFile().isEnabled()) {
             int seconds = getAutoBroadcastFile().getSeconds();
             new AutoBroadcastTask().runTaskTimerAsynchronously(this, 20L * seconds, 20L * seconds);
         }

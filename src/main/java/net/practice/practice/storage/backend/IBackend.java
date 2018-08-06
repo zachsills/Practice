@@ -1,4 +1,4 @@
-package net.practice.practice.storage;
+package net.practice.practice.storage.backend;
 
 import net.practice.practice.game.player.Profile;
 

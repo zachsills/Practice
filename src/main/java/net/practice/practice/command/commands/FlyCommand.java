@@ -1,0 +1,24 @@
+package net.practice.practice.command.commands;
+
+import net.practice.practice.game.player.Profile;
+import net.practice.practice.util.command.Command;
+import net.practice.practice.util.command.CommandArgs;
+import org.bukkit.entity.Player;
+
+public class FlyCommand {
+
+    @Command(name = "fly", playerOnly = true, permission = "command.fly")
+    public void onCommand(CommandArgs args) {
+        Player player = args.getPlayer();
+        Profile profile = Profile.getByPlayer(player);
+        if(!profile.isInLobby()) {
+            profile.sendMessage("&cThis command can only be executed in the lobby.");
+            return;
+        }
+
+        player.setAllowFlight(!player.getAllowFlight());
+        player.setFlying(player.getAllowFlight());
+
+        profile.sendMessage("&eFlying is now " + (player.getAllowFlight() ? "&aenabled" : "&cdisabled") + "&e.");
+    }
+}

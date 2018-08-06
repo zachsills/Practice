@@ -13,8 +13,11 @@ public class QueueRange {
     }
 
     public void expand() {
-        min -= 10;
-        max += 10;
+        if((min -= 10) < 0)
+            min = 0;
+
+        if((max += 10) > 5000)
+            max = 5000;
     }
 
     public boolean isExpired() {

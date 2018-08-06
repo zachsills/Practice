@@ -57,7 +57,7 @@ public class DeathEffectListener implements Listener {
                     if (cosmeticProfile.isUnlocked(deathEffect)) {
                         cosmeticProfile.setEnabled(deathEffect, true);
                         DeathEffectInv.updateInventory(player);
-                        player.sendMessage(C.color("&f\u00BB &7" + deathEffect.getName() + " &aEnabled!"));
+//                        player.sendMessage(C.color("&f\u00BB &7" + deathEffect.getName() + " &aEnabled!"));
                         player.playSound(player.getLocation(), Sound.NOTE_PLING, 0.7F, 1.4F);
                     } else {
                         player.sendMessage(C.color("&f\u00BB &7" + deathEffect.getName() + " &cis not unlocked! (Purchase Cosmetics @ donate.nub.land)"));
@@ -66,7 +66,7 @@ public class DeathEffectListener implements Listener {
                 } else {
                     cosmeticProfile.setEnabled(deathEffect, false);
                     DeathEffectInv.updateInventory(player);
-                    player.sendMessage(C.color("&f\u00BB &7" + deathEffect.getName() + " &cDisabled!"));
+//                    player.sendMessage(C.color("&f\u00BB &7" + deathEffect.getName() + " &cDisabled!"));
                     player.playSound(player.getLocation(), Sound.NOTE_PLING, 0.7F, 0.8F);
                 }
             }

@@ -117,8 +117,13 @@ public class SoloDuel extends Duel {
     }
 
     private int handleElo(Profile winnerProfile, Profile loserProfile, Ladder ladder) {
-        int winnerNewElo = EloUtils.getNewRating(winnerProfile.getElo(ladder), loserProfile.getElo(ladder), 1);
-        int loserNewElo = EloUtils.getNewRating(loserProfile.getElo(ladder), winnerProfile.getElo(ladder), 0);
+        int winnerNewElo;
+        if((winnerNewElo = EloUtils.getNewRating(winnerProfile.getElo(ladder), loserProfile.getElo(ladder), 1)) < 0)
+            winnerNewElo = 0;
+
+        int loserNewElo;
+        if((loserNewElo = EloUtils.getNewRating(loserProfile.getElo(ladder), winnerProfile.getElo(ladder), 0)) < 0)
+            loserNewElo = 0;
 
         int winnderOldElo = winnerProfile.getElo(ladder);
 

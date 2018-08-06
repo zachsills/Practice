@@ -36,7 +36,7 @@ public class SpawnHandler {
 
         player.setGameMode(GameMode.SURVIVAL);
         player.setFlying(false);
-        player.setAllowFlight(false);
+        player.setAllowFlight(player.hasPermission("command.fly"));
 
         player.setLevel(0);
         player.setExp(0.0F);
