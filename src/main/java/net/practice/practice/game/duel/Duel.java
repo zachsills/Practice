@@ -158,7 +158,7 @@ public abstract class Duel {
 
 //    public void saveInitialPots() {
 //        getPlayers().forEach(player -> {
-//           initialPots.put(player, (int) Arrays.stream(player.getInventory().getContents())
+//           initialPots.put(player, (int) Arrays.stream(player.getSoloRanked().getContents())
 //                   .filter(Objects::nonNull)
 //                   .filter(itemStack -> itemStack.getType() == Material.POTION && itemStack.getDurability() == 16421)
 //                   .count());

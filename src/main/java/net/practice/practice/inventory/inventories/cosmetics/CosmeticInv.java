@@ -11,7 +11,7 @@ public class CosmeticInv {
 
     public static void openInventory(Player player) {
         Inventory inventory = Practice.getInstance().getServer().createInventory(null, 27, C.color("&eCosmetics"));
-        int index = 10;
+        int index = 13;
         inventory.setItem(index, new I(Material.NETHER_STAR).name("&cDeath Effects").clearLore()
                 .lore(" ")
                 .lore("&7Choose a death effect!")

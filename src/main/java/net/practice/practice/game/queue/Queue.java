@@ -2,8 +2,11 @@ package net.practice.practice.game.queue;
 
 import lombok.Getter;
 import net.practice.practice.game.duel.DuelType;
+import net.practice.practice.game.duel.type.DuoDuel;
 import net.practice.practice.game.duel.type.SoloDuel;
 import net.practice.practice.game.ladder.Ladder;
+import net.practice.practice.game.party.Party;
+import net.practice.practice.game.party.PartyManager;
 import net.practice.practice.game.player.Profile;
 
 import java.util.*;
@@ -57,6 +60,23 @@ public abstract class Queue {
 
         return total;
     }
+    public static int getPartiesInGame(Ladder ladder, boolean ranked) {
+        int total = 0;
+
+        if(ranked) {
+            for(Party party : PartyManager.getParties().values())
+                total += party.getCurrentDuel() != null
+                        && party.getCurrentDuel().getLadder() == ladder
+                        && party.getCurrentDuel() instanceof DuoDuel
+                        && ((DuoDuel) party.getCurrentDuel()).isRanked() ? party.getSize() : 0;
+        } else {
+            for(Party party : PartyManager.getParties().values())
+                total += party.getCurrentDuel() != null && party.getCurrentDuel().getLadder() == ladder ? party.getSize() : 0;
+        }
+
+        return total;
+    }
+
 
     public void add(UUID uuid) {
         queued.add(uuid);

@@ -11,10 +11,16 @@ import org.bukkit.inventory.ItemFlag;
 public class RequestInv {
 
     public static void openInventory(Player requester, Player requested) {
-        Inventory inventory = Bukkit.createInventory(requester, 18, C.color("&eRequesting: " + requested.getName()));
+        Inventory inventory = Bukkit.createInventory(requester, 27, C.color("&eRequesting: " + requested.getName()));
 
-        for(Ladder ladder : Ladder.getLadders().values())
-            inventory.addItem(new I(ladder.getDisplayIcon()).amount(1).name(ladder.getDisplayName()).clearLore().flag(ItemFlag.HIDE_POTION_EFFECTS));
+        int index = 10;
+        for(Ladder ladder : Ladder.getLadders().values()) {
+            if((index + 1) % 9 == 0)
+                index += 2;
+
+            inventory.setItem(index, new I(ladder.getDisplayIcon()).amount(1).name(ladder.getDisplayName()).clearLore().flag(ItemFlag.HIDE_POTION_EFFECTS));
+            index++;
+        }
 
         requester.openInventory(inventory);
     }

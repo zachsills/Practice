@@ -26,6 +26,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
@@ -401,6 +402,7 @@ public class Profile {
         settings.put(setting, nextOption);
 
         ProfileSetting.toggleFor(getPlayer(), setting, nextOption);
+        getPlayer().playSound(getPlayer().getLocation(), Sound.NOTE_PLING, 0.7F, 1.4F);
     }
 
     public void beginEditing(Ladder ladder) {

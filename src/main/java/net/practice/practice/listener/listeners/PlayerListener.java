@@ -60,8 +60,6 @@ public class PlayerListener implements Listener {
 
             ProfileSetting.toggleFor(event.getPlayer(), ProfileSetting.PLAYER_TIME, profile.getSetting(ProfileSetting.PLAYER_TIME));
         });
-
-        new NameUpdateTask(event.getPlayer(), "&c&lThryl", Bukkit.getOnlinePlayers()).runTaskLaterAsynchronously(Practice.getInstance(), 1L);
     }
 
     @EventHandler
@@ -231,9 +229,9 @@ public class PlayerListener implements Listener {
                             profile.createParty();
                     } else {
                         if(display.contains("Unranked"))
-                            UnrankedInv.openInventory(player);
+                            UnrankedInv.openPartyInventory(player);
                         else if(display.contains("Ranked"))
-                            RankedInv.openInventory(player);
+                            RankedInv.openPartyInventory(player);
                         else if(display.contains("Info"))
                             profile.sendPartyInfo();
                         else if(display.contains("Event"))

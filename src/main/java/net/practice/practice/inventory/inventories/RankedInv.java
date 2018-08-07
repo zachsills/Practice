@@ -14,11 +14,12 @@ import org.bukkit.inventory.ItemFlag;
 
 public class RankedInv {
 
-    @Getter private static Inventory inventory = Practice.getInstance().getServer().createInventory(null, 27, C.color("&6Ranked"));
+    @Getter private static Inventory soloRanked = Practice.getInstance().getServer().createInventory(null, 27, C.color("&6Ranked"));
+    @Getter private static Inventory partyRanked = Practice.getInstance().getServer().createInventory(null, 27, C.color("&62v2 Ranked"));
 
     public static void updateInventory() {
         if(Ladder.getLadders().values().size() == 0) {
-            inventory.setItem(13, new I(Material.RED_ROSE).name(C.color("No ladders set!")));
+            soloRanked.setItem(13, new I(Material.RED_ROSE).name(C.color("No ladders set!")));
         } else {
             int index = 10;
             for(Ladder ladder : Ladder.getLadders().values()) {
@@ -29,7 +30,25 @@ public class RankedInv {
 
                 int queuing = ladder.getTotalQueuing(QueueType.RANKED);
                 int inGame = Queue.getNumberInGame(ladder, true);
-                inventory.setItem(index, new I(ladder.getDisplayIcon()).amount(1).clearLore().lore(C.color("&f&m------------")).lore(C.color("&7Queuing: &c" + queuing))
+                soloRanked.setItem(index, new I(ladder.getDisplayIcon()).amount(1).clearLore().lore(C.color("&f&m------------")).lore(C.color("&7Queuing: &c" + queuing))
+                        .lore(C.color("&7In Game: &c") + inGame).lore(C.color("&f&m------------")).flag(ItemFlag.HIDE_POTION_EFFECTS));
+                index++;
+            }
+        }
+
+        if(Ladder.getLadders().values().size() == 0) {
+            partyRanked.setItem(13, new I(Material.RED_ROSE).name(C.color("No ladders set!")));
+        } else {
+            int index = 10;
+            for(Ladder ladder : Ladder.getLadders().values()) {
+                if(!ladder.isRanked())
+                    continue;
+                if((index + 1) % 9 == 0)
+                    index += 2;
+
+                int queuing = ladder.getTotalQueuing(QueueType.RANKED_TEAM);
+                int inGame = Queue.getPartiesInGame(ladder, true);
+                partyRanked.setItem(index, new I(ladder.getDisplayIcon()).amount(1).clearLore().lore(C.color("&f&m------------")).lore(C.color("&7Queuing: &c" + queuing))
                         .lore(C.color("&7In Game: &c") + inGame).lore(C.color("&f&m------------")).flag(ItemFlag.HIDE_POTION_EFFECTS));
                 index++;
             }
@@ -37,6 +56,10 @@ public class RankedInv {
     }
 
     public static void openInventory(Player player) {
-        player.openInventory(inventory);
+        player.openInventory(soloRanked);
+    }
+
+    public static void openPartyInventory(Player player) {
+        player.openInventory(partyRanked);
     }
 }
