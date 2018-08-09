@@ -257,7 +257,10 @@ public abstract class Duel {
     }
 
     public void saveInventory(UUID uuid) {
-        saveInventory(Bukkit.getPlayer(uuid));
+        Player player = Bukkit.getPlayer(uuid);
+        if (player != null && player.isOnline()) {
+            saveInventory(Bukkit.getPlayer(uuid));
+        }
     }
 
     public abstract void saveInventories();

@@ -36,10 +36,12 @@ public class SpawnHandler {
 
         player.setGameMode(GameMode.SURVIVAL);
         player.setFlying(false);
-        player.setAllowFlight(player.hasPermission("command.fly"));
+        player.setAllowFlight(player.hasPermission("practice.command.fly"));
 
         player.setLevel(0);
         player.setExp(0.0F);
+
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
 
         ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) -1);
 

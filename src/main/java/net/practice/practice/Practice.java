@@ -22,6 +22,7 @@ import net.practice.practice.task.*;
 import net.practice.practice.util.LocUtils;
 import net.practice.practice.util.command.CommandFramework;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Practice extends JavaPlugin {
@@ -99,6 +100,10 @@ public class Practice extends JavaPlugin {
 
         Profile.getProfiles().clear();
         PartyManager.getParties().clear();
+
+        for (Player player : Bukkit.getOnlinePlayers()) { // This is because if people are in the arena world when we stop, it won't unload it below.
+            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        }
 
         getServer().unloadWorld(MapLoc.getArenaWorld(), false);
     }

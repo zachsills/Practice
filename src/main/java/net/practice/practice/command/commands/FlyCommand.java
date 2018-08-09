@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class FlyCommand {
 
-    @Command(name = "fly", playerOnly = true, permission = "command.fly")
+    @Command(name = "fly", playerOnly = true, permission = "practice.command.fly")
     public void onCommand(CommandArgs args) {
         Player player = args.getPlayer();
         Profile profile = Profile.getByPlayer(player);

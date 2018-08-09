@@ -12,17 +12,16 @@ public class CosmeticProfile {
     private static Map<UUID, CosmeticProfile> cosmeticProfiles = new HashMap<>();
 
     @Getter private List<Cosmetic> unlockedCosmetics, enabledCosmetics;
+    @Getter private Player player;
 
     public CosmeticProfile(UUID uuid) {
         if (Bukkit.getPlayer(uuid) == null || !Bukkit.getPlayer(uuid).isOnline()) return;
-        Player player = Bukkit.getPlayer(uuid);
+        this.player = Bukkit.getPlayer(uuid);
 
         unlockedCosmetics = new ArrayList<>();
         enabledCosmetics = new ArrayList<>();
 
-        if (player.isOp()) {
-            unlockedCosmetics.addAll(Arrays.asList(DeathEffect.values()));
-        }
+
 
         cosmeticProfiles.put(uuid, this);
     }
@@ -32,6 +31,13 @@ public class CosmeticProfile {
             return cosmeticProfiles.get(uuid);
 
         return new CosmeticProfile(uuid);
+    }
+
+    private void setUnlockedCosmetics(Player player) {
+        unlockedCosmetics.clear();
+        if (player.isOp() || player.hasPermission("practice.cosmetic.deatheffects")) {
+            unlockedCosmetics.addAll(Arrays.asList(DeathEffect.values()));
+        }
     }
 
     public boolean isEnabled(Cosmetic cosmetic) {
@@ -49,6 +55,7 @@ public class CosmeticProfile {
     }
 
     public boolean isUnlocked(Cosmetic cosmetic) {
+        setUnlockedCosmetics(player);
         return unlockedCosmetics.contains(cosmetic);
     }
 

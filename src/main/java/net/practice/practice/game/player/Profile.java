@@ -30,6 +30,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -301,10 +304,17 @@ public class Profile {
         player.setFoodLevel(20);
 
         player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 21, 0));
 
         player.setAllowFlight(true);
         player.setFlying(true);
-        player.setVelocity(player.getVelocity().setY(1.5F));
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setVelocity(player.getVelocity().setY(1.7F));
+            }
+        }.runTaskLater(Practice.getInstance(), 1L);
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
