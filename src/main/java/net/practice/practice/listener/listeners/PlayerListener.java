@@ -55,6 +55,8 @@ public class PlayerListener implements Listener {
         RunnableShorthand.runNextTick(() -> {
             SpawnHandler.spawn(event.getPlayer());
 
+            event.getPlayer().setAllowFlight(event.getPlayer().hasPermission("practice.command.fly"));
+
             ProfileSetting.toggleFor(event.getPlayer(), ProfileSetting.PLAYER_TIME, profile.getSetting(ProfileSetting.PLAYER_TIME));
         });
     }

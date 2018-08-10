@@ -3,6 +3,7 @@ package net.practice.practice.inventory.inventories;
 import lombok.Getter;
 import net.practice.practice.Practice;
 import net.practice.practice.game.ladder.Ladder;
+import net.practice.practice.game.player.Profile;
 import net.practice.practice.game.queue.Queue;
 import net.practice.practice.game.queue.QueueType;
 import net.practice.practice.util.chat.C;
@@ -56,10 +57,22 @@ public class RankedInv {
     }
 
     public static void openInventory(Player player) {
-        player.openInventory(soloRanked);
+        if (canOpenRanked(player)) {
+            player.openInventory(soloRanked);
+        } else {
+            player.sendMessage(C.color("&cYou must have 10 unranked wins before playing ranked! (" + Profile.getByPlayer(player).getUnrankedWins() + "/10)"));
+        }
     }
 
     public static void openPartyInventory(Player player) {
-        player.openInventory(partyRanked);
+        if (canOpenRanked(player)) {
+            player.openInventory(partyRanked);
+        } else {
+            player.sendMessage(C.color("&cYou must have 10 unranked wins before playing ranked! (" + Profile.getByPlayer(player).getUnrankedWins() + "/10)"));
+        }
+    }
+
+    private static boolean canOpenRanked(Player player) {
+        return Profile.getByPlayer(player).getUnrankedWins() > 10;
     }
 }
