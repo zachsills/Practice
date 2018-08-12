@@ -1,14 +1,14 @@
-package net.practice.practice.game.duel;
+package land.nub.practice.game.duel;
 
+import land.nub.practice.game.arena.map.MapLoc;
+import land.nub.practice.util.chat.C;
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.game.arena.map.MapLoc;
-import net.practice.practice.game.duel.type.SoloDuel;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.spawn.SpawnHandler;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.chat.JsonMessage;
+import land.nub.practice.game.duel.type.SoloDuel;
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.spawn.SpawnHandler;
+import land.nub.practice.util.chat.JsonMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

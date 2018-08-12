@@ -1,12 +1,12 @@
-package net.practice.practice.game.party;
+package land.nub.practice.game.party;
 
+import land.nub.practice.game.duel.Duel;
+import land.nub.practice.game.duel.PartyDuelRequest;
+import land.nub.practice.game.queue.Queue;
+import land.nub.practice.spawn.PartyHandler;
+import land.nub.practice.util.chat.C;
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.game.duel.Duel;
-import net.practice.practice.game.duel.PartyDuelRequest;
-import net.practice.practice.game.queue.Queue;
-import net.practice.practice.spawn.PartyHandler;
-import net.practice.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

@@ -1,4 +1,4 @@
-package net.practice.practice.game.player.data;
+package land.nub.practice.game.player.data;
 
 public enum ProfileState {
 

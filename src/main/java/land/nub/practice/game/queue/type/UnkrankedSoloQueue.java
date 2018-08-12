@@ -1,14 +1,14 @@
-package net.practice.practice.game.queue.type;
+package land.nub.practice.game.queue.type;
 
-import net.practice.practice.game.arena.map.MapLoc;
-import net.practice.practice.game.duel.Duel;
-import net.practice.practice.game.duel.type.SoloDuel;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.queue.Queue;
-import net.practice.practice.game.queue.QueueType;
-import net.practice.practice.spawn.SpawnHandler;
-import net.practice.practice.util.chat.C;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.game.arena.map.MapLoc;
+import land.nub.practice.game.duel.Duel;
+import land.nub.practice.game.duel.type.SoloDuel;
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.queue.Queue;
+import land.nub.practice.game.queue.QueueType;
+import land.nub.practice.spawn.SpawnHandler;
 import org.bukkit.Bukkit;
 
 public class UnkrankedSoloQueue extends Queue {

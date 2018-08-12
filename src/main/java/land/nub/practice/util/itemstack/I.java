@@ -1,6 +1,6 @@
-package net.practice.practice.util.itemstack;
+package land.nub.practice.util.itemstack;
 
-import net.practice.practice.util.chat.C;
+import land.nub.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;

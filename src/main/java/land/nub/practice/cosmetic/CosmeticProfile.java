@@ -1,7 +1,7 @@
-package net.practice.practice.cosmetic;
+package land.nub.practice.cosmetic;
 
+import land.nub.practice.cosmetic.deatheffect.DeathEffect;
 import lombok.Getter;
-import net.practice.practice.cosmetic.deatheffect.DeathEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

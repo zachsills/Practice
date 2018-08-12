@@ -1,16 +1,16 @@
-package net.practice.practice.game.queue.type;
+package land.nub.practice.game.queue.type;
 
+import land.nub.practice.game.arena.map.MapLoc;
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.party.PartyManager;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.queue.Queue;
+import land.nub.practice.game.queue.QueueRange;
+import land.nub.practice.game.queue.QueueType;
 import lombok.Getter;
-import net.practice.practice.game.arena.map.MapLoc;
-import net.practice.practice.game.duel.Duel;
-import net.practice.practice.game.duel.type.DuoDuel;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.party.Party;
-import net.practice.practice.game.party.PartyManager;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.queue.Queue;
-import net.practice.practice.game.queue.QueueRange;
-import net.practice.practice.game.queue.QueueType;
+import land.nub.practice.game.duel.Duel;
+import land.nub.practice.game.duel.type.DuoDuel;
+import land.nub.practice.game.party.Party;
 
 import java.util.HashMap;
 import java.util.Iterator;

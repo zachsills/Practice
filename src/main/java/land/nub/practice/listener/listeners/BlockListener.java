@@ -1,7 +1,7 @@
-package net.practice.practice.listener.listeners;
+package land.nub.practice.listener.listeners;
 
-import net.practice.practice.game.duel.DuelState;
-import net.practice.practice.game.player.Profile;
+import land.nub.practice.game.duel.DuelState;
+import land.nub.practice.game.player.Profile;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

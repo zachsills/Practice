@@ -1,6 +1,6 @@
-package net.practice.practice.util.command;
+package land.nub.practice.util.command;
 
-import net.practice.practice.util.chat.C;
+import land.nub.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;

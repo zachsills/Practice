@@ -1,18 +1,15 @@
-package net.practice.practice.command.commands;
+package land.nub.practice.command.commands;
 
-import net.practice.practice.game.party.Party;
-import net.practice.practice.game.party.PartyManager;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.spawn.PartyHandler;
-import net.practice.practice.spawn.SpawnHandler;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.chat.JsonMessage;
-import net.practice.practice.util.command.Command;
-import net.practice.practice.util.command.CommandArgs;
+import land.nub.practice.game.party.PartyManager;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.command.Command;
+import land.nub.practice.util.command.CommandArgs;
+import land.nub.practice.game.party.Party;
+import land.nub.practice.spawn.SpawnHandler;
+import land.nub.practice.util.chat.JsonMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public class PartyCommand {
 

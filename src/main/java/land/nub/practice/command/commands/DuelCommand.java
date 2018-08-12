@@ -1,13 +1,13 @@
-package net.practice.practice.command.commands;
+package land.nub.practice.command.commands;
 
-import net.practice.practice.game.duel.DuelRequest;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.player.data.ProfileSetting;
-import net.practice.practice.game.player.data.ProfileState;
-import net.practice.practice.inventory.inventories.RequestInv;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.command.Command;
-import net.practice.practice.util.command.CommandArgs;
+import land.nub.practice.game.duel.DuelRequest;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.player.data.ProfileSetting;
+import land.nub.practice.game.player.data.ProfileState;
+import land.nub.practice.inventory.inventories.RequestInv;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.command.Command;
+import land.nub.practice.util.command.CommandArgs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

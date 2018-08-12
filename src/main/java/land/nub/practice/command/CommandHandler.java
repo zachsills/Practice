@@ -1,7 +1,7 @@
-package net.practice.practice.command;
+package land.nub.practice.command;
 
-import net.practice.practice.Practice;
-import net.practice.practice.command.commands.*;
+import land.nub.practice.Practice;
+import land.nub.practice.command.commands.*;
 
 import java.util.stream.Stream;
 

@@ -1,13 +1,13 @@
-package net.practice.practice.inventory.inventories;
+package land.nub.practice.inventory.inventories;
 
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.queue.Queue;
+import land.nub.practice.game.queue.QueueType;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.itemstack.I;
 import lombok.Getter;
-import net.practice.practice.Practice;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.queue.Queue;
-import net.practice.practice.game.queue.QueueType;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.itemstack.I;
+import land.nub.practice.Practice;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -73,6 +73,6 @@ public class RankedInv {
     }
 
     private static boolean canOpenRanked(Player player) {
-        return Profile.getByPlayer(player).getUnrankedWins() > 10;
+        return Profile.getByPlayer(player).getUnrankedWins() >= 10;
     }
 }

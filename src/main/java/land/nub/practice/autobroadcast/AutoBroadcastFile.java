@@ -1,6 +1,6 @@
-package net.practice.practice.autobroadcast;
+package land.nub.practice.autobroadcast;
 
-import net.practice.practice.util.file.Configuration;
+import land.nub.practice.util.file.Configuration;
 
 import java.util.List;
 

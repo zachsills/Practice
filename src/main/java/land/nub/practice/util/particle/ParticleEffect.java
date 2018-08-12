@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.practice.practice.util.particle;
+package land.nub.practice.util.particle;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

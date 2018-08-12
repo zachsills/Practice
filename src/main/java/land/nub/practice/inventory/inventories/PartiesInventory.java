@@ -1,10 +1,10 @@
-package net.practice.practice.inventory.inventories;
+package land.nub.practice.inventory.inventories;
 
 import lombok.Getter;
-import net.practice.practice.game.party.Party;
-import net.practice.practice.game.party.PartyManager;
-import net.practice.practice.game.party.PartyState;
-import net.practice.practice.util.itemstack.I;
+import land.nub.practice.game.party.Party;
+import land.nub.practice.game.party.PartyManager;
+import land.nub.practice.game.party.PartyState;
+import land.nub.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,8 +1,8 @@
-package net.practice.practice.game.ladder;
+package land.nub.practice.game.ladder;
 
+import land.nub.practice.util.InvUtils;
+import land.nub.practice.util.file.Configuration;
 import lombok.Getter;
-import net.practice.practice.util.InvUtils;
-import net.practice.practice.util.file.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 

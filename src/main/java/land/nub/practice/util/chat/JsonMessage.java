@@ -1,4 +1,4 @@
-package net.practice.practice.util.chat;
+package land.nub.practice.util.chat;
 
 //Created by Justis Root. Released into the public domain.
 //https://gist.github.com/justisr

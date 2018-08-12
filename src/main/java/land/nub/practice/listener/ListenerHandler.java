@@ -1,9 +1,9 @@
-package net.practice.practice.listener;
+package land.nub.practice.listener;
 
-import net.practice.practice.Practice;
-import net.practice.practice.cosmetic.CosmeticListener;
-import net.practice.practice.cosmetic.deatheffect.DeathEffectListener;
-import net.practice.practice.listener.listeners.*;
+import land.nub.practice.cosmetic.CosmeticListener;
+import land.nub.practice.cosmetic.deatheffect.DeathEffectListener;
+import land.nub.practice.listener.listeners.*;
+import land.nub.practice.Practice;
 import org.bukkit.Bukkit;
 
 import java.util.stream.Stream;
@@ -18,7 +18,6 @@ public class ListenerHandler {
                 new EditorListener(),
                 new PlayerListener(),
                 new SpectatorListener(),
-                new WeatherListener(),
                 new WorldListener(),
                 new CosmeticListener(),
                 new DeathEffectListener()

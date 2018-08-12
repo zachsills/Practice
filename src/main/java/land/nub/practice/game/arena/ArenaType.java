@@ -1,4 +1,4 @@
-package net.practice.practice.game.arena;
+package land.nub.practice.game.arena;
 
 public enum ArenaType {
 

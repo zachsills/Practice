@@ -1,4 +1,4 @@
-package net.practice.practice.util.chat;
+package land.nub.practice.util.chat;
 
 import org.bukkit.ChatColor;
 

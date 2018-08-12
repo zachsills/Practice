@@ -1,8 +1,8 @@
-package net.practice.practice.inventory.inventories.cosmetics;
+package land.nub.practice.inventory.inventories.cosmetics;
 
-import net.practice.practice.Practice;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.itemstack.I;
+import land.nub.practice.Practice;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.itemstack.I;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

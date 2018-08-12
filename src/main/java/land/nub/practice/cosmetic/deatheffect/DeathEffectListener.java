@@ -1,13 +1,13 @@
-package net.practice.practice.cosmetic.deatheffect;
+package land.nub.practice.cosmetic.deatheffect;
 
-import net.practice.practice.Practice;
-import net.practice.practice.cosmetic.CosmeticProfile;
-import net.practice.practice.cosmetic.Cosmetic;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.inventory.inventories.cosmetics.CosmeticInv;
-import net.practice.practice.inventory.inventories.cosmetics.DeathEffectInv;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.particle.ParticleEffect;
+import land.nub.practice.inventory.inventories.cosmetics.DeathEffectInv;
+import land.nub.practice.Practice;
+import land.nub.practice.cosmetic.CosmeticProfile;
+import land.nub.practice.cosmetic.Cosmetic;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.inventory.inventories.cosmetics.CosmeticInv;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.particle.ParticleEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;

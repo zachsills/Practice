@@ -1,4 +1,4 @@
-package net.practice.practice.util.command;
+package land.nub.practice.util.command;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package net.practice.practice.game.party;
+package land.nub.practice.game.party;
 
 public enum PartyState {
 

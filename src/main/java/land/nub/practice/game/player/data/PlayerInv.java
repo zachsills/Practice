@@ -1,8 +1,8 @@
-package net.practice.practice.game.player.data;
+package land.nub.practice.game.player.data;
 
+import land.nub.practice.util.InvUtils;
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.util.InvUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;

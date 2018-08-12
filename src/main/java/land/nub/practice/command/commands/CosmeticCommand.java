@@ -1,8 +1,8 @@
-package net.practice.practice.command.commands;
+package land.nub.practice.command.commands;
 
-import net.practice.practice.inventory.inventories.cosmetics.CosmeticInv;
-import net.practice.practice.util.command.Command;
-import net.practice.practice.util.command.CommandArgs;
+import land.nub.practice.inventory.inventories.cosmetics.CosmeticInv;
+import land.nub.practice.util.command.Command;
+import land.nub.practice.util.command.CommandArgs;
 
 public class CosmeticCommand {
 

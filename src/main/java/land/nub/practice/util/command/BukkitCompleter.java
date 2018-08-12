@@ -1,4 +1,4 @@
-package net.practice.practice.util.command;
+package land.nub.practice.util.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

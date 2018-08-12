@@ -1,13 +1,13 @@
-package net.practice.practice.game.queue;
+package land.nub.practice.game.queue;
 
 import lombok.Getter;
-import net.practice.practice.game.duel.DuelType;
-import net.practice.practice.game.duel.type.DuoDuel;
-import net.practice.practice.game.duel.type.SoloDuel;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.party.Party;
-import net.practice.practice.game.party.PartyManager;
-import net.practice.practice.game.player.Profile;
+import land.nub.practice.game.duel.DuelType;
+import land.nub.practice.game.duel.type.DuoDuel;
+import land.nub.practice.game.duel.type.SoloDuel;
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.party.Party;
+import land.nub.practice.game.party.PartyManager;
+import land.nub.practice.game.player.Profile;
 
 import java.util.*;
 import java.util.stream.Collectors;

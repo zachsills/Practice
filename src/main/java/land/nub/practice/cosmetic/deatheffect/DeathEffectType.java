@@ -1,4 +1,4 @@
-package net.practice.practice.cosmetic.deatheffect;
+package land.nub.practice.cosmetic.deatheffect;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

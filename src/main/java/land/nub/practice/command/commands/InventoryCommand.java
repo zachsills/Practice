@@ -1,9 +1,9 @@
-package net.practice.practice.command.commands;
+package land.nub.practice.command.commands;
 
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.player.data.InventorySnapshot;
-import net.practice.practice.util.command.Command;
-import net.practice.practice.util.command.CommandArgs;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.player.data.InventorySnapshot;
+import land.nub.practice.util.command.Command;
+import land.nub.practice.util.command.CommandArgs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -1,13 +1,13 @@
-package net.practice.practice.board.provider;
+package land.nub.practice.board.provider;
 
-import net.practice.practice.board.BoardProvider;
-import net.practice.practice.game.party.Party;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.queue.Queue;
-import net.practice.practice.game.queue.type.RankedPartyQueue;
-import net.practice.practice.game.queue.type.RankedSoloQueue;
-import net.practice.practice.util.PlayerUtils;
-import net.practice.practice.util.chat.C;
+import land.nub.practice.game.queue.type.RankedSoloQueue;
+import land.nub.practice.board.BoardProvider;
+import land.nub.practice.game.party.Party;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.queue.Queue;
+import land.nub.practice.game.queue.type.RankedPartyQueue;
+import land.nub.practice.util.PlayerUtils;
+import land.nub.practice.util.chat.C;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

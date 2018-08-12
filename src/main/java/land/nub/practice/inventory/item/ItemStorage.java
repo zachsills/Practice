@@ -1,7 +1,7 @@
-package net.practice.practice.inventory.item;
+package land.nub.practice.inventory.item;
 
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.itemstack.I;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.itemstack.I;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

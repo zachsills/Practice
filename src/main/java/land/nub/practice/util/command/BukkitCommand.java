@@ -1,7 +1,6 @@
-package net.practice.practice.util.command;
+package land.nub.practice.util.command;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

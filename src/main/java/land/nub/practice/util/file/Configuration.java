@@ -1,7 +1,7 @@
-package net.practice.practice.util.file;
+package land.nub.practice.util.file;
 
 import lombok.Getter;
-import net.practice.practice.Practice;
+import land.nub.practice.Practice;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

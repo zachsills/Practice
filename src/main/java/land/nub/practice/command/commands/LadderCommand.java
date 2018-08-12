@@ -1,11 +1,11 @@
-package net.practice.practice.command.commands;
+package land.nub.practice.command.commands;
 
-import net.practice.practice.Practice;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.player.data.PlayerInv;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.command.Command;
-import net.practice.practice.util.command.CommandArgs;
+import land.nub.practice.Practice;
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.player.data.PlayerInv;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.command.Command;
+import land.nub.practice.util.command.CommandArgs;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

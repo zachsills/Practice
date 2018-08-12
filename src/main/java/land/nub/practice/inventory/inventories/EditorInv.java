@@ -1,11 +1,11 @@
-package net.practice.practice.inventory.inventories;
+package land.nub.practice.inventory.inventories;
 
-import net.practice.practice.Practice;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.player.data.PlayerKit;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.itemstack.I;
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.player.data.PlayerKit;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.itemstack.I;
+import land.nub.practice.Practice;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

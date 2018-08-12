@@ -1,12 +1,12 @@
-package net.practice.practice.board.provider;
+package land.nub.practice.board.provider;
 
-import net.practice.practice.board.BoardProvider;
-import net.practice.practice.game.duel.Duel;
-import net.practice.practice.game.duel.DuelState;
-import net.practice.practice.game.duel.type.SoloDuel;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.util.PlayerUtils;
-import net.practice.practice.util.TimeUtils;
+import land.nub.practice.board.BoardProvider;
+import land.nub.practice.game.duel.Duel;
+import land.nub.practice.game.duel.DuelState;
+import land.nub.practice.game.duel.type.SoloDuel;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.util.PlayerUtils;
+import land.nub.practice.util.TimeUtils;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

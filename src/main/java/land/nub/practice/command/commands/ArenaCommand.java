@@ -1,12 +1,12 @@
-package net.practice.practice.command.commands;
+package land.nub.practice.command.commands;
 
-import net.practice.practice.Practice;
-import net.practice.practice.game.arena.Arena;
-import net.practice.practice.game.arena.ArenaType;
-import net.practice.practice.util.LocUtils;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.command.Command;
-import net.practice.practice.util.command.CommandArgs;
+import land.nub.practice.Practice;
+import land.nub.practice.game.arena.Arena;
+import land.nub.practice.game.arena.ArenaType;
+import land.nub.practice.util.LocUtils;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.command.Command;
+import land.nub.practice.util.command.CommandArgs;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

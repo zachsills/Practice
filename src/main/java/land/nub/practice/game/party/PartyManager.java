@@ -1,7 +1,7 @@
-package net.practice.practice.game.party;
+package land.nub.practice.game.party;
 
 import lombok.Getter;
-import net.practice.practice.game.player.Profile;
+import land.nub.practice.game.player.Profile;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

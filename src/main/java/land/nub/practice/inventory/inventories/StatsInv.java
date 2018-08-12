@@ -1,23 +1,20 @@
-package net.practice.practice.inventory.inventories;
+package land.nub.practice.inventory.inventories;
 
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.itemstack.I;
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.game.ladder.Ladder;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.spawn.SpawnHandler;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.itemstack.I;
+import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.spawn.SpawnHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class StatsInv {
 

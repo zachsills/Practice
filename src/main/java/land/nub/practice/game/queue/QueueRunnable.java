@@ -1,4 +1,4 @@
-package net.practice.practice.game.queue;
+package land.nub.practice.game.queue;
 
 import org.bukkit.scheduler.BukkitRunnable;
 

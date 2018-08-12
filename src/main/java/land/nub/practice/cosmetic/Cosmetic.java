@@ -1,4 +1,4 @@
-package net.practice.practice.cosmetic;
+package land.nub.practice.cosmetic;
 
 public interface Cosmetic {
     // xd

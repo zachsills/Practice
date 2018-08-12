@@ -1,10 +1,10 @@
-package net.practice.practice.listener.listeners;
+package land.nub.practice.listener.listeners;
 
-import net.practice.practice.game.arena.map.MapLoc;
-import net.practice.practice.game.duel.Duel;
-import net.practice.practice.game.duel.DuelState;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.task.MapCleanRunnable;
+import land.nub.practice.game.arena.map.MapLoc;
+import land.nub.practice.game.duel.Duel;
+import land.nub.practice.game.duel.DuelState;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.task.MapCleanRunnable;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;

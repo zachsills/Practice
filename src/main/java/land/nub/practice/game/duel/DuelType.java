@@ -1,4 +1,4 @@
-package net.practice.practice.game.duel;
+package land.nub.practice.game.duel;
 
 import lombok.Getter;
 import org.bukkit.ChatColor;

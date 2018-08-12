@@ -1,10 +1,10 @@
-package net.practice.practice.listener.listeners;
+package land.nub.practice.listener.listeners;
 
-import net.practice.practice.game.duel.DuelType;
-import net.practice.practice.game.duel.type.SoloDuel;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.util.RunnableShorthand;
-import net.practice.practice.util.chat.C;
+import land.nub.practice.game.duel.DuelType;
+import land.nub.practice.game.duel.type.SoloDuel;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.util.RunnableShorthand;
+import land.nub.practice.util.chat.C;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

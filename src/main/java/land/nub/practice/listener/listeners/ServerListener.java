@@ -1,4 +1,4 @@
-package net.practice.practice.listener.listeners;
+package land.nub.practice.listener.listeners;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -6,16 +6,12 @@ import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.AbstractWrapper;
-import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
-import com.mojang.authlib.GameProfile;
-import net.practice.practice.Practice;
-import net.practice.practice.util.chat.C;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.Practice;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;

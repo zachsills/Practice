@@ -1,11 +1,11 @@
-package net.practice.practice.board.provider;
+package land.nub.practice.board.provider;
 
-import net.practice.practice.board.BoardProvider;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.player.data.ProfileSetting;
-import net.practice.practice.game.player.data.ProfileState;
-import net.practice.practice.util.ConfigValues;
-import net.practice.practice.util.chat.C;
+import land.nub.practice.board.BoardProvider;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.player.data.ProfileSetting;
+import land.nub.practice.game.player.data.ProfileState;
+import land.nub.practice.util.ConfigValues;
+import land.nub.practice.util.chat.C;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;

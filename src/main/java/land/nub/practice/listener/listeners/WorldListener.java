@@ -1,8 +1,8 @@
-package net.practice.practice.listener.listeners;
+package land.nub.practice.listener.listeners;
 
-import net.practice.practice.game.arena.map.MapLoc;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.game.player.data.ProfileState;
+import land.nub.practice.game.arena.map.MapLoc;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.game.player.data.ProfileState;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.SkullType;

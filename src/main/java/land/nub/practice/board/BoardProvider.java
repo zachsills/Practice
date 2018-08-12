@@ -1,6 +1,6 @@
-package net.practice.practice.board;
+package land.nub.practice.board;
 
-import net.practice.practice.Practice;
+import land.nub.practice.Practice;
 import org.bukkit.entity.Player;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.practice.practice.game.arena.map;
+package land.nub.practice.game.arena.map;
 
 public enum MapState {
 

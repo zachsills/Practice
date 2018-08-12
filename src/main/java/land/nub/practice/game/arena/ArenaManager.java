@@ -1,8 +1,8 @@
-package net.practice.practice.game.arena;
+package land.nub.practice.game.arena;
 
+import land.nub.practice.util.LocUtils;
+import land.nub.practice.util.file.Configuration;
 import lombok.Getter;
-import net.practice.practice.util.LocUtils;
-import net.practice.practice.util.file.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 

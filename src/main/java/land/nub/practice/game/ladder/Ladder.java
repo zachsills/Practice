@@ -1,15 +1,15 @@
-package net.practice.practice.game.ladder;
+package land.nub.practice.game.ladder;
 
+import land.nub.practice.game.player.data.PlayerInv;
+import land.nub.practice.game.queue.Queue;
+import land.nub.practice.game.queue.QueueType;
+import land.nub.practice.game.queue.type.RankedSoloQueue;
+import land.nub.practice.game.queue.type.UnkrankedSoloQueue;
+import land.nub.practice.game.queue.type.UnrankedPartyQueue;
+import land.nub.practice.util.InvUtils;
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.game.player.data.PlayerInv;
-import net.practice.practice.game.queue.Queue;
-import net.practice.practice.game.queue.QueueType;
-import net.practice.practice.game.queue.type.RankedPartyQueue;
-import net.practice.practice.game.queue.type.RankedSoloQueue;
-import net.practice.practice.game.queue.type.UnkrankedSoloQueue;
-import net.practice.practice.game.queue.type.UnrankedPartyQueue;
-import net.practice.practice.util.InvUtils;
+import land.nub.practice.game.queue.type.RankedPartyQueue;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,7 +25,7 @@ public class Ladder {
 
     @Getter private final String name;
 
-    @Getter private Queue[] queues;
+    @Getter private land.nub.practice.game.queue.Queue[] queues;
 
     @Getter @Setter private String displayName;
     @Getter @Setter private ItemStack displayIcon;
@@ -37,7 +37,7 @@ public class Ladder {
         this.name = name;
         this.displayName = ChatColor.GREEN + name;
 
-        this.queues = new Queue[4]; // Change to 4
+        this.queues = new land.nub.practice.game.queue.Queue[4]; // Change to 4
         queues[0] = new UnkrankedSoloQueue(this);
         queues[2] = new UnrankedPartyQueue(this);
 
@@ -76,15 +76,15 @@ public class Ladder {
         }
     }
 
-    public Queue getUnrankedQueue() {
+    public land.nub.practice.game.queue.Queue getUnrankedQueue() {
         return queues[0];
     }
 
-    public Queue getRankedQueue() {
+    public land.nub.practice.game.queue.Queue getRankedQueue() {
         return queues[1];
     }
 
-    public Queue getUnrankedPartyQueue() {
+    public land.nub.practice.game.queue.Queue getUnrankedPartyQueue() {
         return queues[2];
     }
 

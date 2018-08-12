@@ -1,10 +1,10 @@
-package net.practice.practice.command.commands;
+package land.nub.practice.command.commands;
 
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.spawn.SpawnHandler;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.command.Command;
-import net.practice.practice.util.command.CommandArgs;
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.spawn.SpawnHandler;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.command.Command;
+import land.nub.practice.util.command.CommandArgs;
 
 public class SpawnCommand {
 

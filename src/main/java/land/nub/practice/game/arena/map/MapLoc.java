@@ -1,16 +1,16 @@
-package net.practice.practice.game.arena.map;
+package land.nub.practice.game.arena.map;
 
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import land.nub.practice.task.MapCleanRunnable;
+import land.nub.practice.util.CustomLoc;
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.Practice;
-import net.practice.practice.game.arena.Arena;
-import net.practice.practice.game.arena.ArenaType;
-import net.practice.practice.spawn.SpawnHandler;
-import net.practice.practice.task.MapCleanRunnable;
-import net.practice.practice.util.CustomLoc;
+import land.nub.practice.Practice;
+import land.nub.practice.game.arena.Arena;
+import land.nub.practice.game.arena.ArenaType;
+import land.nub.practice.spawn.SpawnHandler;
 import org.bukkit.*;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;

@@ -1,9 +1,9 @@
-package net.practice.practice.cosmetic.deatheffect;
+package land.nub.practice.cosmetic.deatheffect;
 
+import land.nub.practice.cosmetic.Cosmetic;
+import land.nub.practice.util.particle.ParticleEffect;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.practice.practice.cosmetic.Cosmetic;
-import net.practice.practice.util.particle.ParticleEffect;
 import org.bukkit.Material;
 
 @Getter

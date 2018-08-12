@@ -1,7 +1,7 @@
-package net.practice.practice.board;
+package land.nub.practice.board;
 
 import lombok.Getter;
-import net.practice.practice.Practice;
+import land.nub.practice.Practice;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

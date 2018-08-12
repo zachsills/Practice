@@ -1,4 +1,4 @@
-package net.practice.practice.util.player;
+package land.nub.practice.util.player;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

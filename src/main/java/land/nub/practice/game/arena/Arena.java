@@ -1,8 +1,8 @@
-package net.practice.practice.game.arena;
+package land.nub.practice.game.arena;
 
+import land.nub.practice.util.LocUtils;
 import lombok.Getter;
 import lombok.Setter;
-import net.practice.practice.util.LocUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;

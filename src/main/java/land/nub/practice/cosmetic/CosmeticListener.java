@@ -1,6 +1,6 @@
-package net.practice.practice.cosmetic;
+package land.nub.practice.cosmetic;
 
-import net.practice.practice.inventory.inventories.cosmetics.DeathEffectInv;
+import land.nub.practice.inventory.inventories.cosmetics.DeathEffectInv;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

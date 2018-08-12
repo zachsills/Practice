@@ -1,9 +1,9 @@
-package net.practice.practice.game.player.data;
+package land.nub.practice.game.player.data;
 
+import land.nub.practice.game.player.Profile;
+import land.nub.practice.util.chat.C;
+import land.nub.practice.util.itemstack.I;
 import lombok.Getter;
-import net.practice.practice.game.player.Profile;
-import net.practice.practice.util.chat.C;
-import net.practice.practice.util.itemstack.I;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
