@@ -1,5 +1,6 @@
 package land.nub.practice.listener.listeners;
 
+import land.nub.practice.game.arena.map.MapLoc;
 import land.nub.practice.game.duel.DuelRequest;
 import land.nub.practice.game.duel.DuelState;
 import land.nub.practice.game.queue.Queue;
@@ -44,6 +45,15 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onAsyncLogin(AsyncPlayerPreLoginEvent event) {
         new Profile(event.getUniqueId(), true);
+    }
+
+    @EventHandler
+    public void onLogin(PlayerLoginEvent event) {
+        if (!MapLoc.isFinishedLoadingChunks()) {
+            if (!event.getPlayer().hasPermission("moderation.staff")) {
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, C.color("&cThe server is still starting up!"));
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)

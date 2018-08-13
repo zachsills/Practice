@@ -15,6 +15,7 @@ import org.bukkit.*;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class MapLoc {
     @Getter @Setter private static World arenaWorld;
     @Getter @Setter private static int[] grid = null;
     @Getter @Setter private static List<MapLoc> maps = new ArrayList<>();
+    @Getter @Setter private static boolean finishedLoadingChunks = false;
     @Getter @Setter private CustomLoc spawnOne, spawnTwo;
     @Getter @Setter private Arena arena;
     @Getter @Setter private MapState state;
@@ -290,22 +292,5 @@ public class MapLoc {
         setState(MapState.CLEANING);
 
         new MapCleanRunnable(this).runTaskTimer(Practice.getInstance(), 1L, 1L);
-    }
-
-    public static Collection<Chunk> getChunks(Location location) {
-        World world = location.getWorld();
-        int baseX = location.getChunk().getX();
-        int baseZ = location.getChunk().getZ();
-
-        Collection<Chunk> chunks = new HashSet<>();
-        for(int x = -5; x < 5; x++) {
-            for(int z = -5; z < 5; z++) {
-                Chunk chunk = world.getChunkAt(baseX + x, baseZ + z);
-
-                chunks.add(chunk);
-            }
-        }
-
-        return chunks;
     }
 }

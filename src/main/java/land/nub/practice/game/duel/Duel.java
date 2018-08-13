@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 
 public abstract class Duel {
 
-    //@Getter private Arena oldarena;
     @Getter private MapLoc map;
     @Getter private Ladder ladder;
     @Getter private DuelType type;
@@ -93,30 +92,25 @@ public abstract class Duel {
             profile.setCurrentDuel(this);
         });
 
-        new BukkitRunnable() {
+        countDownTask = new BukkitRunnable() {
             @Override
             public void run() {
-                countDownTask = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if(countDown > 0) {
-                            sendMessage(C.color("&7Duel starting in &e" + countDown + " &e" + (countDown == 1 ? "second" : "seconds") + "&7."));
-                            duelers.forEach(player -> {
-                                player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
-                            });
-                            countDown--;
-                        } else {
-                            start();
-                            duelers.forEach(player -> {
-                                player.playSound(player.getLocation(), Sound.NOTE_PLING, 2f, 2f);
-                            });
-                            this.cancel();
-                        }
-                    }
-                };
-                countDownTask.runTaskTimer(Practice.getInstance(), 0, 20L);
+                if(countDown > 0) {
+                    sendMessage(C.color("&7Duel starting in &e" + countDown + " &e" + (countDown == 1 ? "second" : "seconds") + "&7."));
+                    duelers.forEach(player -> {
+                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
+                    });
+                    countDown--;
+                } else {
+                    start();
+                    duelers.forEach(player -> {
+                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 2f, 2f);
+                    });
+                    this.cancel();
+                }
             }
-        }.runTaskLaterAsynchronously(Practice.getInstance(), 30L);
+        };
+        countDownTask.runTaskTimer(Practice.getInstance(), 0, 20L);
     }
 
     public void start() {
@@ -250,13 +244,8 @@ public abstract class Duel {
     }
 
     public void initialTeleport(Player player, Location location) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.teleport(location);
-                giveKits(player);
-            }
-        }.runTaskLater(Practice.getInstance(), 30L);
+        player.teleport(location);
+        giveKits(player);
     }
 
     public abstract boolean canHit(Player playerOne, Player playerTwo);
