@@ -39,8 +39,11 @@ public class PlayingProvider implements BoardProvider {
                     lines.add("&6Ping: &7" + PlayerUtils.getPing(player) + " &f| &7" + PlayerUtils.getPing(opponent));
                 } else if(duel.getState() == DuelState.STARTING) {
                     lines.add("&6Opponent: &7" + opponent.getName());
-                    lines.add(" ");
-                    lines.add("&6Starting: &7" + duel.getCountDown());
+
+                    if(duel.getCountDownTask() != null) {
+                        lines.add(" ");
+                        lines.add("&6Starting: &7" + duel.getCountDown());
+                    }
                 } else if(duel.getState() == DuelState.ENDED) {
                     lines.add("&6Winner: &7" + soloDuel.getWinner().getName());
                 }
@@ -71,8 +74,10 @@ public class PlayingProvider implements BoardProvider {
                     for(Player opponent : otherDuo)
                         lines.add((duoDuel.getAlive().contains(opponent) ? "&f" : "&7&m") + opponent.getName());
 
-                    lines.add(" ");
-                    lines.add("&6Starting: &7" + duel.getCountDown());
+                    if(duel.getCountDownTask() != null) {
+                        lines.add(" ");
+                        lines.add("&6Starting: &7" + duel.getCountDown());
+                    }
                 } else if(duel.getState() == DuelState.ENDED) {
                     lines.add("&6Winner: &7" + PartyManager.getByUuid(duoDuel.getWinner()).getLeaderName() + "'s Party");
                 }
@@ -96,8 +101,10 @@ public class PlayingProvider implements BoardProvider {
                     Party otherParty = partyDuel.getPartyOne() == party ? partyDuel.getPartyTwo() : partyDuel.getPartyOne();
                     lines.add("&cOpponents: &f" + partyDuel.getAlive(otherParty) + "/" + otherParty.getSize());
 
-                    lines.add(" ");
-                    lines.add("&6Starting: &7" + duel.getCountDown());
+                    if(duel.getCountDownTask() != null) {
+                        lines.add(" ");
+                        lines.add("&6Starting: &7" + duel.getCountDown());
+                    }
                 } else if(duel.getState() == DuelState.ENDED) {
                     lines.add("&6Winner: &7" + partyDuel.getWinner().getLeaderName() + "'s Party");
                 }

@@ -46,8 +46,8 @@ public class SoloDuel extends Duel {
     public void preStart() {
         super.preStart();
 
-        playerOne.teleport(getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
-        playerTwo.teleport(getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
+        initialTeleport(playerOne, getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
+        initialTeleport(playerTwo, getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
 
         Profile.totalInGame += 2;
     }

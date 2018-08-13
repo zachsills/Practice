@@ -7,14 +7,13 @@ import land.nub.practice.game.ladder.Ladder;
 import land.nub.practice.game.player.Profile;
 import land.nub.practice.game.player.data.PlayerKit;
 import land.nub.practice.util.InvUtils;
+import land.nub.practice.util.RunnableShorthand;
 import land.nub.practice.util.chat.C;
 import land.nub.practice.util.itemstack.I;
 import lombok.Getter;
 import lombok.Setter;
 import land.nub.practice.game.player.data.InventorySnapshot;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -42,7 +41,7 @@ public abstract class Duel {
 
     @Getter private List<Profile> spectators;
 
-    private BukkitRunnable countDownTask;
+    @Getter private BukkitRunnable countDownTask;
     @Getter private int countDown = 5;
 
     public Duel(MapLoc map, Ladder ladder, DuelType type) {
@@ -86,7 +85,6 @@ public abstract class Duel {
         }
 
         duelers.forEach(InvUtils::clear);
-        duelers.forEach(this::giveKits);
         duelers.forEach(player -> {
             player.setAllowFlight(false);
             player.setFlying(false);
@@ -95,25 +93,30 @@ public abstract class Duel {
             profile.setCurrentDuel(this);
         });
 
-        countDownTask = new BukkitRunnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
-                if(countDown > 0) {
-                    sendMessage(C.color("&7Duel starting in &e" + countDown + " &e" + (countDown == 1 ? "second" : "seconds") + "&7."));
-                    duelers.forEach(player -> {
-                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
-                    });
-                    countDown--;
-                } else {
-                    start();
-                    duelers.forEach(player -> {
-                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 2f, 2f);
-                    });
-                    this.cancel();
-                }
+                countDownTask = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(countDown > 0) {
+                            sendMessage(C.color("&7Duel starting in &e" + countDown + " &e" + (countDown == 1 ? "second" : "seconds") + "&7."));
+                            duelers.forEach(player -> {
+                                player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
+                            });
+                            countDown--;
+                        } else {
+                            start();
+                            duelers.forEach(player -> {
+                                player.playSound(player.getLocation(), Sound.NOTE_PLING, 2f, 2f);
+                            });
+                            this.cancel();
+                        }
+                    }
+                };
+                countDownTask.runTaskTimer(Practice.getInstance(), 0, 20L);
             }
-        };
-        countDownTask.runTaskTimer(Practice.getInstance(), 0, 20L);
+        }.runTaskLaterAsynchronously(Practice.getInstance(), 30L);
     }
 
     public void start() {
@@ -244,6 +247,16 @@ public abstract class Duel {
         return Stream.concat(getPlayers().stream(), getSpectators().stream().map(Profile::getPlayer))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    public void initialTeleport(Player player, Location location) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.teleport(location);
+                giveKits(player);
+            }
+        }.runTaskLater(Practice.getInstance(), 30L);
     }
 
     public abstract boolean canHit(Player playerOne, Player playerTwo);

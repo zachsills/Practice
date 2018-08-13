@@ -51,10 +51,10 @@ public class DuoDuel extends Duel {
         super.preStart();
 
         duoOne.forEach(player -> {
-            player.teleport(getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
+            initialTeleport(player, getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
         });
         duoTwo.forEach(player -> {
-            player.teleport(getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
+            initialTeleport(player, getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
         });
 
         Profile.totalInGame += 4;

@@ -62,10 +62,10 @@ public class PartyDuel extends Duel {
         super.preStart();
 
         teamOne.forEach(player -> {
-            player.teleport(getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
+            initialTeleport(player, getMap().getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
         });
         teamTwo.forEach(player -> {
-            player.teleport(getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
+            initialTeleport(player, getMap().getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
         });
 
         Profile.totalInGame += initialSize;

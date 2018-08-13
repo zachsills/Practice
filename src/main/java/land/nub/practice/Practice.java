@@ -4,6 +4,7 @@ import com.bizarrealex.azazel.Azazel;
 import land.nub.practice.autobroadcast.AutoBroadcastFile;
 import land.nub.practice.board.BoardManager;
 import land.nub.practice.board.provider.ProviderResolver;
+import land.nub.practice.game.arena.Arena;
 import land.nub.practice.game.arena.ArenaManager;
 import land.nub.practice.game.arena.map.MapLoc;
 import land.nub.practice.game.arena.map.MapManager;
@@ -19,6 +20,7 @@ import land.nub.practice.task.CleanerTask;
 import land.nub.practice.task.LeaderboardTask;
 import land.nub.practice.task.UpdateInventoryTask;
 import land.nub.practice.util.LocUtils;
+import land.nub.practice.util.RunnableShorthand;
 import land.nub.practice.util.command.CommandFramework;
 import lombok.Getter;
 import land.nub.practice.command.CommandHandler;
@@ -27,6 +29,9 @@ import land.nub.practice.storage.file.BuycraftFile;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Collection;
 
 public class Practice extends JavaPlugin {
 
@@ -86,6 +91,47 @@ public class Practice extends JavaPlugin {
         }
 
         new Azazel(this, new PracticeTabAdapter());
+
+        new BukkitRunnable() {
+            int loadTime = 1;
+
+            @Override
+            public void run() {
+                for(MapLoc loc : MapLoc.getMaps()) {
+                    {
+                        Collection<Chunk> chunks = MapLoc.getChunks(loc.getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
+                        chunks.parallelStream()
+                                .filter(chunk -> {
+                                    return !chunk.isLoaded();
+                                })
+                                .forEach(chunk -> {
+                                    new BukkitRunnable() {
+                                        @Override
+                                        public void run() {
+                                            chunk.load();
+                                        }
+                                    }.runTaskLater(Practice.this, loadTime++);
+                                });
+                    }
+
+                    {
+                        Collection<Chunk> chunks = MapLoc.getChunks(loc.getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
+                        chunks.parallelStream()
+                                .filter(chunk -> {
+                                    return !chunk.isLoaded();
+                                })
+                                .forEach(chunk -> {
+                                    new BukkitRunnable() {
+                                        @Override
+                                        public void run() {
+                                            chunk.load();
+                                        }
+                                    }.runTaskLater(Practice.this, loadTime++);
+                                });
+                    }
+                }
+            }
+        }.runTaskLater(this, 10L);
     }
 
     @Override

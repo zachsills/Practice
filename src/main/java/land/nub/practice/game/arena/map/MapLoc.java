@@ -291,4 +291,21 @@ public class MapLoc {
 
         new MapCleanRunnable(this).runTaskTimer(Practice.getInstance(), 1L, 1L);
     }
+
+    public static Collection<Chunk> getChunks(Location location) {
+        World world = location.getWorld();
+        int baseX = location.getChunk().getX();
+        int baseZ = location.getChunk().getZ();
+
+        Collection<Chunk> chunks = new HashSet<>();
+        for(int x = -5; x < 5; x++) {
+            for(int z = -5; z < 5; z++) {
+                Chunk chunk = world.getChunkAt(baseX + x, baseZ + z);
+
+                chunks.add(chunk);
+            }
+        }
+
+        return chunks;
+    }
 }
