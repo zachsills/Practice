@@ -100,38 +100,32 @@ public class Practice extends JavaPlugin {
                 for(MapLoc loc : MapLoc.getMaps()) {
                     {
                         Collection<Chunk> chunks = MapLoc.getChunks(loc.getSpawnOne().toBukkit(MapLoc.getArenaWorld()));
-                        chunks.parallelStream()
-                                .filter(chunk -> {
-                                    return !chunk.isLoaded();
-                                })
-                                .forEach(chunk -> {
+                        chunks.forEach(chunk -> {
                                     new BukkitRunnable() {
                                         @Override
                                         public void run() {
-                                            chunk.load();
+//                                            chunk.load();
+                                            Bukkit.broadcastMessage(loadTime + "");
                                         }
-                                    }.runTaskLater(Practice.this, loadTime++);
+                                    }.runTaskLater(Practice.this, loadTime += 100);
                                 });
                     }
 
                     {
                         Collection<Chunk> chunks = MapLoc.getChunks(loc.getSpawnTwo().toBukkit(MapLoc.getArenaWorld()));
-                        chunks.parallelStream()
-                                .filter(chunk -> {
-                                    return !chunk.isLoaded();
-                                })
-                                .forEach(chunk -> {
+                        chunks.forEach(chunk -> {
                                     new BukkitRunnable() {
                                         @Override
                                         public void run() {
-                                            chunk.load();
+//                                            chunk.load();
+                                            Bukkit.broadcastMessage(loadTime + "");
                                         }
-                                    }.runTaskLater(Practice.this, loadTime++);
+                                    }.runTaskLater(Practice.this, loadTime += 100);
                                 });
                     }
                 }
             }
-        }.runTaskLater(this, 10L);
+        }.runTaskLater(this, 1L);
     }
 
     @Override
