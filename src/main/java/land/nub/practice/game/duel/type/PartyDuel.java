@@ -200,6 +200,10 @@ public class PartyDuel extends Duel {
         return (int) team.stream().filter(alive::contains).count();
     }
 
+    public List<Player> getTeam(Party party) {
+        return teamOne.contains(party.getAllPlayers().get(0)) ? teamOne : teamTwo;
+    }
+
     private boolean hasWinner() {
         List<Player> winner = findWinner();
         if(winner != null) {

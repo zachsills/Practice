@@ -90,7 +90,13 @@ public class PlayingProvider implements BoardProvider {
                     lines.add("&aTeam: &f" + partyDuel.getAlive(party) + "/" + party.getSize());
 
                     Party otherParty = partyDuel.getPartyOne() == party ? partyDuel.getPartyTwo() : partyDuel.getPartyOne();
-                    lines.add("&cOpponents: &f" + partyDuel.getAlive(otherParty) + "/" + otherParty.getSize());
+                    if(otherParty.getSize() != 3) {
+                        lines.add("&cOpponents: &f" + partyDuel.getAlive(otherParty) + "/" + otherParty.getSize());
+                    } else {
+                        List<Player> team = partyDuel.getTeam(otherParty);
+                        for(Player opponent : team)
+                            lines.add((partyDuel.getAlive().contains(opponent) ? "&f" : "&7&m") + opponent.getName());
+                    }
 
                     lines.add(" ");
                     lines.add("&6Duration: &7" + TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime()));
@@ -99,7 +105,13 @@ public class PlayingProvider implements BoardProvider {
                     lines.add("&aTeam: &f" + partyDuel.getAlive(party) + "/" + party.getSize());
 
                     Party otherParty = partyDuel.getPartyOne() == party ? partyDuel.getPartyTwo() : partyDuel.getPartyOne();
-                    lines.add("&cOpponents: &f" + partyDuel.getAlive(otherParty) + "/" + otherParty.getSize());
+                    if(otherParty.getSize() != 3) {
+                        lines.add("&cOpponents: &f" + partyDuel.getAlive(otherParty) + "/" + otherParty.getSize());
+                    } else {
+                        List<Player> team = partyDuel.getTeam(otherParty);
+                        for(Player opponent : team)
+                            lines.add((partyDuel.getAlive().contains(opponent) ? "&f" : "&7&m") + opponent.getName());
+                    }
 
                     if(duel.getCountDownTask() != null) {
                         lines.add(" ");
