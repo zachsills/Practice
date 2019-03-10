@@ -61,7 +61,8 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if (MapLoc.getArenaWorld() == null || MapLoc.getArenaWorld().getUID() == null || event.getIgnitingBlock().getWorld().getUID() == null) return;
+        if (MapLoc.getArenaWorld() == null || MapLoc.getArenaWorld().getUID() == null ||  event.getIgnitingBlock() == null || event.getIgnitingBlock().getWorld() == null|| event.getIgnitingBlock().getWorld().getUID() == null)
+            return;
         if (event.getIgnitingBlock().getWorld().getUID().equals(MapLoc.getArenaWorld().getUID())) {
             if (event.getCause() == BlockIgniteEvent.IgniteCause.EXPLOSION || event.getCause() == BlockIgniteEvent.IgniteCause.LAVA
                     || event.getCause() == BlockIgniteEvent.IgniteCause.LIGHTNING || event.getCause() == BlockIgniteEvent.IgniteCause.SPREAD) {
