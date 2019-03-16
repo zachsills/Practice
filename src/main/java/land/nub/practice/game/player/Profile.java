@@ -510,6 +510,14 @@ public class Profile {
                     customKits.put(ladder, kits);
                 }
             }
+        } else {
+            for(Ladder ladder : Ladder.getAllLadders()) {
+                List<PlayerKit> kits = new ArrayList<>();
+                for(int i = 0; i < 5; i++)
+                    kits.add(new PlayerKit("&b&lKit " + (i + 1)));
+
+                customKits.put(ladder, kits);
+            }
         }
 
         for(Ladder ladder : Ladder.getLadders().values()) {

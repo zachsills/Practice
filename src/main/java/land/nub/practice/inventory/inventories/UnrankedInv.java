@@ -22,6 +22,7 @@ public class UnrankedInv {
         if(Ladder.getLadders().values().size() == 0) {
             soloUnranked.setItem(13, new I(Material.RED_ROSE).name(C.color("No ladders set!")));
         } else {
+            soloUnranked.clear();
             int index = 10;
             for(Ladder ladder : Ladder.getLadders().values()) {
                 if((index + 1) % 9 == 0)
