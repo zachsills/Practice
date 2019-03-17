@@ -25,7 +25,11 @@ public class PlayerUtils {
     }
 
     public static double getHealth(Player player) {
-        return Math.round(player.getHealth() * 2) / 2.0;
+        return roundHealth(player.getHealth());
+    }
+
+    public static double roundHealth(double health) {
+        return Math.round(health * 2) / 2.0;
     }
 
     public static int getRemainingPots(Player player) {

@@ -2,15 +2,15 @@ package land.nub.practice.tab;
 
 import com.bizarrealex.azazel.tab.TabAdapter;
 import com.bizarrealex.azazel.tab.TabTemplate;
+import land.nub.practice.game.duel.Duel;
 import land.nub.practice.game.duel.DuelState;
 import land.nub.practice.game.duel.DuelType;
-import land.nub.practice.util.PlayerUtils;
-import land.nub.practice.util.TimeUtils;
-import land.nub.practice.util.chat.C;
-import land.nub.practice.game.duel.Duel;
 import land.nub.practice.game.duel.type.SoloDuel;
 import land.nub.practice.game.player.Profile;
 import land.nub.practice.game.player.data.ProfileState;
+import land.nub.practice.util.PlayerUtils;
+import land.nub.practice.util.TimeUtils;
+import land.nub.practice.util.chat.C;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -19,15 +19,15 @@ import java.util.Iterator;
 
 public class PracticeTabAdapter implements TabAdapter {
 
-    private final String LINE1_7 = " &f&m---------------", LINE1_8 = " &f&m---------------";
     private static DecimalFormat decimalFormat = new DecimalFormat("0.0");
+    private final String LINE1_7 = " &f&m---------------", LINE1_8 = " &f&m---------------";
 
     @Override
     public TabTemplate getTemplate(Player player, int protocolVersion) {
         TabTemplate template = new TabTemplate();
 
         // Header
-        if (protocolVersion >= 47) { // 1.8
+        if(protocolVersion >= 47) { // 1.8
             template.middle(0, " &6&lNub Land &7&l| &f&lUS");
             template.left(0, LINE1_8);
             template.right(0, LINE1_8);
@@ -50,7 +50,7 @@ public class PracticeTabAdapter implements TabAdapter {
         int ping = PlayerUtils.getPing(player);
 
         Profile profile = Profile.getByPlayer(player);
-        if (profile.getState() == ProfileState.LOBBY || profile.getState() == ProfileState.EDITING) {
+        if(profile.getState() == ProfileState.LOBBY || profile.getState() == ProfileState.EDITING) {
 
             template.left(2, highlightC + "Online:");
             template.left(3, infoC + online);
@@ -74,7 +74,7 @@ public class PracticeTabAdapter implements TabAdapter {
             template.right(8, highlightC + "Donate:");
             template.right(9, infoC + "donate.nub.land");
 
-        } else if (profile.getState() == ProfileState.QUEUING) {
+        } else if(profile.getState() == ProfileState.QUEUING) {
 
             template.left(2, highlightC + "Online:");
             template.left(3, infoC + online);
@@ -113,8 +113,7 @@ public class PracticeTabAdapter implements TabAdapter {
             // Right
             template.right(11, highlightC + "Position:");
             template.right(12, infoC + position);
-        } else if (profile.isInParty() && profile.getParty().getCurrentQueue() != null) {
-
+        } else if(profile.isInParty() && profile.getParty().getCurrentQueue() != null) {
             template.left(2, highlightC + "Online:");
             template.left(3, infoC + online);
             template.left(5, highlightC + "In Game:");
@@ -152,17 +151,15 @@ public class PracticeTabAdapter implements TabAdapter {
             // Right
             template.right(11, highlightC + "Position:");
             template.right(12, infoC + position);
-        } else if (profile.getState() == ProfileState.PLAYING) {
+        } else if(profile.getState() == ProfileState.PLAYING) {
             Duel duel = profile.getCurrentDuel();
-            if (duel != null) {
+            if(duel != null) {
                 String ladder = duel.getLadder().getDisplayName();
                 String duration = TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime());
-
-                if (duel.getType() == DuelType.ONE_VS_ONE) {
+                if(duel.getType() == DuelType.ONE_VS_ONE) {
                     SoloDuel soloDuel = (SoloDuel) duel;
                     Player opponent = (soloDuel.getPlayerOne() == player ? soloDuel.getPlayerTwo() : soloDuel.getPlayerOne());
-
-                    if (duel.getState() == DuelState.STARTING) {
+                    if(duel.getState() == DuelState.STARTING) {
                         template.left(2, highlightC + "You:");
                         template.left(3, "&a" + player.getName());
 
@@ -172,13 +169,9 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.right(2, highlightC + "Opponent:");
                         template.right(3, "&c" + opponent.getName());
                     } else {
-                        double accuracy;
-                        if (duel.getThrownPots().getOrDefault(player, 0) == 0 || duel.getMissedPots().getOrDefault(player, 0) == 0) {
-                            accuracy = 100;
-                        } else {
-                            accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player))
-                                    / (double) duel.getThrownPots().get(player)) * 100.0;
-                        }
+                        double accuracy = 100.0;
+                        if(duel.getThrownPots().getOrDefault(player, 0) != 0 && duel.getMissedPots().getOrDefault(player, 0) != 0)
+                            accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player)) / (double) duel.getThrownPots().get(player)) * 100.0;
 
                         template.left(2, highlightC + "You:");
                         template.left(3, "&a" + player.getName());
@@ -187,7 +180,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.middle(3, infoC + ladder);
                         template.middle(5, highlightC + "Duration:");
                         template.middle(6, infoC + duration);
-                        if (player.getInventory().contains(Material.POTION)) {
+                        if(player.getInventory().contains(Material.POTION)) {
                             template.middle(8, highlightC + "Thrown | Missed:");
                             template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
                             template.middle(11, highlightC + "Pot Accuracy:");
@@ -198,20 +191,16 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.right(3, "&c" + opponent.getName());
                     }
                 } else {
-                    if (duel.getState() == DuelState.STARTING) {
+                    if(duel.getState() == DuelState.STARTING) {
                         template.left(2, highlightC + "You:");
                         template.left(3, "&a" + player.getName());
 
                         template.middle(2, highlightC + "Starting:");
                         template.middle(3, infoC + duel.getCountDown());
                     } else {
-                        double accuracy;
-                        if (duel.getThrownPots().getOrDefault(player, 0) == 0 || duel.getMissedPots().getOrDefault(player, 0) == 0) {
-                            accuracy = 100;
-                        } else {
-                            accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player))
-                                    / (double) duel.getThrownPots().get(player)) * 100.0;
-                        }
+                        double accuracy = 100.0;
+                        if(duel.getThrownPots().getOrDefault(player, 0) != 0 && duel.getMissedPots().getOrDefault(player, 0) != 0)
+                            accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player)) / (double) duel.getThrownPots().get(player)) * 100.0;
 
                         template.left(2, highlightC + "You:");
                         template.left(3, "&a" + player.getName());
@@ -220,7 +209,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.middle(3, infoC + ladder);
                         template.middle(5, highlightC + "Duration:");
                         template.middle(6, infoC + duration);
-                        if (player.getInventory().contains(Material.POTION)) {
+                        if(player.getInventory().contains(Material.POTION)) {
                             template.middle(8, highlightC + "Thrown | Missed:");
                             template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
                             template.middle(11, highlightC + "Pot Accuracy:");
@@ -229,8 +218,8 @@ public class PracticeTabAdapter implements TabAdapter {
 
                         template.right(2, highlightC + "Players:");
                         Iterator<Player> players = duel.getPlayers().iterator();
-                        for (int i = 3; i < 19; i++) {
-                            if (players.hasNext()) {
+                        for(int i = 3; i < 19; i++) {
+                            if(players.hasNext()) {
                                 template.right(i, C.color("&c" + players.next().getName()));
                             } else {
                                 break;
@@ -239,14 +228,14 @@ public class PracticeTabAdapter implements TabAdapter {
                     }
                 }
             }
-        } else if (profile.getState() == ProfileState.SPECTATING) {
+        } else if(profile.getState() == ProfileState.SPECTATING) {
             Duel duel = profile.getSpectating();
             String ladder = duel.getLadder().getDisplayName();
             String duration = TimeUtils.msToMMSS(System.currentTimeMillis() - duel.getStartTime());
             template.right(2, highlightC + "Players:");
             Iterator<Player> players = duel.getPlayers().iterator();
-            for (int i = 3; i < 19; i++) {
-                if (players.hasNext()) {
+            for(int i = 3; i < 19; i++) {
+                if(players.hasNext()) {
                     template.right(i, players.next().getName());
                 } else {
                     break;
@@ -259,7 +248,7 @@ public class PracticeTabAdapter implements TabAdapter {
         }
 
         // Footer
-        if (protocolVersion >= 47) { // 1.8
+        if(protocolVersion >= 47) { // 1.8
             template.left(19, LINE1_8);
             template.middle(19, LINE1_8);
             template.right(19, LINE1_8);

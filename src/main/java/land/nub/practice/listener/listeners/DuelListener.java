@@ -3,6 +3,7 @@ package land.nub.practice.listener.listeners;
 import land.nub.practice.game.arena.map.MapLoc;
 import land.nub.practice.game.duel.DuelState;
 import land.nub.practice.game.player.data.PlayerKit;
+import land.nub.practice.util.PlayerUtils;
 import land.nub.practice.util.chat.C;
 import land.nub.practice.util.itemstack.I;
 import land.nub.practice.Practice;
@@ -210,12 +211,10 @@ public class DuelListener implements Listener {
                 Arrow arrow = (Arrow)event.getDamager();
                 if (arrow.getShooter() instanceof Player) {
                     Player shooter = (Player)arrow.getShooter();
-                    if (target.getHealth() - event.getFinalDamage() > 0.0) {
-                        double n = (target.getHealth() - event.getFinalDamage()) / 2.0;
-                        double rounded = Math.round(n * 2.0) / 2.0;
+                    if(target.getHealth() - event.getFinalDamage() > 0.0) {
                         shooter.sendMessage(C.color("&6%player% &eis now at &6%health%&4%heartEmoji%")
                                 .replace("%player%", target.getName())
-                                .replace("%health%", new DecimalFormat("#0.0").format(rounded))
+                                .replace("%health%", PlayerUtils.roundHealth((target.getHealth() - event.getFinalDamage()) / 2.0) + "")
                                 .replace("%heartEmoji%", StringEscapeUtils.unescapeJava("\u2764")));
                     }
                 }
