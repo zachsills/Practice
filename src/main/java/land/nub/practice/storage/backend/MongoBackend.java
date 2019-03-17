@@ -5,6 +5,9 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+import land.nub.practice.game.ladder.Ladder;
 import land.nub.practice.util.RunnableShorthand;
 import lombok.Getter;
 import land.nub.practice.Practice;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Sorts.*;
 
 public class MongoBackend implements IBackend {
 
@@ -69,6 +73,16 @@ public class MongoBackend implements IBackend {
     @Override
     public void saveProfiles() {
         Profile.getProfiles().values().forEach(this::saveProfileSync);
+    }
+
+    @Override
+    public List<Profile> getTopProfiles(Ladder ladder) {
+        return profiles.find().sort(descending("elo." + ladder.getName())).limit(10)
+                .map(document -> {
+                    UUID uuid = UUID.fromString(document.getString("uuid"));
+
+                    return Profile.getByUuid(uuid);
+                }).into(new ArrayList<>());
     }
 
     public List<Profile> getAllProfiles() {

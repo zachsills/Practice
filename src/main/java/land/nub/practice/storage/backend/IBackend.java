@@ -1,6 +1,9 @@
 package land.nub.practice.storage.backend;
 
+import land.nub.practice.game.ladder.Ladder;
 import land.nub.practice.game.player.Profile;
+
+import java.util.List;
 
 public interface IBackend {
 
@@ -13,4 +16,6 @@ public interface IBackend {
     void loadProfile(Profile profile);
 
     void saveProfiles();
+
+    List<Profile> getTopProfiles(Ladder ladder);
 }
