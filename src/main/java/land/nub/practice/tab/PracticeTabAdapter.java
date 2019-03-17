@@ -242,7 +242,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         for(int i = 3; i < 19; i++) {
                             if(partyIterator.hasNext()) {
                                 Player next = partyIterator.next();
-                                template.right(i, "&a" + next.getName());
+                                template.left(i, "&a" + next.getName());
                             } else {
                                 break;
                             }
@@ -260,7 +260,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         for(int i = 3; i < 19; i++) {
                             if(partyIterator.hasNext()) {
                                 Player next = partyIterator.next();
-                                template.right(i, (partyDuel.getAlive().contains(next) ? "&a" : "&c") + next.getName());
+                                template.left(i, (partyDuel.getAlive().contains(next) ? "&a" : "&c") + next.getName());
                             } else {
                                 break;
                             }
