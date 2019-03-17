@@ -3,4 +3,4 @@ version: ${project.version}
 main: ${project.main}
 description: Practice plugin for nubs.
 depend: [NubCore]
-authors: [Thryl, obviously]
+authors: [Huli, Jonhan]
