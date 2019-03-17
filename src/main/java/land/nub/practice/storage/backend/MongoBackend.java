@@ -85,20 +85,6 @@ public class MongoBackend implements IBackend {
                 }).into(new ArrayList<>());
     }
 
-    public List<Profile> getAllProfiles() {
-        List<Profile> all = new ArrayList<>(Profile.getProfiles().values());
-
-        for(Document document : profiles.find()) {
-            UUID uuid = UUID.fromString(document.getString("uuid"));
-            if(Profile.getProfiles().containsKey(uuid.toString()))
-                continue;
-
-            all.add(Profile.getByUuid(uuid));
-        }
-
-        return all;
-    }
-
     @SuppressWarnings("deprecation")
     public boolean load(JavaPlugin plugin) {
         try {

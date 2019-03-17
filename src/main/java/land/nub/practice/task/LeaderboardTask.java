@@ -18,13 +18,6 @@ public class LeaderboardTask extends BukkitRunnable {
         for(Ladder ladder : Ladder.getLadders().values()) {
             Map<String, Integer> ladderTop = new LinkedHashMap<>();
             List<Profile> topProfiles = Practice.getInstance().getBackend().getTopProfiles(ladder);
-            /*List<Profile> topProfiles = profiles.stream()
-                    .filter(profile -> {
-                        return profile.getName() != null;
-                    })
-                    .sorted(Comparator.comparingInt(profile -> profile.getElo(ladder)))
-                    .collect(Collectors.toList());
-            Collections.reverse(topProfiles);*/
             topProfiles.forEach(profile -> {
                 ladderTop.put(profile.getName(), profile.getElo(ladder));
             });
