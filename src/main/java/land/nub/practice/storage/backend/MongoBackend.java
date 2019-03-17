@@ -5,13 +5,11 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Sorts;
+import land.nub.practice.Practice;
 import land.nub.practice.game.ladder.Ladder;
+import land.nub.practice.game.player.Profile;
 import land.nub.practice.util.RunnableShorthand;
 import lombok.Getter;
-import land.nub.practice.Practice;
-import land.nub.practice.game.player.Profile;
 import org.bson.Document;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Sorts.*;
+import static com.mongodb.client.model.Sorts.descending;
 
 public class MongoBackend implements IBackend {
 
