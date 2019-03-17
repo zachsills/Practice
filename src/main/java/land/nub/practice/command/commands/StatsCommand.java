@@ -7,6 +7,7 @@ import land.nub.practice.util.command.Command;
 import land.nub.practice.util.command.CommandArgs;
 import land.nub.practice.util.player.UUIDFetcher;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.util.UUID;
 
@@ -18,9 +19,11 @@ public class StatsCommand {
         if(args.length() >= 1) {
             UUID uuid = UUIDFetcher.getUUID(args.getArgs(0));
             if(uuid != null) {
-                profile = Profile.getByUuid(uuid);
-                if(Bukkit.getOfflinePlayer(uuid) == null || !Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()) {
-                    args.getPlayer().sendMessage(C.color("&cThe player '" + args.getArgs(0) + "' is not a player."));
+                OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+                if(player.isOnline() || player.hasPlayedBefore()) {
+                    profile = Profile.getByUuid(uuid);
+                } else {
+                    args.getPlayer().sendMessage(C.color("&cThe player '" + args.getArgs(0) + "' has never logged on."));
                     return;
                 }
             } else {
