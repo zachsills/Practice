@@ -5,7 +5,10 @@ import com.bizarrealex.azazel.tab.TabTemplate;
 import land.nub.practice.game.duel.Duel;
 import land.nub.practice.game.duel.DuelState;
 import land.nub.practice.game.duel.DuelType;
+import land.nub.practice.game.duel.type.DuoDuel;
+import land.nub.practice.game.duel.type.PartyDuel;
 import land.nub.practice.game.duel.type.SoloDuel;
+import land.nub.practice.game.party.Party;
 import land.nub.practice.game.player.Profile;
 import land.nub.practice.game.player.data.ProfileState;
 import land.nub.practice.util.PlayerUtils;
@@ -16,6 +19,7 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 import java.util.Iterator;
+import java.util.List;
 
 public class PracticeTabAdapter implements TabAdapter {
 
@@ -190,20 +194,30 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.right(2, highlightC + "Opponent:");
                         template.right(3, "&c" + opponent.getName());
                     }
-                } else {
+                } else if(duel.getType() == DuelType.TWO_VS_TWO) {
+                    DuoDuel duoDuel = (DuoDuel) duel;
+                    List<Player> duo = duoDuel.getDuo(player), otherDuo = duoDuel.getDuoOne() == duo ? duoDuel.getDuoTwo() : duoDuel.getDuoOne();
                     if(duel.getState() == DuelState.STARTING) {
-                        template.left(2, highlightC + "You:");
-                        template.left(3, "&a" + player.getName());
+                        template.left(2, highlightC + "Your Team:");
+                        int teammateIndex = 3;
+                        for(Player teammate : duo)
+                            template.left(teammateIndex++, "&a" + teammate.getName());
 
                         template.middle(2, highlightC + "Starting:");
                         template.middle(3, infoC + duel.getCountDown());
+
+                        int opponentIndex = 3;
+                        for(Player opponent : otherDuo)
+                            template.right(opponentIndex++, (duoDuel.getAlive().contains(opponent) ? "&f" : "&7&m") + opponent.getName());
                     } else {
                         double accuracy = 100.0;
                         if(duel.getThrownPots().getOrDefault(player, 0) != 0 && duel.getMissedPots().getOrDefault(player, 0) != 0)
                             accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player)) / (double) duel.getThrownPots().get(player)) * 100.0;
 
-                        template.left(2, highlightC + "You:");
-                        template.left(3, "&a" + player.getName());
+                        template.left(2, highlightC + "Your Team:");
+                        int teammateIndex = 3;
+                        for(Player teammate : duo)
+                            template.left(teammateIndex++, (duoDuel.getAlive().contains(teammate) ? "&a" : "&c") + teammate.getName());
 
                         template.middle(2, highlightC + "Ladder:");
                         template.middle(3, infoC + ladder);
@@ -216,11 +230,61 @@ public class PracticeTabAdapter implements TabAdapter {
                             template.middle(12, infoC + decimalFormat.format(accuracy) + "%");
                         }
 
-                        template.right(2, highlightC + "Players:");
-                        Iterator<Player> players = duel.getPlayers().iterator();
+                        template.right(2, highlightC + "Opposing Team:");
+                        int opponentIndex = 3;
+                        for(Player opponent : otherDuo)
+                            template.right(opponentIndex++, (duoDuel.getAlive().contains(opponent) ? "&f" : "&7&m") + opponent.getName());
+                    }
+                } else if(duel.getType() == DuelType.TEAM_VS_TEAM) {
+                    PartyDuel partyDuel = (PartyDuel) duel;
+                    Party party = partyDuel.getPartyOne().contains(player) ? partyDuel.getPartyOne() : partyDuel.getPartyTwo(), otherParty = partyDuel.getPartyOne() == party ? partyDuel.getPartyTwo() : partyDuel.getPartyOne();
+                    if(duel.getState() == DuelState.STARTING) {
+                        template.left(2, highlightC + "Your Team:");
+                        Iterator<Player> partyIterator = partyDuel.getTeam(party).iterator();
                         for(int i = 3; i < 19; i++) {
-                            if(players.hasNext()) {
-                                template.right(i, C.color("&c" + players.next().getName()));
+                            if(partyIterator.hasNext()) {
+                                Player next = partyIterator.next();
+                                template.right(i, "&a" + next.getName());
+                            } else {
+                                break;
+                            }
+                        }
+
+                        template.middle(2, highlightC + "Starting:");
+                        template.middle(3, infoC + duel.getCountDown());
+                    } else {
+                        double accuracy = 100.0;
+                        if(duel.getThrownPots().getOrDefault(player, 0) != 0 && duel.getMissedPots().getOrDefault(player, 0) != 0)
+                            accuracy = ((duel.getThrownPots().get(player) - duel.getMissedPots().get(player)) / (double) duel.getThrownPots().get(player)) * 100.0;
+
+                        template.left(2, highlightC + "Your Team:");
+                        Iterator<Player> partyIterator = partyDuel.getTeam(party).iterator();
+                        for(int i = 3; i < 19; i++) {
+                            if(partyIterator.hasNext()) {
+                                Player next = partyIterator.next();
+                                template.right(i, (partyDuel.getAlive().contains(next) ? "&a" : "&c") + next.getName());
+                            } else {
+                                break;
+                            }
+                        }
+
+                        template.middle(2, highlightC + "Ladder:");
+                        template.middle(3, infoC + ladder);
+                        template.middle(5, highlightC + "Duration:");
+                        template.middle(6, infoC + duration);
+                        if(player.getInventory().contains(Material.POTION)) {
+                            template.middle(8, highlightC + "Thrown | Missed:");
+                            template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
+                            template.middle(11, highlightC + "Pot Accuracy:");
+                            template.middle(12, infoC + decimalFormat.format(accuracy) + "%");
+                        }
+
+                        template.right(2, highlightC + "Opposing Team:");
+                        Iterator<Player> otherPartyIterator = partyDuel.getTeam(party).iterator();
+                        for(int i = 3; i < 19; i++) {
+                            if(otherPartyIterator.hasNext()) {
+                                Player next = otherPartyIterator.next();
+                                template.right(i, (partyDuel.getAlive().contains(next) ? "&a" : "&c") + next.getName());
                             } else {
                                 break;
                             }
