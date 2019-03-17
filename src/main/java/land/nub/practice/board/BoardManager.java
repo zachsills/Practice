@@ -15,22 +15,42 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class BoardManager implements Listener {
     private final Practice plugin = Practice.getInstance();
 
     private Map<UUID, Board> scoreboards;
-    private BukkitTask updateTask;
+//    private BukkitTask updateTask;
+    private Thread updateThread;
 
     @Getter private BoardProvider provider;
 
     public BoardManager(BoardProvider provider) {
         this.scoreboards = new HashMap<>();
-        this.updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateAll, 2L, 2L);
+//        this.updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateAll, 2L, 2L);
 
         this.provider = provider;
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
+
+        this.updateThread = new Thread(() -> {
+            while(true) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100L);
+                } catch(InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
+                try {
+                    updateAll();
+                } catch(Exception ex) {
+                    Bukkit.getLogger().severe("There was an error updating everyone's scoreboard: " + ex.getMessage() + " (Scoreboard updates will continue)");
+                    ex.printStackTrace();
+                }
+            }
+        }, "Scoreboard Updates");
+        this.updateThread.start();
     }
 
     public void setupAll() {
@@ -70,10 +90,7 @@ public class BoardManager implements Listener {
     }
 
     public void onDisable() {
-        try {
-            this.updateTask.cancel();
-        } catch(IllegalStateException exception) {
-        }
+        this.updateThread.stop();
 
         Bukkit.getOnlinePlayers().forEach(this::remove);
         HandlerList.unregisterAll(this);
