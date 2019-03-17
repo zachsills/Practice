@@ -543,6 +543,13 @@ public class Profile {
             eloStore.append(eloEntry.getKey().getName(), eloEntry.getValue());
         }
 
+        for(Ladder ladder : Ladder.getAllLadders()) {
+            if(eloStore.containsKey(ladder.getName()))
+                continue;
+
+            eloStore.append(ladder.getName(), RankingUtils.STARTING_ELO);
+        }
+
         BasicDBObject settingsStore = new BasicDBObject();
         for(ProfileSetting setting : settings.keySet())
             settingsStore.append(setting.getKey(), settings.get(setting));
