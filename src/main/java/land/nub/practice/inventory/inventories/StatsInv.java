@@ -47,6 +47,9 @@ public class StatsInv {
 
         int index = 28;
         for(Ladder ladder : Ladder.getLadders().values()) {
+            if(!ladder.isRanked())
+                continue;
+
             String name = C.color("&e&l" + C.strip(ladder.getDisplayIcon().getItemMeta().getDisplayName()));
 
             String whosElo = (player.getUniqueId().equals(targetP.getUuid())) ? "Your" : (targetP.getName() + "'s");

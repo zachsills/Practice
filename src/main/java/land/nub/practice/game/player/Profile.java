@@ -544,6 +544,8 @@ public class Profile {
         }
 
         for(Ladder ladder : Ladder.getAllLadders()) {
+            if(!ladder.isRanked())
+                continue;
             if(eloStore.containsKey(ladder.getName()))
                 continue;
 
