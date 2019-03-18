@@ -16,7 +16,7 @@ public class CleanerTask extends BukkitRunnable {
     public void run() {
         for(Profile profile : Profile.getProfiles().values()) {
             if(profile.getRecentDuel() != null) {
-                if(profile.getRecentDuel().getEndTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= (1000 * 90))
+                if(profile.getRecentDuel().getEndTime() != 0L && Math.abs(System.currentTimeMillis() - profile.getRecentDuel().getEndTime()) >= (1000 * 30))
                     profile.setRecentDuel(null);
             }
 

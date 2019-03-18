@@ -29,7 +29,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DuelListener implements Listener {
 
@@ -109,8 +111,24 @@ public class DuelListener implements Listener {
             return;
 
         event.setCancelled(true);
-
         player.sendMessage(C.color("&cYou are still on ender pearl cooldown."));
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if(event.getTo().getBlockY() == event.getFrom().getBlockY())
+            return;
+
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByPlayer(player);
+        if(!profile.isInGame())
+            return;
+        if(!profile.getCurrentDuel().getLadder().isSpleef())
+            return;
+
+        Material material = event.getTo().getBlock().getType();
+        if(material.name().contains("LAVA"))
+            player.setHealth(0.0D);
     }
 
     @EventHandler
@@ -362,7 +380,7 @@ public class DuelListener implements Listener {
         player.setItemInHand(new ItemStack(Material.BOWL));
         player.updateInventory();
 
-        double healAmount = 7.0;
+        double healAmount = 7.0D;
         if(player.getHealth() + healAmount >= player.getMaxHealth())
             player.setHealth(player.getMaxHealth());
         else

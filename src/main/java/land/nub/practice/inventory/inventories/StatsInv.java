@@ -32,7 +32,7 @@ public class StatsInv {
         int eloCount = Ladder.getAllLadders().size();
         int globalElo = eloCount > 0 ? (eloSum / eloCount) : 1000;
 
-        inventory.setItem(13, new I(SpawnHandler.getSkull(targetP.getUuid().toString())).name(C.color("&e&l" + targetP.getName()))
+        inventory.setItem(13, new I(SpawnHandler.getSkull(targetP.getName())).name(C.color("&e&l" + targetP.getName()))
                 .lore(C.color("&f&m--------------"))
                 .lore(C.color("&6Ranked:"))
                 .lore(C.color("  &eWins &7- &f" + targetP.getRankedWins()))

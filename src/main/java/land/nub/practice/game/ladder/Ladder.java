@@ -122,4 +122,8 @@ public class Ladder {
     public boolean isSpleef() {
         return name.contains("Spleef");
     }
+
+    public boolean isSumo() {
+        return name.contains("Sumo");
+    }
 }

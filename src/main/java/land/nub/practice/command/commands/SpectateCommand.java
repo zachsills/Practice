@@ -6,10 +6,14 @@ import land.nub.practice.util.RunnableShorthand;
 import land.nub.practice.util.chat.C;
 import land.nub.practice.util.command.Command;
 import land.nub.practice.util.command.CommandArgs;
+import land.nub.practice.util.command.Completer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SpectateCommand {
 
@@ -54,5 +58,18 @@ public class SpectateCommand {
             profile.getPlayer().setFlying(true);
             profile.getPlayer().setGameMode(GameMode.CREATIVE);
         });
+    }
+
+    @Completer(name = "spectate", aliases = { "spec", "watch" })
+    public List<String> onCompleter(CommandArgs args) {
+        List<String> list = new ArrayList<>();
+        for(Profile profile : Profile.getProfiles().values()) {
+            if(!profile.isInGame())
+                continue;
+
+            list.add(profile.getName());
+        }
+
+        return list;
     }
 }

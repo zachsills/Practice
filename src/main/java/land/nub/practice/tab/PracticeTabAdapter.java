@@ -154,6 +154,7 @@ public class PracticeTabAdapter implements TabAdapter {
             template.right(11, highlightC + "Position:");
             template.right(12, infoC + position);
         } else if(profile.getState() == ProfileState.PLAYING) {
+            boolean hasPots = PlayerUtils.getRemainingPots(player) > 0;
             Duel duel = profile.getCurrentDuel();
             if(duel != null) {
                 String ladder = duel.getLadder().getDisplayName();
@@ -182,7 +183,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.middle(3, infoC + ladder);
                         template.middle(5, highlightC + "Duration:");
                         template.middle(6, infoC + duration);
-                        if(player.getInventory().contains(Material.POTION)) {
+                        if(hasPots) {
                             template.middle(8, highlightC + "Thrown | Missed:");
                             template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
                             template.middle(11, highlightC + "Pot Accuracy:");
@@ -221,7 +222,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.middle(3, infoC + ladder);
                         template.middle(5, highlightC + "Duration:");
                         template.middle(6, infoC + duration);
-                        if(player.getInventory().contains(Material.POTION)) {
+                        if(hasPots) {
                             template.middle(8, highlightC + "Thrown | Missed:");
                             template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
                             template.middle(11, highlightC + "Pot Accuracy:");
@@ -270,7 +271,7 @@ public class PracticeTabAdapter implements TabAdapter {
                         template.middle(3, infoC + ladder);
                         template.middle(5, highlightC + "Duration:");
                         template.middle(6, infoC + duration);
-                        if(player.getInventory().contains(Material.POTION)) {
+                        if(hasPots) {
                             template.middle(8, highlightC + "Thrown | Missed:");
                             template.middle(9, infoC + duel.getThrownPots().getOrDefault(player, 0) + " | " + duel.getMissedPots().getOrDefault(player, 0));
                             template.middle(11, highlightC + "Pot Accuracy:");
